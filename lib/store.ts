@@ -1,0 +1,148 @@
+"use client"
+
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import type { Role, UserPreference, SavedComparison, ChatMessage, Alert, PricingSnapshot } from "@/lib/types"
+
+interface AppState {
+  // Auth
+  role: Role
+  userName: string
+  userEmail: string
+  isAuthenticated: boolean
+  setRole: (role: Role) => void
+  login: (email: string, name: string, role: Role) => void
+  logout: () => void
+
+  // Preferences
+  preferences: UserPreference
+  setPreferences: (prefs: Partial<UserPreference>) => void
+  theme: "light" | "dark" | "system"
+  setTheme: (theme: "light" | "dark" | "system") => void
+  language: "en" | "sn" | "nd"
+  setLanguage: (lang: "en" | "sn" | "nd") => void
+
+  // News Widget
+  showNews: boolean
+  setShowNews: (show: boolean) => void
+  lastNewsSeenDate: string | null
+  setLastNewsSeen: (date: string) => void
+
+  // Saved comparisons
+  savedComparisons: SavedComparison[]
+
+  addSavedComparison: (c: SavedComparison) => void
+  removeSavedComparison: (id: string) => void
+
+  // Compare tray
+  compareTray: { category: string; subcategory?: string; ids: string[] }
+  addToCompareTray: (category: string, id: string, subcategory?: string) => void
+  removeFromCompareTray: (id: string) => void
+  clearCompareTray: () => void
+
+  // Chat
+  chatMessages: ChatMessage[]
+  addChatMessage: (msg: ChatMessage) => void
+  clearChat: () => void
+
+  // Alerts
+  alerts: Alert[]
+  addAlert: (a: Alert) => void
+  markAlertRead: (id: string) => void
+
+  // Admin
+  uploadLogs: PricingSnapshot[]
+  addUploadLog: (log: PricingSnapshot) => void
+
+  // Recent views
+  recentViews: { category: string; id: string; name: string; timestamp: string }[]
+  addRecentView: (view: { category: string; id: string; name: string }) => void
+}
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      role: "guest",
+      userName: "",
+      userEmail: "",
+      isAuthenticated: false,
+      setRole: (role) => set({ role, isAuthenticated: role !== "guest" }),
+      login: (email, name, role) => set({ role, userEmail: email, userName: name, isAuthenticated: true }),
+      logout: () => set({ role: "guest", userName: "", userEmail: "", isAuthenticated: false }),
+
+      preferences: {
+        scenario: "family",
+        priceVsQuality: 50,
+        convenienceVsReputation: 50,
+        shortTermVsLongTerm: 50,
+      },
+      setPreferences: (prefs) =>
+        set({ preferences: { ...get().preferences, ...prefs } }),
+
+      theme: "system",
+      setTheme: (theme) => set({ theme }),
+      language: "en",
+      setLanguage: (language) => set({ language }),
+
+      showNews: false,
+      setShowNews: (showNews) => set({ showNews }),
+      lastNewsSeenDate: null,
+      setLastNewsSeen: (date) => set({ lastNewsSeenDate: date }),
+
+      savedComparisons: [],
+
+      addSavedComparison: (c) =>
+        set({ savedComparisons: [...get().savedComparisons, c] }),
+      removeSavedComparison: (id) =>
+        set({ savedComparisons: get().savedComparisons.filter((s) => s.id !== id) }),
+
+      compareTray: { category: "", subcategory: "", ids: [] },
+      addToCompareTray: (category, id, subcategory) => {
+        const tray = get().compareTray
+        // If switching category or subcategory, clear and start fresh
+        if (tray.category !== category || (subcategory && tray.subcategory !== subcategory)) {
+          set({ compareTray: { category, subcategory, ids: [id] } })
+        } else if (!tray.ids.includes(id)) {
+          // Limit to max 4 items and ensure uniqueness
+          if (tray.ids.length < 4) {
+            set({ compareTray: { ...tray, ids: [...tray.ids, id] } })
+          }
+        }
+      },
+      removeFromCompareTray: (id) => {
+        const tray = get().compareTray
+        const newIds = tray.ids.filter((i) => i !== id)
+        set({ compareTray: { ...tray, ids: newIds, subcategory: newIds.length === 0 ? "" : tray.subcategory } })
+      },
+      clearCompareTray: () => set({ compareTray: { category: "", subcategory: "", ids: [] } }),
+
+      chatMessages: [],
+      addChatMessage: (msg) => set({ chatMessages: [...get().chatMessages, msg] }),
+      clearChat: () => set({ chatMessages: [] }),
+
+      alerts: [
+        { id: "a1", type: "price_drop", category: "telecom", itemId: "eco-d3", message: "Econet Monthly 5GB price dropped by 10%", createdAt: "2026-02-05T10:00:00Z", read: false },
+        { id: "a2", type: "new_promo", category: "banking", itemId: "stanbic", message: "Stanbic offering zero fees for new accounts this month", createdAt: "2026-02-04T08:00:00Z", read: false },
+        { id: "a3", type: "fee_increase", category: "banking", itemId: "fbc", message: "FBC ZIPIT fees increased from $1.50 to $1.80", createdAt: "2026-02-03T12:00:00Z", read: true },
+      ],
+      addAlert: (a) => set({ alerts: [a, ...get().alerts] }),
+      markAlertRead: (id) =>
+        set({ alerts: get().alerts.map((a) => (a.id === id ? { ...a, read: true } : a)) }),
+
+      uploadLogs: [],
+      addUploadLog: (log) => set({ uploadLogs: [...get().uploadLogs, log] }),
+
+      recentViews: [],
+      addRecentView: (view) => {
+        const views = get().recentViews.filter((v) => v.id !== view.id)
+        set({
+          recentViews: [
+            { ...view, timestamp: new Date().toISOString() },
+            ...views.slice(0, 9),
+          ],
+        })
+      },
+    }),
+    { name: "zimcompare-store" }
+  )
+)

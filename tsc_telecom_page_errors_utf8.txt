@@ -1,0 +1,166 @@
+﻿app/telecom/compare/data/page.tsx(4,29): error TS2307: Cannot find module '@/lib/mock/telecoms' or its corresponding type declarations.
+app/telecom/compare/data/page.tsx(5,29): error TS2307: Cannot find module '@/lib/store' or its corresponding type declarations.
+app/telecom/compare/data/page.tsx(6,28): error TS2307: Cannot find module '@/components/disclaimer' or its corresponding type declarations.
+app/telecom/compare/data/page.tsx(24,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+app/telecom/compare/data/page.tsx(38,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(39,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(40,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(42,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(43,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(46,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(50,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(120,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(122,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(123,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(124,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(128,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(131,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(134,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(138,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(147,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(148,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(149,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(150,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(151,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(153,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(154,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(155,41): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(156,45): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(157,45): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(165,49): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(168,41): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(174,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(176,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(177,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(179,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(186,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(187,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(189,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(190,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(198,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(199,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(200,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(201,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(206,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(210,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(221,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(222,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(223,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(224,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(229,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(233,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(244,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(245,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(246,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(247,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(252,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(256,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(262,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(263,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(264,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(265,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(270,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(274,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(285,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(286,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(288,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(295,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(296,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(298,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(299,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(310,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(311,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(312,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(313,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(315,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(316,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(317,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(321,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(323,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(324,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(325,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(327,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(330,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(331,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(332,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(334,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(335,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(340,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(341,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(347,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(348,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(351,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(352,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(353,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(355,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(356,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(361,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(362,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(368,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(369,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(372,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(373,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(374,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(376,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(377,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(382,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(383,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(391,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(392,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(393,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(394,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(397,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(398,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(399,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(400,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(401,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(404,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(405,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(408,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(409,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(417,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(418,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(419,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(422,21): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(423,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(424,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(425,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(425,82): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(427,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(428,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(429,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(429,98): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(431,25): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(432,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(433,29): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(433,84): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(439,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(446,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(447,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(447,33): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+app/telecom/compare/data/page.tsx(448,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+node_modules/next/dist/build/templates/app-page.d.ts(3,25): error TS2307: Cannot find module 'VAR_MODULE_GLOBAL_ERROR' or its corresponding type declarations.
+node_modules/next/dist/build/webpack-config.d.ts(10,104): error TS2694: Namespace '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/next/dist/compiled/webpack/webpack".webpack' has no exported member 'RuleSetUseItem'.
+node_modules/next/dist/build/webpack/loaders/next-app-loader/index.d.ts(1,13): error TS2613: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/next/dist/compiled/webpack/webpack"' has no default export. Did you mean to use 'import { webpack } from "C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/next/dist/compiled/webpack/webpack"' instead?
+node_modules/next/dist/client/components/error-boundary.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/client/components/http-access-fallback/error-boundary.d.ts(11,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/client/components/layout-router.d.ts(2,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/client/link.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/client/with-router.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/lib/metadata/metadata.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/server/app-render/entry-base.d.ts(1,114): error TS2307: Cannot find module 'react-server-dom-webpack/server' or its corresponding type declarations.
+node_modules/next/dist/server/app-render/entry-base.d.ts(2,27): error TS2307: Cannot find module 'react-server-dom-webpack/static' or its corresponding type declarations.
+node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(39,16): error TS2304: Cannot find name 'HeadersIterator'.
+node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(40,13): error TS2304: Cannot find name 'HeadersIterator'.
+node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(41,15): error TS2304: Cannot find name 'HeadersIterator'.
+node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(42,26): error TS2304: Cannot find name 'HeadersIterator'.
+node_modules/next/dist/shared/lib/app-router-context.shared-runtime.d.ts(4,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/app-router-types.d.ts(7,13): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/head-manager-context.shared-runtime.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/image-config-context.shared-runtime.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/loadable-context.shared-runtime.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/loadable.shared-runtime.d.ts(21,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/router-context.shared-runtime.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/server-inserted-html.shared-runtime.d.ts(1,8): error TS1259: Module '"C:/Users/user/Downloads/zim-compare-ui-redesign (2)/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+node_modules/next/dist/shared/lib/utils.d.ts(10,13): error TS1192: Module '"fs"' has no default export.

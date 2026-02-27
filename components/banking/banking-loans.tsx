@@ -1,0 +1,166 @@
+"use client"
+
+import { useState } from "react"
+import { banks, bankLoans } from "@/lib/mock/banks"
+import { useAppStore } from "@/lib/store"
+import { cn } from "@/lib/utils"
+import { Disclaimer } from "@/components/disclaimer"
+import { Plus, Check, AlertCircle, X } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
+
+const subTabs = [
+  { key: "personal", label: "Personal" },
+  { key: "sme", label: "SME" },
+  { key: "mortgage", label: "Mortgage" },
+  { key: "vehicle", label: "Vehicle" },
+  { key: "salary_based", label: "Salary-based" },
+] as const
+
+interface BankingLoansProps {
+  location?: string
+}
+
+export function BankingLoans({ location = "All Locations" }: BankingLoansProps) {
+  const [sub, setSub] = useState<string>("personal")
+  const { addToCompareTray, removeFromCompareTray, compareTray } = useAppStore()
+  const { t } = useI18n()
+
+  const filtered = bankLoans.filter((l) => {
+    const categoryMatch = l.category === sub
+    if (!categoryMatch) return false
+
+    // National scope by default
+    if (location === "All Locations") return true
+
+    return true
+  })
+
+  return (
+    <div className="space-y-4">
+      {/* Sub-tabs - 3 Column Grid */}
+      <div className="grid grid-cols-3 gap-2 rounded-2xl bg-white/20 dark:bg-black/20 backdrop-blur-xl border border-white/25 dark:border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.08)] p-2">
+        {subTabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setSub(t.key)}
+            className={cn(
+              "rounded-xl px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition-all duration-300 text-center",
+              sub === t.key
+                ? "bg-white/40 dark:bg-white/10 text-foreground shadow-[0_0_15px_rgba(45,212,191,0.5)]"
+                : "hover:bg-white/10 hover:backdrop-blur-2xl hover:brightness-125 hover:-translate-y-[1px] text-muted-foreground"
+            )}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {filtered.map((l) => {
+          const inTray = compareTray.ids.includes(l.id)
+          const trayFull = compareTray.ids.length >= 4 && !inTray
+          const totalCost12 = (1000 * (l.apr / 100)) + l.initiationFee
+          const totalCost24 = (1000 * (l.apr / 100) * 2) + l.initiationFee
+
+          return (
+            <div
+              key={l.id}
+              className={cn(
+                "rounded-xl border bg-card p-4 transition-all duration-300 relative group",
+                inTray ? "border-primary ring-1 ring-primary/20 shadow-lg shadow-primary/5" : "border-border hover:border-primary/30"
+              )}
+            >
+              {inTray && (
+                <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground p-1 rounded-full shadow-lg z-10 animate-in zoom-in">
+                  <Check size={12} />
+                </div>
+              )}
+
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-semibold text-foreground">{l.name}</p>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">{l.bankName}</p>
+
+              <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
+                <div className="rounded-lg bg-secondary/50 p-2">
+                  <p className="text-muted-foreground">APR</p>
+                  <p className="text-foreground font-medium">{l.apr}%</p>
+                </div>
+                <div className="rounded-lg bg-secondary/50 p-2">
+                  <p className="text-muted-foreground">Initiation Fee</p>
+                  <p className="text-foreground font-medium">${l.initiationFee}</p>
+                </div>
+                <div className="rounded-lg bg-secondary/50 p-2">
+                  <p className="text-muted-foreground">Early Settle Penalty</p>
+                  <p className="text-foreground font-medium">{l.earlySettlementPenalty}%</p>
+                </div>
+                <div className="rounded-lg bg-secondary/50 p-2">
+                  <p className="text-muted-foreground">Max Term</p>
+                  <p className="text-foreground font-medium">{l.maxTermMonths} months</p>
+                </div>
+              </div>
+
+              {/* Total cost preview */}
+              <div className="rounded-lg border border-border bg-secondary/20 p-3 mb-3">
+                <p className="text-xs text-muted-foreground mb-1">Total cost of $1,000 borrowed</p>
+                <div className="flex gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground">12 months:</span>{" "}
+                    <span className="text-foreground font-medium">${totalCost12.toFixed(0)}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">24 months:</span>{" "}
+                    <span className="text-foreground font-medium">${totalCost24.toFixed(0)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <p className="text-xs text-muted-foreground mb-1">Requirements</p>
+                <div className="flex flex-wrap gap-1">
+                  {l.requirements.map((r) => (
+                    <span key={r} className="text-[10px] bg-secondary text-muted-foreground px-2 py-0.5 rounded-full">
+                      {r}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={() => inTray ? removeFromCompareTray(l.id) : addToCompareTray("banking", l.id, "loans")}
+                className={cn(
+                  "btn-compare-standard w-full",
+                  (inTray || trayFull) && "opacity-60"
+                )}
+              >
+                {inTray ? (
+                  <>{t("common.removeFromCompare")}</>
+                ) : trayFull ? (
+                  <>
+                    <AlertCircle size={14} />
+                    {t("common.compareLimitReached")}
+                  </>
+                ) : (
+                  <>
+                    <Plus size={14} />
+                    {t("common.addToCompare")}
+                  </>
+                )}
+              </button>
+            </div>
+          )
+        })}
+        {filtered.length === 0 && (
+          <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center col-span-full">
+            <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <X className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-bold text-foreground mb-2">No {sub} loans found for {location}</h3>
+            <p className="text-muted-foreground mb-6 max-w-xs mx-auto">None of the banks offering {sub} loans are currently active in this location.</p>
+          </div>
+        )}
+      </div>
+      <Disclaimer />
+    </div>
+  )
+}
