@@ -28,18 +28,24 @@ export function ChatWidget() {
     const [input, setInput] = useState("")
     const [isTyping, setIsTyping] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
+    const isMountedRef = useRef(true)
     const endRef = useRef<HTMLDivElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     useEffect(() => {
         setIsMounted(true)
+        isMountedRef.current = true
         // Add welcome message if chat is empty
         if (chatMessages.length === 0) {
             addChatMessage({
-                id: "welcome",
+                id: "welcome-msg",
                 role: "assistant",
                 content: "Hi! What would you like to compare today?",
                 timestamp: new Date().toISOString(),
             })
+        }
+        return () => {
+            isMountedRef.current = false
         }
     }, [])
 
@@ -48,6 +54,13 @@ export function ChatWidget() {
             endRef.current?.scrollIntoView({ behavior: "smooth" })
         }
     }, [chatMessages, isOpen])
+
+    useEffect(() => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto"
+            textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
+        }
+    }, [input])
 
     const handleSend = (e?: React.FormEvent) => {
         if (e) e.preventDefault()
@@ -64,6 +77,7 @@ export function ChatWidget() {
         setIsTyping(true)
 
         setTimeout(() => {
+            if (!isMountedRef.current) return
             const response = getResponse(userMsg.content)
             addChatMessage({
                 id: (Date.now() + 1).toString(),
@@ -107,14 +121,19 @@ export function ChatWidget() {
                                 onClick={clearChat}
                                 className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary/50 hover:text-destructive transition-colors"
                                 title="Clear Chat"
+                                aria-label="Clear Chat"
                             >
-                                <Trash2 size={16} />
+                                <Trash2 size={16} aria-hidden="true" />
+                                <span className="sr-only">Clear Chat</span>
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-colors"
+                                title="Close Chat"
+                                aria-label="Close Chat"
                             >
-                                <X size={18} />
+                                <X size={18} aria-hidden="true" />
+                                <span className="sr-only">Close Chat</span>
                             </button>
                         </div>
                     </div>
@@ -137,9 +156,9 @@ export function ChatWidget() {
                         {isTyping && (
                             <div className="max-w-[85%] rounded-2xl bg-secondary/50 p-3 border border-border/30">
                                 <div className="flex gap-1.5">
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce delay-0" />
+                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce delay-150" />
+                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce delay-300" />
                                 </div>
                             </div>
                         )}
@@ -150,25 +169,23 @@ export function ChatWidget() {
                     <div className="border-t border-border/50 p-3 bg-secondary/20">
                         <form onSubmit={handleSend} className="relative flex items-end gap-2">
                             <textarea
+                                ref={textareaRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
                                 rows={1}
                                 placeholder="Type a message..."
                                 className="min-h-[44px] max-h-[120px] scrollbar-none w-full resize-none rounded-xl border border-border/50 bg-background/50 px-4 py-3 pr-12 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all backdrop-blur-sm"
-                                style={{ height: "auto" }}
-                                onInput={(e) => {
-                                    const target = e.target as HTMLTextAreaElement
-                                    target.style.height = "auto"
-                                    target.style.height = `${Math.min(target.scrollHeight, 120)}px`
-                                }}
                             />
                             <button
                                 type="submit"
+                                title="Send Message"
+                                aria-label="Send Message"
                                 disabled={!input.trim() || isTyping}
                                 className="absolute right-2 bottom-2 p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
                             >
-                                <Send size={18} />
+                                <Send size={18} aria-hidden="true" />
+                                <span className="sr-only">Send Message</span>
                             </button>
                         </form>
                     </div>
@@ -178,6 +195,8 @@ export function ChatWidget() {
             {/* Toggle Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
+                title={isOpen ? "Close Chat" : "Open Chat"}
+                aria-label={isOpen ? "Close Chat" : "Open Chat"}
                 className={cn(
                     "flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-300 active:scale-95",
                     isOpen
@@ -185,7 +204,8 @@ export function ChatWidget() {
                         : "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30"
                 )}
             >
-                {isOpen ? <ChevronDown size={28} /> : <MessageCircle size={28} />}
+                {isOpen ? <ChevronDown size={28} aria-hidden="true" /> : <MessageCircle size={28} aria-hidden="true" />}
+                <span className="sr-only">{isOpen ? "Close Chat" : "Open Chat"}</span>
             </button>
         </div>
     )

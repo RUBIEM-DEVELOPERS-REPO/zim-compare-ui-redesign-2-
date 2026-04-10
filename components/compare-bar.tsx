@@ -25,11 +25,16 @@ export function CompareBar() {
     const [isDragging, setIsDragging] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+    const isMountedRef = useRef(true)
     const barRef = useRef<HTMLDivElement>(null)
 
     // Hydration guard
     useEffect(() => {
         setIsMounted(true)
+        isMountedRef.current = true
+        return () => {
+            isMountedRef.current = false
+        }
     }, [])
 
     const isBankingPage = pathname?.includes("/banking")
@@ -188,7 +193,9 @@ export function CompareBar() {
 
         // Clear the tray after successful navigation trigger
         setTimeout(() => {
-            clearCompareTray()
+            if (isMountedRef.current) {
+                clearCompareTray()
+            }
         }, 500)
     }
 

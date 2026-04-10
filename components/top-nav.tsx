@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { useAppStore } from "@/lib/store"
 import { GlobalSearch } from "@/components/global-search"
 import { cn } from "@/lib/utils"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 import { useI18n } from "@/lib/i18n"
@@ -57,19 +57,25 @@ export function TopNav() {
     router.push("/")
   }
 
-  const visibleItems = navItems.filter((item) => {
-    if (item.labelKey === "nav.chat" && role !== "paid" && role !== "admin") return false
-    if (item.labelKey === "nav.summaries" && role !== "paid" && role !== "admin") return false
-    if (item.labelKey === "nav.saved" && role === "guest") return false
-    if (item.labelKey === "nav.admin" && role !== "admin") return false
-    return true
-  })
+  const visibleItems = useMemo(() => {
+    return navItems.filter((item) => {
+      if (item.labelKey === "nav.chat" && role !== "paid" && role !== "admin") return false
+      if (item.labelKey === "nav.summaries" && role !== "paid" && role !== "admin") return false
+      if (item.labelKey === "nav.saved" && role === "guest") return false
+      if (item.labelKey === "nav.admin" && role !== "admin") return false
+      return true
+    })
+  }, [role])
 
   const checkScroll = () => {
     const el = navScrollRef.current
-    if (!el) return
-    setCanScrollLeft(el.scrollLeft > 4)
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
+    if (!el || !mounted) return
+    
+    const left = el.scrollLeft > 4
+    const right = el.scrollLeft < el.scrollWidth - el.clientWidth - 4
+    
+    setCanScrollLeft((prev) => (prev !== left ? left : prev))
+    setCanScrollRight((prev) => (prev !== right ? right : prev))
   }
 
   useEffect(() => {

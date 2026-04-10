@@ -6,6 +6,8 @@ export const telecomProviders: TelecomProvider[] = [
   { id: "telecel", name: "Telecel", type: "MNO", transparencyScore: 65, digitalScore: 65, coverageScore: 70, networkType: "3G/4G", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo", "Gweru", "Mutare"] },
   { id: "telone", name: "TelOne", type: "ISP", transparencyScore: 72, digitalScore: 70, coverageScore: 60, networkType: "Fibre/ADSL", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Chinhoyi", "Marondera"] },
   { id: "liquid", name: "Liquid Telecom", type: "ISP", transparencyScore: 78, digitalScore: 82, coverageScore: 55, networkType: "Fibre", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo", "Mutare", "Victoria Falls"] },
+  { id: "utande", name: "Utande", type: "ISP", transparencyScore: 74, digitalScore: 78, coverageScore: 45, networkType: "Fibre/WiMAX", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo"] },
+  { id: "dandemutande", name: "Dandemutande", type: "ISP", transparencyScore: 72, digitalScore: 70, coverageScore: 40, networkType: "Fibre/VSAT", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo", "Mutare"] },
 ]
 
 export const dataBundles: DataBundle[] = [
@@ -33,8 +35,18 @@ export const dataBundles: DataBundle[] = [
   { id: "to-d1", providerId: "telone", providerName: "TelOne", category: "monthly", name: "TelOne Fibre 20GB", price: 15.00, dataGB: 20, validityDays: 30, costPerGB: 0.75, speedClass: "Fibre 10Mbps", fupNote: "" },
   { id: "to-d2", providerId: "telone", providerName: "TelOne", category: "unlimited", name: "TelOne Unlimited Fibre", price: 45.00, dataGB: 100, validityDays: 30, costPerGB: 0.45, speedClass: "Fibre 20Mbps", fupNote: "FUP: Throttled after 100GB" },
   // Liquid
-  { id: "liq-d1", providerId: "liquid", providerName: "Liquid Telecom", category: "monthly", name: "Liquid Fibre 50GB", price: 25.00, dataGB: 50, validityDays: 30, costPerGB: 0.5, speedClass: "Fibre 25Mbps", fupNote: "" },
-  { id: "liq-d2", providerId: "liquid", providerName: "Liquid Telecom", category: "unlimited", name: "Liquid Unlimited", price: 60.00, dataGB: 200, validityDays: 30, costPerGB: 0.3, speedClass: "Fibre 50Mbps", fupNote: "FUP: 200GB then throttled" },
+  { id: "liq-d1", providerId: "liquid", providerName: "Liquid Telecom", category: "internet", name: "Liquid Home Fibre 50", price: 25.00, dataGB: 50, validityDays: 30, costPerGB: 0.5, speedClass: "Fibre 25Mbps", fupNote: "Free installation for 12m contracts" },
+  { id: "liq-d2", providerId: "liquid", providerName: "Liquid Telecom", category: "internet", name: "Liquid Unlimited Home", price: 60.00, dataGB: 200, validityDays: 30, costPerGB: 0.3, speedClass: "Fibre 50Mbps", fupNote: "FUP: 200GB then 2Mbps" },
+  // TelOne Internet
+  { id: "to-i1", providerId: "telone", providerName: "TelOne", category: "internet", name: "Home Fibre 20GB", price: 15.00, dataGB: 20, validityDays: 30, costPerGB: 0.75, speedClass: "Fibre 10Mbps", fupNote: "Student discount available" },
+  { id: "to-i2", providerId: "telone", providerName: "TelOne", category: "internet", name: "Infinity Pro (Unlimited)", price: 45.00, dataGB: 100, validityDays: 30, costPerGB: 0.45, speedClass: "Fibre 20Mbps", fupNote: "FUP: 100GB then throttled" },
+  { id: "to-i3", providerId: "telone", providerName: "TelOne", category: "internet", name: "ADSL Home Basic", price: 10.00, dataGB: 10, validityDays: 30, costPerGB: 1.0, speedClass: "ADSL 5Mbps", fupNote: "Requires landline" },
+  // Utande
+  { id: "ut-i1", providerId: "utande", providerName: "Utande", category: "internet", name: "Utande Fibre Lite", price: 30.00, dataGB: 60, validityDays: 30, costPerGB: 0.5, speedClass: "Fibre 15Mbps", fupNote: "" },
+  { id: "ut-i2", providerId: "utande", providerName: "Utande", category: "internet", name: "WiMAX Home Unlimited", price: 55.00, dataGB: 150, validityDays: 30, costPerGB: 0.37, speedClass: "WiMAX 10Mbps", fupNote: "No cables required" },
+  // Dandemutande
+  { id: "dm-i1", providerId: "dandemutande", providerName: "Dandemutande", category: "internet", name: "Utande VSAT Basic", price: 80.00, dataGB: 30, validityDays: 30, costPerGB: 2.67, speedClass: "VSAT 5Mbps", fupNote: "Available nationwide" },
+  { id: "dm-i2", providerId: "dandemutande", providerName: "Dandemutande", category: "internet", name: "Ignite Fibre Home", price: 40.00, dataGB: 100, validityDays: 30, costPerGB: 0.4, speedClass: "Fibre 20Mbps", fupNote: "" },
 ]
 
 export const voiceRates: VoiceRate[] = [

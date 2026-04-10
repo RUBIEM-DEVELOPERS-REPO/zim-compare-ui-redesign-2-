@@ -21,6 +21,9 @@ body {
     border-color: hsla(var(--glass-border) / 1.2);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   }
+  .delay-0 { animation-delay: 0ms; }
+  .delay-150 { animation-delay: 150ms; }
+  .delay-300 { animation-delay: 300ms; }
 }
 
 @layer components {

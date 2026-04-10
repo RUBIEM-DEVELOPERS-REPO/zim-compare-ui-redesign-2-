@@ -44,14 +44,14 @@ export function HotelsOverview({ location = "All Locations" }: HotelsOverviewPro
 
     return (
         <div className="space-y-6">
-            <div className="glass-panel p-6 bg-primary/5 border-primary/20 shadow-xl overflow-hidden relative">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <Sparkles className="h-24 w-24 text-primary" />
+            <div className="glass-panel p-4 bg-primary/5 border-primary/20 shadow-xl overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-3 opacity-10">
+                    <Sparkles className="h-16 w-16 text-primary" />
                 </div>
                 <div className="relative z-10 font-bold">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2 px-2 py-1 bg-primary/10 rounded-full inline-block">{t("stays.hospitalityTitle")}</p>
-                    <h2 className="text-2xl font-bold text-foreground tracking-tight">{t("stays.hospitalitySubtitle")}</h2>
-                    <p className="text-sm text-muted-foreground mt-2 max-w-lg leading-relaxed">
+                    <p className="text-[8px] font-black text-primary uppercase tracking-widest mb-1.5 px-2 py-0.5 bg-primary/10 rounded-full inline-block">{t("stays.hospitalityTitle")}</p>
+                    <h2 className="text-lg font-bold text-foreground tracking-tight">{t("stays.hospitalitySubtitle")}</h2>
+                    <p className="text-xs text-muted-foreground mt-1.5 max-w-lg leading-relaxed">
                         {t("stays.propertiesCount", { count: filtered.length })} properties available in {location}.
                     </p>
                     <Disclaimer />
@@ -60,48 +60,48 @@ export function HotelsOverview({ location = "All Locations" }: HotelsOverviewPro
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryCards.map(c => (
-                    <div key={c.label} className="glass-card p-4 group">
-                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">{c.label}</p>
-                        <p className="text-sm font-black text-foreground tabular-nums">{c.value}</p>
-                        <p className="text-[10px] font-black text-primary mt-1.5 uppercase tracking-tighter italic">{c.detail}</p>
+                    <div key={c.label} className="glass-card p-3 group">
+                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mb-1">{c.label}</p>
+                        <p className="text-xs font-black text-foreground tabular-nums">{c.value}</p>
+                        <p className="text-[8px] font-black text-primary mt-1 uppercase tracking-tighter italic">{c.detail}</p>
                     </div>
                 ))}
             </div>
 
             {featured.length > 0 && (
                 <section>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">{t("stays.recommendedProperties")}</h3>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <h3 className="text-[10px] font-semibold text-foreground mb-2">{t("stays.recommendedProperties")}</h3>
+                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {featured.map(h => (
-                            <div key={h.id} className="glass-card p-5 hover:border-primary/40 group">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div>
-                                        <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">{h.name}</p>
-                                        <div className="flex items-center gap-1.5 mt-1">
-                                            <MapPin className="w-3 h-3 text-primary" />
-                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{h.city}</p>
+                            <div key={h.id} className="glass-card p-3.5 hover:border-primary/40 group">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex-1 min-w-0 mr-2">
+                                        <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors tracking-tight truncate">{h.name}</p>
+                                        <div className="flex items-center gap-1 mt-0.5">
+                                            <MapPin className="w-2.5 h-2.5 text-primary" />
+                                            <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight truncate">{h.city}</p>
                                         </div>
                                     </div>
-                                    <div className="text-right bg-primary/10 px-3 py-1.5 rounded-xl border border-primary/10">
-                                        <p className="text-sm font-black text-primary tabular-nums">${h.pricePerNight}</p>
-                                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{t("stays.night")}</p>
+                                    <div className="text-right bg-primary/10 px-2 py-1 rounded-lg border border-primary/10 flex-shrink-0">
+                                        <p className="text-xs font-black text-primary tabular-nums">${h.pricePerNight}</p>
+                                        <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest leading-none">{t("stays.night")}</p>
                                     </div>
                                 </div>
-                                <div className="mb-3">
+                                <div className="mb-2">
                                     <StarRating stars={h.stars} />
                                 </div>
-                                <div className="flex flex-wrap gap-1.5 mb-4">
-                                    {h.amenities.slice(0, 5).map(a => (
-                                        <span key={a} className="flex items-center gap-1 text-[9px] bg-muted px-2 py-0.5 rounded-full text-foreground/70 font-black uppercase tracking-tighter border border-border/40">
-                                            {amenityIcons[a]} {t(`stays.amenities.${a}`)}
+                                <div className="flex flex-wrap gap-1 mb-3">
+                                    {h.amenities.slice(0, 4).map(a => (
+                                        <span key={a} className="flex items-center gap-1 text-[8px] bg-muted px-2 py-0.5 rounded-full text-foreground/70 font-black uppercase tracking-tighter border border-border/40">
+                                            <span className="scale-75">{amenityIcons[a]}</span> {t(`stays.amenities.${a}`)}
                                         </span>
                                     ))}
                                 </div>
-                                <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
-                                    <span className="text-[9px] bg-primary/20 text-primary px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-sm border border-primary/20">{t("stays.recommended")}</span>
-                                    <div className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-xl">
-                                        <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                                        <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 tabular-nums">{h.rating}</span>
+                                <div className="flex items-center justify-between pt-3 border-t border-border mt-auto">
+                                    <span className="text-[8px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-black uppercase tracking-widest shadow-sm border border-primary/20">{t("stays.recommended")}</span>
+                                    <div className="flex items-center gap-1 bg-amber-500/10 px-1.5 py-0.5 rounded-lg">
+                                        <Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />
+                                        <span className="text-[8px] font-black text-amber-600 dark:text-amber-400 tabular-nums">{h.rating}</span>
                                     </div>
                                 </div>
                             </div>

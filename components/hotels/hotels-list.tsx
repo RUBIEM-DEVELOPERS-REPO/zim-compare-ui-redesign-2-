@@ -84,10 +84,10 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
             <div className="glass-panel p-5 bg-card/40 border-border/50 shadow-xl relative overflow-hidden">
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-wrap gap-3 items-center justify-between">
-                        <div className="flex gap-2 flex-wrap">
+                        <div className="flex gap-1.5 flex-wrap">
                             {starFilters.map(f => (
                                 <button key={f} onClick={() => setStarFilter(f)}
-                                    className={cn("glass-tab-base px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                                    className={cn("glass-tab-base px-3 py-1 text-[8px] font-black uppercase tracking-widest transition-all",
                                         starFilter === f ? "glass-tab-active" : "text-muted-foreground hover:text-foreground"
                                     )}>{f}</button>
                             ))}
@@ -110,12 +110,12 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mr-3">{t("stays.filters")}:</span>
                         {amenityFilters.map(a => (
                             <button key={a} onClick={() => toggleAmenity(a)}
-                                className={cn("flex items-center gap-2.5 rounded-xl px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all border",
+                                className={cn("flex items-center gap-2 rounded-xl px-3 py-1.5 text-[8px] font-black uppercase tracking-widest transition-all border",
                                     amenityFilter.includes(a)
                                         ? "bg-primary/15 text-primary border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.1)]"
                                         : "bg-muted/30 text-muted-foreground border-white/5 hover:border-primary/30"
                                 )}>
-                                <span className="text-primary">{amenityIcons[a]}</span> {t(`stays.amenities.${a}`)}
+                                <span className="text-primary scale-75">{amenityIcons[a]}</span> {t(`stays.amenities.${a}`)}
                             </button>
                         ))}
                     </div>
@@ -162,7 +162,7 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
             )}
 
             {/* Grid */}
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {sorted.map(h => (
                     <div key={h.id}
                         className={cn("group flex flex-col glass-card overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2",
@@ -170,7 +170,7 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                         )}>
 
                         {/* Image Container */}
-                        <div className="relative h-60 w-full overflow-hidden">
+                        <div className="relative h-36 w-full overflow-hidden">
                             <img
                                 src={h.imageUrl || "/placeholder.svg"}
                                 alt={h.name}
@@ -194,16 +194,16 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                             </div>
 
                             {/* Price Overlay */}
-                            <div className="absolute bottom-4 right-4 text-right transform group-hover:translate-x-[-4px] transition-transform">
-                                <p className="text-3xl font-black text-white leading-none">${h.pricePerNight}</p>
-                                <p className="text-[9px] text-white/70 font-black uppercase tracking-[0.2em] mt-1">{t("stays.perNight")}</p>
+                            <div className="absolute bottom-3 right-3 text-right transform group-hover:translate-x-[-2px] transition-transform">
+                                <p className="text-xl font-black text-white leading-none">${h.pricePerNight}</p>
+                                <p className="text-[8px] text-white/70 font-black uppercase tracking-[0.2em] mt-1">{t("stays.perNight")}</p>
                             </div>
                         </div>
 
                         {/* Content */}
-                        <div className="p-6 flex-1 flex flex-col relative">
+                        <div className="p-4 flex-1 flex flex-col relative text-balance">
                             <div className="flex-1">
-                                <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors tracking-tight line-clamp-1">{h.name}</h3>
+                                <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors tracking-tight line-clamp-1">{h.name}</h3>
 
                                 <div className="flex items-center justify-between mt-3">
                                     <div className="flex items-center gap-2">
@@ -220,47 +220,47 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                                 </p>
 
                                 {/* Amenities Row */}
-                                <div className="flex flex-wrap gap-2 mt-5">
+                                <div className="flex flex-wrap gap-1.5 mt-3">
                                     {h.amenities.slice(0, 4).map(a => (
-                                        <div key={a} className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner group/amenity">
-                                            <span className="text-primary transition-transform group-hover/amenity:scale-110">{amenityIcons[a] ?? null}</span>
-                                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
+                                        <div key={a} className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded-xl border border-white/5 shadow-inner group/amenity">
+                                            <span className="text-primary scale-75 transition-transform group-hover/amenity:scale-90">{amenityIcons[a] ?? null}</span>
+                                            <span className="text-[8px] font-black text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
                                         </div>
                                     ))}
                                     {h.amenities.length > 4 && (
-                                        <span className="text-[9px] font-black text-primary/60 self-center ml-2 uppercase tracking-tighter">+{h.amenities.length - 4} More</span>
+                                        <span className="text-[8px] font-black text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{h.amenities.length - 4}</span>
                                     )}
                                 </div>
                             </div>
 
                             {/* Footer / Stats */}
-                            <div className="mt-8 pt-5 border-t border-border/10 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-11 w-11 rounded-2xl bg-primary/10 flex items-center justify-center font-black text-primary text-base shadow-inner border border-primary/5">
+                            <div className="mt-5 pt-3 border-t border-border/10 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center font-black text-primary text-sm shadow-inner border border-primary/5">
                                         {h.rating}
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none">{t("stays.exceptional")}</p>
-                                        <p className="text-[9px] font-black text-muted-foreground mt-1 uppercase tracking-tighter">{t("stays.verifiedReviews", { count: h.reviewCount })}</p>
+                                        <p className="text-[8px] font-black text-foreground uppercase tracking-widest leading-none">{t("stays.exceptional")}</p>
+                                        <p className="text-[7px] font-black text-muted-foreground mt-0.5 uppercase tracking-tighter">{t("stays.verifiedReviews", { count: h.reviewCount })}</p>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={(e) => toggleSelect(h.id, e)}
                                     className={cn(
-                                        "btn-compare-standard px-5 py-2.5 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all",
+                                        "btn-compare-standard px-3 py-2 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all text-[8px]",
                                         selected.includes(h.id) ? "bg-primary/20 text-primary border-primary/30" : "bg-primary text-primary-foreground"
                                     )}
                                 >
                                     {selected.includes(h.id) ? (
                                         <>
-                                            <CheckCircle2 className="w-4 h-4" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">{t("common.added")}</span>
+                                            <CheckCircle2 className="w-3 h-3" />
+                                            <span>{t("common.added")}</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Plus className="w-4 h-4" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">{t("common.addToCompare")}</span>
+                                            <Plus className="w-3 h-3" />
+                                            <span>{t("common.addToCompare")}</span>
                                         </>
                                     )}
                                 </button>

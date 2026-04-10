@@ -40,6 +40,18 @@ const providerDetails: Record<string, { summary: string; strengths: string[]; we
     weaknesses: ["Premium pricing", "Limited residential coverage", "Long installation times"],
     ussd: "N/A",
   },
+  utande: {
+    summary: "Business and residential ISP offering high-performance fibre and WiMAX solutions.",
+    strengths: ["Strong WiMAX presence", "Competitive business fibre", "Personalized support", "Good urban reliability"],
+    weaknesses: ["Higher setup costs", "Limited reach outside major cities", "Smaller network footprint"],
+    ussd: "N/A",
+  },
+  dandemutande: {
+    summary: "Leading ICT solutions provider and ISP with a focus on VSAT and enterprise fibre.",
+    strengths: ["Extensive VSAT network (nationwide)", "High-end enterprise solutions", "Reliable support", "Microsoft partner"],
+    weaknesses: ["VSAT latency", "Niche residential market", "Higher price point for high-end gear"],
+    ussd: "N/A",
+  },
 }
 
 interface TelecomProfilesProps {

@@ -9,6 +9,7 @@ import { TelecomPackages } from "@/components/telecom/telecom-packages"
 import { TelecomCoverage } from "@/components/telecom/telecom-coverage"
 import { TelecomFees } from "@/components/telecom/telecom-fees"
 import { TelecomProfiles } from "@/components/telecom/telecom-profiles"
+import { TelecomInternet } from "@/components/telecom/telecom-internet"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
 import { useEffect } from "react"
@@ -17,6 +18,7 @@ import { useAppStore } from "@/lib/store"
 const tabs = [
   { key: "overview", label: "Overview" },
   { key: "data", label: "Data Bundles" },
+  { key: "internet", label: "Internet / Private WiFi" },
   { key: "voice", label: "Voice & SMS" },
   { key: "packages", label: "Packages & Promos" },
   { key: "coverage", label: "Coverage & Quality" },
@@ -58,6 +60,7 @@ export default function TelecomPage() {
 
       {tab === "overview" && <TelecomOverview location={location} />}
       {tab === "data" && <TelecomData location={location} />}
+      {tab === "internet" && <TelecomInternet location={location} />}
       {tab === "voice" && <TelecomVoice location={location} />}
       {tab === "packages" && <TelecomPackages location={location} />}
       {tab === "coverage" && <TelecomCoverage location={location} />}

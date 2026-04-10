@@ -198,12 +198,14 @@
             "monthly": "Monthly",
             "night": "Night",
             "social": "Social",
-            "unlimited": "Unlimited/FUP"
+            "unlimited": "Unlimited/FUP",
+            "internet": "Internet / WiFi"
         },
         "sort": {
             "costPerGB": "Sort: Cost/GB",
             "price": "Sort: Price",
-            "data": "Sort: Data"
+            "data": "Sort: Data",
+            "speed": "Sort: Speed"
         }
     },
     "schools": {

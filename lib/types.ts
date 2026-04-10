@@ -84,7 +84,7 @@ export interface DataBundle {
   id: string
   providerId: string
   providerName: string
-  category: "daily" | "weekly" | "monthly" | "night" | "social" | "unlimited"
+  category: "daily" | "weekly" | "monthly" | "night" | "social" | "unlimited" | "internet"
   name: string
   price: number
   dataGB: number

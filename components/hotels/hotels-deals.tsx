@@ -31,7 +31,7 @@ export function HotelsDeals({ location = "All Locations" }: HotelsDealsProps) {
                 {hotelDeals.map(deal => {
                     const discount = Math.round(((deal.originalPrice - deal.dealPrice) / deal.originalPrice) * 100)
                     return (
-                        <div key={deal.id} className="glass-card p-6 hover:border-amber-500/40 group">
+                        <div key={deal.id} className="glass-card p-4 hover:border-amber-500/40 group">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
@@ -40,34 +40,34 @@ export function HotelsDeals({ location = "All Locations" }: HotelsDealsProps) {
                                         </span>
                                     </div>
                                     <p className="text-sm font-bold text-foreground tracking-tight group-hover:text-amber-500 transition-colors">{deal.dealName}</p>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{deal.hotelName}</p>
+                                    <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{deal.hotelName}</p>
                                 </div>
-                                <div className="text-right bg-muted/30 px-4 py-2 rounded-2xl border border-white/5">
-                                    <p className="text-[10px] text-muted-foreground line-through font-bold tabular-nums">${deal.originalPrice}</p>
-                                    <p className="text-2xl font-black text-foreground tabular-nums">${deal.dealPrice}</p>
+                                <div className="text-right bg-muted/30 px-2 py-1 rounded-lg border border-white/5">
+                                    <p className="text-[7px] text-muted-foreground line-through font-bold tabular-nums">${deal.originalPrice}</p>
+                                    <p className="text-sm font-black text-foreground tabular-nums">${deal.dealPrice}</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2 mb-5 py-2 px-3 bg-muted/20 rounded-xl border border-white/5 w-fit">
-                                <Calendar className="w-3.5 h-3.5 text-primary" />
-                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{t("stays.validUntil", { date: new Date(deal.validUntil).toLocaleDateString(t("common.location") === "All Locations" ? "en-ZW" : "en-ZW", { day: "numeric", month: "short", year: "numeric" }) })}</p>
+                            <div className="flex items-center gap-2 mb-3 py-1.5 px-2 bg-muted/20 rounded-xl border border-white/5 w-fit">
+                                <Calendar className="w-2.5 h-2.5 text-primary" />
+                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">{t("stays.validUntil", { date: new Date(deal.validUntil).toLocaleDateString(t("common.location") === "All Locations" ? "en-ZW" : "en-ZW", { day: "numeric", month: "short", year: "numeric" }) })}</p>
                             </div>
 
-                            <div className="space-y-2 mb-6">
-                                <p className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-3 ml-1">{t("stays.includes")}</p>
-                                <div className="grid grid-cols-1 gap-2">
+                             <div className="space-y-1.5 mb-4">
+                                <p className="text-[8px] font-black text-foreground uppercase tracking-[0.2em] mb-2 ml-1">{t("stays.includes")}</p>
+                                <div className="grid grid-cols-1 gap-1.5">
                                     {deal.includes.map(item => (
-                                        <div key={item} className="flex items-center gap-3 group/item">
-                                            <div className="p-1 bg-emerald-500/10 rounded-lg group-hover/item:bg-emerald-500/20 transition-colors">
-                                                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                        <div key={item} className="flex items-center gap-2 group/item">
+                                            <div className="p-0.5 bg-emerald-500/10 rounded group-hover/item:bg-emerald-500/20 transition-colors">
+                                                <CheckCircle className="w-2 h-2 text-emerald-500 shrink-0" />
                                             </div>
-                                            <p className="text-[11px] font-medium text-muted-foreground">{item}</p>
+                                            <p className="text-[8px] font-medium text-muted-foreground">{item}</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            <button className="w-full rounded-2xl bg-primary py-3 text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95">
+                            <button className="w-full rounded-xl bg-primary py-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95">
                                 {t("stays.viewDeal")}
                             </button>
                         </div>
