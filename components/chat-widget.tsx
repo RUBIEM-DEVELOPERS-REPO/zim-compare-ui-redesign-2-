@@ -26,6 +26,7 @@ export function ChatWidget() {
     const { chatMessages, addChatMessage, clearChat } = useAppStore()
     const [isOpen, setIsOpen] = useState(false)
     const [input, setInput] = useState("")
+    const [textareaHeight, setTextareaHeight] = useState<string>("auto")
     const [isTyping, setIsTyping] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
     const isMountedRef = useRef(true)
@@ -58,7 +59,8 @@ export function ChatWidget() {
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto"
-            textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
+            const newHeight = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
+            setTextareaHeight(newHeight)
         }
     }, [input])
 
@@ -176,6 +178,7 @@ export function ChatWidget() {
                                 rows={1}
                                 placeholder="Type a message..."
                                 className="min-h-[44px] max-h-[120px] scrollbar-none w-full resize-none rounded-xl border border-border/50 bg-background/50 px-4 py-3 pr-12 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all backdrop-blur-sm"
+                                style={{ height: textareaHeight }}
                             />
                             <button
                                 type="submit"
