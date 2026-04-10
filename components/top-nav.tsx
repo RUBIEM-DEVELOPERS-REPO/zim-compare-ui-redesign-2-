@@ -101,7 +101,7 @@ export function TopNav() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+    <header className="glass-navbar">
       <div className="mx-auto max-w-7xl px-4">
         {/* Top Row: Brand & Controls Grouped Left */}
         <div className="flex h-14 items-center gap-4 relative">
@@ -110,10 +110,10 @@ export function TopNav() {
             {/* Brand Cluster */}
             <Link href={pathname === "/" ? "/" : "/dashboard"} className="flex items-center gap-2 mr-1">
               <div className={cn(
-                "h-7 w-7 rounded-md flex items-center justify-center transition-all duration-500",
-                "bg-primary"
+                "h-8 w-8 rounded-lg flex items-center justify-center transition-all duration-500",
+                "bg-primary glass-premium border-white/20"
               )}>
-                <span className="text-xs font-bold text-primary-foreground">FT</span>
+                <span className="text-xs font-black text-white">FT</span>
               </div>
               <span className="font-semibold text-foreground hidden sm:block">
                 Fintech
@@ -130,8 +130,10 @@ export function TopNav() {
                       key={lang}
                       onClick={() => setLanguage(lang)}
                       className={cn(
-                        "text-[10px] font-bold w-6 h-6 rounded flex items-center justify-center transition-colors border border-transparent",
-                        language === lang ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary hover:border-border"
+                        "text-[10px] font-bold w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300 backdrop-blur-md border",
+                        language === lang 
+                          ? "bg-primary text-white border-white/20 shadow-[0_0_10px_rgba(20,184,166,0.5)]" 
+                          : "bg-white/5 text-muted-foreground border-white/5 hover:bg-white/10 hover:border-white/10"
                       )}
                     >
                       {lang.toUpperCase()}
@@ -226,8 +228,7 @@ export function TopNav() {
               <div
                 ref={navScrollRef}
                 onWheel={handleWheel}
-                className="flex items-center gap-1 overflow-x-auto scrollbar-none scroll-smooth px-1"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                className="flex items-center gap-1 overflow-x-auto scroll-smooth px-1 scrollbar-none"
               >
                 {visibleItems.map((item) => {
                   const isPremium = ["nav.mobility", "nav.utilities", "nav.stayscape"].includes(item.labelKey)
@@ -279,7 +280,7 @@ export function TopNav() {
               <div className="px-1 mb-2">
                 <GlobalSearch />
               </div>
-              <nav className="flex gap-1 overflow-x-auto scrollbar-none pb-1" style={{ scrollbarWidth: "none" }}>
+              <nav className="flex gap-1 overflow-x-auto pb-1 scrollbar-none">
                 {visibleItems.map((item) => {
                   const isPremium = ["nav.mobility", "nav.utilities", "nav.stayscape"].includes(item.labelKey)
                   const isActive = pathname === item.href || pathname.startsWith(item.href + "/")

@@ -39,34 +39,34 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
 
     return (
         <div className="space-y-6">
-            <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Most Affordable</p>
-                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">{sorted[0].name}</p>
-                    <p className="text-[11px] font-bold text-teal-600 mt-1">${sorted[0].annualFees.toLocaleString()}/year</p>
+            <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+                <div className="glass-card p-5 group hover:-translate-y-1 transition-all duration-300">
+                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none mb-3">Most Affordable</p>
+                    <p className="text-sm font-black text-foreground line-clamp-1 uppercase tracking-tight">{sorted[0].name}</p>
+                    <p className="text-[11px] font-black text-primary mt-2 tabular-nums">${sorted[0].annualFees.toLocaleString()}/year</p>
                 </div>
-                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Top Ranked</p>
-                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">
+                <div className="glass-card p-5 group hover:-translate-y-1 transition-all duration-300">
+                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none mb-3">Top Ranked</p>
+                    <p className="text-sm font-black text-foreground line-clamp-1 uppercase tracking-tight">
                         {universities.find(u => u.ranking.local === 1)?.name}
                     </p>
-                    <p className="text-[11px] font-bold text-teal-600 mt-1">#1 Local Ranking</p>
+                    <p className="text-[11px] font-black text-primary mt-2 uppercase tracking-tighter">#1 Local Ranking</p>
                 </div>
-                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Best Value</p>
-                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">
+                <div className="glass-card p-5 group hover:-translate-y-1 transition-all duration-300">
+                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none mb-3">Best Value</p>
+                    <p className="text-sm font-black text-foreground line-clamp-1 uppercase tracking-tight">
                         {[...universities].sort((a, b) => b.affordabilityScore - a.affordabilityScore)[0].name}
                     </p>
-                    <p className="text-[11px] font-bold text-teal-600 mt-1">
+                    <p className="text-[11px] font-black text-primary mt-2 uppercase tracking-tighter">
                         {[...universities].sort((a, b) => b.affordabilityScore - a.affordabilityScore)[0].affordabilityScore}% Affordability
                     </p>
                 </div>
-                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Best Employment</p>
-                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">
+                <div className="glass-card p-5 group hover:-translate-y-1 transition-all duration-300">
+                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none mb-3">Best Employment</p>
+                    <p className="text-sm font-black text-foreground line-clamp-1 uppercase tracking-tight">
                         {[...universities].sort((a, b) => b.employabilityScore - a.employabilityScore)[0].name}
                     </p>
-                    <p className="text-[11px] font-bold text-teal-600 mt-1">
+                    <p className="text-[11px] font-black text-primary mt-2 uppercase tracking-tighter">
                         {[...universities].sort((a, b) => b.employabilityScore - a.employabilityScore)[0].employabilityScore}% Employability
                     </p>
                 </div>
@@ -79,45 +79,40 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
                         <div
                             key={uni.id}
                             className={cn(
-                                "rounded-2xl border bg-card p-5 transition-all duration-300 relative group overflow-hidden",
+                                "glass-card p-5 transition-all duration-500 relative group flex flex-col hover:-translate-y-1",
                                 compareTray.ids.includes(uni.id)
-                                    ? "bg-teal-50 border-teal-200 shadow-teal-500/10 ring-1 ring-teal-200"
-                                    : "border-border hover:border-teal-200/50 hover:shadow-2xl hover:shadow-teal-500/5 hover:-translate-y-1"
+                                    ? "border-primary/60 bg-primary/10 ring-2 ring-primary/20 shadow-2xl shadow-primary/20"
+                                    : "hover:border-primary/40 shadow-xl"
                             )}
                         >
-                            {/* Error Toast locally */}
                             {error && compareTray.ids.length >= 3 && !compareTray.ids.includes(uni.id) && (
-                                <div className="absolute top-2 left-2 right-2 bg-destructive/90 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 z-20 animate-in fade-in slide-in-from-top-1">
-                                    <AlertCircle size={10} />
+                                <div className="absolute top-2 left-2 right-2 glass-panel border-destructive/50 bg-destructive/20 text-foreground text-[9px] font-black px-3 py-1.5 rounded-xl flex items-center gap-2 z-20 animate-in fade-in slide-in-from-top-2">
+                                    <AlertCircle size={12} className="text-destructive" />
                                     {error}
                                 </div>
                             )}
-                            <div className="flex items-center justify-between mb-3">
-                                <p className="text-sm font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">
-                                    {uni.name}
-                                </p>
+                            <div className="flex items-start justify-between gap-3 mb-4">
+                                <p className="text-sm font-black text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{uni.name}</p>
                             </div>
-                            <p className="text-[10px] font-bold text-muted-foreground mb-4 uppercase tracking-wider">
-                                {uni.city}, {uni.province}
-                            </p>
+                            <p className="text-[10px] font-black text-muted-foreground mb-5 uppercase tracking-widest">{uni.city}, {uni.province}</p>
 
-                            <div className="flex gap-2 flex-wrap mb-4">
+                            <div className="flex gap-2 flex-wrap mb-5">
                                 <ScoreBadge score={uni.affordabilityScore} label="Affordability" />
                                 <ScoreBadge score={uni.academicScore} label="Academic" />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
-                                <div className="rounded-xl bg-secondary/30 p-3">
-                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Annual Fees</p>
-                                    <p className="text-teal-600">${uni.annualFees.toLocaleString()}</p>
+                            <div className="grid grid-cols-2 gap-2 mb-6">
+                                <div className="rounded-2xl bg-muted/30 p-4 border border-white/5 relative group/stat overflow-hidden">
+                                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5 leading-none">Annual Fees</p>
+                                    <p className="text-sm font-black text-primary tabular-nums tracking-tighter">${uni.annualFees.toLocaleString()}</p>
                                 </div>
-                                <div className="rounded-xl bg-secondary/30 p-3">
-                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">App Fee</p>
-                                    <p className="text-foreground">${uni.applicationFee}</p>
+                                <div className="rounded-2xl bg-muted/30 p-4 border border-white/5 relative group/stat overflow-hidden">
+                                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5 leading-none">App Fee</p>
+                                    <p className="text-sm font-black text-foreground tabular-nums tracking-tighter">${uni.applicationFee}</p>
                                 </div>
-                                <div className="rounded-xl bg-secondary/30 p-3 col-span-2">
-                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Ranking</p>
-                                    <p className="text-foreground">
+                                <div className="rounded-2xl bg-muted/30 p-4 border border-white/5 col-span-2 relative group/stat overflow-hidden">
+                                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5 leading-none">Ranking</p>
+                                    <p className="text-[10px] font-black text-foreground uppercase tracking-tight">
                                         {uni.ranking.local && `#${uni.ranking.local} Local`}
                                         {uni.ranking.local && uni.ranking.global && " • "}
                                         {uni.ranking.global && `#${uni.ranking.global} Global`}
@@ -126,30 +121,24 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-border/50 flex items-center justify-between">
+                            <div className="pt-5 border-t border-white/5 flex items-center justify-between mt-auto">
                                 <div>
-                                    <p className="text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider text-[8px]">Accreditation</p>
-                                    <p className="text-[10px] font-medium text-foreground">{uni.accreditationStatus}</p>
+                                    <p className="text-[9px] font-black text-muted-foreground mb-1 uppercase tracking-widest leading-none">Accreditation</p>
+                                    <p className="text-[10px] font-black text-foreground uppercase tracking-tight">{uni.accreditationStatus}</p>
                                 </div>
                                 <button
                                     onClick={(e) => handleCompare(e, uni.id)}
                                     className={cn(
-                                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                                        "flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-lg active:scale-95",
                                         compareTray.ids.includes(uni.id)
-                                            ? "bg-teal-600 text-white shadow-lg shadow-teal-600/20"
-                                            : "bg-teal-50 text-teal-700 border border-teal-100 hover:bg-teal-100"
+                                            ? "bg-primary text-primary-foreground shadow-primary/20"
+                                            : "bg-muted/40 text-foreground border border-white/5 hover:bg-muted/60"
                                     )}
                                 >
                                     {compareTray.ids.includes(uni.id) ? (
-                                        <>
-                                            <Check size={12} strokeWidth={3} />
-                                            <span>Added</span>
-                                        </>
+                                        <><Check size={12} strokeWidth={4} /> <span>Added</span></>
                                     ) : (
-                                        <>
-                                            <Plus size={12} strokeWidth={3} />
-                                            <span>Add</span>
-                                        </>
+                                        <><Plus size={12} strokeWidth={4} /> <span>Add</span></>
                                     )}
                                 </button>
                             </div>

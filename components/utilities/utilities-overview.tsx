@@ -28,7 +28,7 @@ export function UtilitiesOverview() {
                 {summaryCards.map((c) => {
                     const Icon = c.icon
                     return (
-                        <div key={c.label} className="rounded-xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
+                        <div key={c.label} className="glass-card p-4 h-full">
                             <div className="flex items-center gap-2 mb-2">
                                 <Icon className={`h-4 w-4 ${c.color}`} />
                                 <p className="text-xs text-muted-foreground">{c.label}</p>
@@ -48,7 +48,7 @@ export function UtilitiesOverview() {
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-3">
                     {smartBadges.map((b) => (
-                        <div key={b.label} className={`rounded-xl border p-4 ${b.color}`}>
+                        <div key={b.label} className={`glass-panel p-4 ${b.color}`}>
                             <p className="text-xs font-bold mb-1">{b.label}</p>
                             <p className="text-xs opacity-80">{b.description}</p>
                         </div>
@@ -64,7 +64,7 @@ export function UtilitiesOverview() {
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {topElectricity.map((p) => (
-                        <div key={p.id} className="rounded-xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
+                        <div key={p.id} className="glass-card p-4 h-full">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-sm font-semibold text-foreground">{p.name}</p>
                                 {p.badge && (

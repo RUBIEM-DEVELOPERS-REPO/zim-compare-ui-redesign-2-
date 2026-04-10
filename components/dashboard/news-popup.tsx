@@ -47,6 +47,8 @@ export function NewsPopup() {
     if (minimized) return (
         <button
             onClick={() => setMinimized(false)}
+            title="Expand news"
+            aria-label="Expand news"
             className="fixed bottom-24 right-6 z-40 bg-card border border-border p-3 rounded-full shadow-xl hover:bg-secondary transition-colors"
         >
             <Newspaper className="text-primary" size={20} />
@@ -56,17 +58,17 @@ export function NewsPopup() {
     if (!showNews) return null
 
     return (
-        <div className="fixed bottom-24 right-6 z-40 w-80 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500">
+        <div className="fixed bottom-24 right-6 z-40 w-80 glass-panel shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500">
             <div className="bg-primary/5 p-4 border-b border-border flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Newspaper className="text-primary" size={18} />
                     <h4 className="font-semibold text-sm">{t("dashboard.latestNews")}</h4>
                 </div>
                 <div className="flex items-center gap-1">
-                    <button onClick={() => setMinimized(true)} className="p-1 hover:bg-secondary rounded">
+                    <button onClick={() => setMinimized(true)} title="Minimize news" aria-label="Minimize news" className="p-1 hover:bg-secondary rounded">
                         <Minimize2 size={14} className="text-muted-foreground" />
                     </button>
-                    <button onClick={() => setShowNews(false)} className="p-1 hover:bg-secondary rounded text-destructive">
+                    <button onClick={() => setShowNews(false)} title="Close news" aria-label="Close news" className="p-1 hover:bg-secondary rounded text-destructive">
                         <X size={14} />
                     </button>
                 </div>

@@ -7,6 +7,9 @@ import { InsurancePolicies } from "@/components/insurance/insurance-policies"
 import { InsuranceClaims } from "@/components/insurance/insurance-claims"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
+import { InsuranceCompareBar } from "@/components/insurance/insurance-compare-bar"
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -17,6 +20,14 @@ const tabs = [
 export default function InsurancePage() {
   const [tab, setTab] = useState<string>("overview")
   const [location, setLocation] = useState<string>("All Locations")
+  const { compareTray, clearCompareTray } = useAppStore()
+
+  // Clear stale comparison state if not insurance
+  useEffect(() => {
+    if (compareTray.ids.length > 0 && compareTray.category !== "insurance") {
+      clearCompareTray()
+    }
+  }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
   return (
     <div className="space-y-6">
@@ -37,6 +48,8 @@ export default function InsurancePage() {
           onLocationChange={setLocation}
         />
       </div>
+
+      <InsuranceCompareBar />
 
       {tab === "overview" && <InsuranceOverview onTabChange={setTab} location={location} />}
       {tab === "policies" && <InsurancePolicies location={location} />}

@@ -35,7 +35,7 @@ interface AppState {
   removeSavedComparison: (id: string) => void
 
   // Compare tray
-  compareTray: { category: string; subcategory?: string; ids: string[] }
+  compareTray: { category: string; subcategory?: string; ids: string[]; lastAddedId?: string }
   addToCompareTray: (category: string, id: string, subcategory?: string) => void
   removeFromCompareTray: (id: string) => void
   clearCompareTray: () => void
@@ -96,23 +96,30 @@ export const useAppStore = create<AppState>()(
       removeSavedComparison: (id) =>
         set({ savedComparisons: get().savedComparisons.filter((s) => s.id !== id) }),
 
-      compareTray: { category: "", subcategory: "", ids: [] },
+      compareTray: { category: "", subcategory: "", ids: [], lastAddedId: "" },
       addToCompareTray: (category, id, subcategory) => {
         const tray = get().compareTray
         // If switching category or subcategory, clear and start fresh
         if (tray.category !== category || (subcategory && tray.subcategory !== subcategory)) {
-          set({ compareTray: { category, subcategory, ids: [id] } })
+          set({ compareTray: { category, subcategory, ids: [id], lastAddedId: id } })
         } else if (!tray.ids.includes(id)) {
           // Limit to max 4 items and ensure uniqueness
           if (tray.ids.length < 4) {
-            set({ compareTray: { ...tray, ids: [...tray.ids, id] } })
+            set({ compareTray: { ...tray, ids: [...tray.ids, id], lastAddedId: id } })
           }
         }
       },
       removeFromCompareTray: (id) => {
         const tray = get().compareTray
         const newIds = tray.ids.filter((i) => i !== id)
-        set({ compareTray: { ...tray, ids: newIds, subcategory: newIds.length === 0 ? "" : tray.subcategory } })
+        set({
+          compareTray: {
+            ...tray,
+            ids: newIds,
+            category: newIds.length === 0 ? "" : tray.category,
+            subcategory: newIds.length === 0 ? "" : tray.subcategory
+          }
+        })
       },
       clearCompareTray: () => set({ compareTray: { category: "", subcategory: "", ids: [] } }),
 

@@ -19,7 +19,7 @@ export function MarketHighlights() {
         {highlights.map((h) => (
           <div
             key={h.labelKey}
-            className="rounded-xl border border-border bg-card p-4 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 backdrop-blur-sm bg-card/60"
+            className="glass-card p-4 h-full"
           >
             <p className="text-xs text-muted-foreground mb-1">{t(`dashboard.highlights.${h.labelKey}`)}</p>
             <p className="text-sm font-semibold text-foreground">{h.value}</p>

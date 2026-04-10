@@ -8,7 +8,18 @@ body {
 
 @layer utilities {
   .text-balance {
-    text-wrap: balance;
+    white-space: normal;
+  }
+  .glass {
+    @apply backdrop-blur-md border shadow-xl transition-all duration-300;
+    background: hsla(var(--glass-background));
+    border-color: hsla(var(--glass-border));
+  }
+  .glass-premium {
+    @apply backdrop-blur-xl border shadow-2xl transition-all duration-500;
+    background: hsla(var(--glass-background) / 1.5);
+    border-color: hsla(var(--glass-border) / 1.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   }
 }
 
@@ -21,6 +32,15 @@ body {
     border: 1px solid rgba(20, 184, 166, 0.2);
     color: hsl(var(--primary));
   }
+  .grid-dynamic-cols {
+    display: grid;
+    /* fallback */
+    grid-template-columns: 200px repeat(1, 1fr);
+  }
+  .grid-dynamic-cols[data-columns="1"] { grid-template-columns: 200px 1fr; }
+  .grid-dynamic-cols[data-columns="2"] { grid-template-columns: 200px 1fr 1fr; }
+  .grid-dynamic-cols[data-columns="3"] { grid-template-columns: 200px 1fr 1fr 1fr; }
+  .grid-dynamic-cols[data-columns="4"] { grid-template-columns: 200px 1fr 1fr 1fr 1fr; }
 
   .glass-tab-base:hover {
     background: rgba(20, 184, 166, 0.18);
@@ -37,14 +57,46 @@ body {
     /* 10% brightness increase for active */
   }
 
-  /* Premium Glassmorphism Tabs */
-  .premium-glass-tab {
+  /* Unified Glassmorphism Tabs */
+  .glass-tab-base {
     @apply relative px-5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300 overflow-hidden;
-    background: rgba(20, 184, 166, 0.06);
+    background: rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(20, 184, 166, 0.15);
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
-    color: hsl(var(--primary));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02), 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: hsl(var(--foreground));
+  }
+
+  .dark .glass-tab-base:not(.glass-tab-active) {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .glass-tab-base:hover {
+    background: rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .glass-tab-active {
+    background: hsl(var(--primary)) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 0 20px rgba(20, 184, 166, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2) !important;
+    font-weight: 700;
+  }
+
+  /* Premium Variation */
+  .premium-glass-tab {
+    @apply glass-tab-base;
+    border-color: rgba(20, 184, 166, 0.2);
   }
 
   .premium-glass-tab::after {
@@ -54,30 +106,21 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-    transition: 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: 0.8s;
   }
 
   .premium-glass-tab:hover::after {
     left: 100%;
   }
 
-  .premium-glass-tab:hover {
-    background: rgba(20, 184, 166, 0.12);
-    backdrop-filter: blur(12px);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 16px rgba(20, 184, 166, 0.08);
-    border-color: rgba(20, 184, 166, 0.3);
+  .premium-glass-tab-active {
+    @apply glass-tab-active;
+    filter: brightness(1.1);
   }
 
-  .premium-glass-tab-active {
-    background: rgba(20, 184, 166, 0.22) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1.5px solid rgba(20, 184, 166, 0.5) !important;
-    box-shadow: 0 0 25px rgba(20, 184, 166, 0.35), inset 0 0 12px rgba(255, 255, 255, 0.1) !important;
-    color: hsl(var(--primary)) !important;
-    font-weight: 800;
-    filter: brightness(1.15);
+  .glass-tab-container {
+    @apply inline-flex items-center gap-1.5 p-1.5 rounded-[1.25rem] backdrop-blur-xl border border-white/10 bg-black/10 dark:bg-white/5 shadow-2xl;
   }
 
   /* Global "Add to Compare" Button Style */
@@ -102,6 +145,46 @@ body {
 
   .btn-compare-standard:disabled {
     @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Universal Glassmorphism Utilities */
+  .glass-card {
+    @apply relative overflow-hidden backdrop-blur-xl border transition-all duration-300 rounded-2xl;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.2),
+      inset 0 0 20px rgba(255, 255, 255, 0.02);
+  }
+
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(20, 184, 166, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 15px 50px rgba(0, 0, 0, 0.3),
+      inset 0 0 30px rgba(255, 255, 255, 0.04);
+  }
+
+  .glass-panel {
+    @apply relative overflow-hidden backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.3),
+      inset 0 0 40px rgba(255, 255, 255, 0.02);
+  }
+
+  .glass-navbar {
+    @apply glass backdrop-blur-2xl border-b border-white/10 sticky top-0 z-[100] rounded-none;
+    background: hsla(var(--background) / 0.4);
+  }
+
+  .glass-input {
+    @apply bg-white/5 backdrop-blur-sm border-white/10 focus:border-primary/50 focus:bg-white/10 transition-all rounded-lg outline-none;
+  }
+
+  .dark .glass-input {
+    background: transparent;
   }
 }
 
@@ -131,7 +214,9 @@ body {
     --chart-3: 30 80% 50%;
     --chart-4: 45 80% 55%;
     --chart-5: 340 65% 50%;
-    --radius: 0.625rem;
+    --radius: 1rem;
+    --glass-background: 0 0% 100% / 0.1;
+    --glass-border: 0 0% 100% / 0.2;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 220 15% 18%;
     --sidebar-primary: 174 75% 39%;
@@ -140,6 +225,9 @@ body {
     --sidebar-accent-foreground: 220 15% 18%;
     --sidebar-border: 220 13% 88%;
     --sidebar-ring: 174 75% 39%;
+    --sidebar-width: 16rem;
+    --sidebar-width-icon: 3rem;
+    --sidebar-width-mobile: 18rem;
   }
 
   .dark {
@@ -175,6 +263,11 @@ body {
     --sidebar-accent-foreground: 210 20% 90%;
     --sidebar-border: 220 12% 16%;
     --sidebar-ring: 174 70% 50%;
+    --sidebar-width: 16rem;
+    --sidebar-width-icon: 3rem;
+    --sidebar-width-mobile: 18rem;
+    --glass-background: 220 15% 9% / 0.15;
+    --glass-border: 0 0% 100% / 0.1;
   }
 }
 

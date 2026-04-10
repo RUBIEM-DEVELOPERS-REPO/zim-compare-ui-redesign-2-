@@ -4,6 +4,7 @@ import { insuranceProviders } from "@/lib/mock/insurance"
 import { Disclaimer } from "@/components/disclaimer"
 import { X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { DynamicBar } from "@/components/ui/dynamic-bar"
 
 const claimsDetails = [
   { id: "old-mutual", process: "Online portal + branch", digitalClaim: true, trackable: true, requiredDocs: ["Claim form", "ID copy", "Police report (motor)", "Medical report (health)"] },
@@ -44,26 +45,25 @@ export function InsuranceClaims({ location = "All Locations" }: { location?: str
         </div>
       ) : (
         <>
-          <div className="rounded-3xl border border-teal-200/50 bg-teal-50/30 p-6 shadow-sm">
+          <div className="glass-panel p-6 bg-teal-50/5 border-teal-200/20 shadow-xl">
             <h3 className="text-sm font-bold text-foreground mb-6 uppercase tracking-widest text-center">{t("insurance.claimsRanking")}</h3>
             <div className="space-y-4">
               {[...filteredProviders]
                 .sort((a, b) => b.claimsScore - a.claimsScore)
                 .map((p, i) => {
-                  const barWidth = (p.claimsScore / 100) * 100
                   return (
                     <div key={p.id} className="flex items-center gap-4 group">
                       <span className="text-[10px] font-black text-teal-600/50 w-4 text-right tabular-nums">{i + 1}</span>
                       <span className="text-xs font-bold text-foreground w-32 truncate">{p.name}</span>
                       <div className="flex-1 h-2.5 bg-secondary/50 rounded-full overflow-hidden relative">
-                        <div
-                          className="h-full bg-teal-600 rounded-full transition-all duration-1000 group-hover:bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.3)]"
-                          style={{ width: `${barWidth}%` }}
+                        <DynamicBar
+                          value={p.claimsScore}
+                          variableName="--bar-width"
+                          className="h-full bg-teal-600 rounded-full transition-all duration-1000 group-hover:bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.3)] dynamic-bar-width"
                         />
                       </div>
                       <div className="flex items-center gap-3 min-w-[100px] justify-end">
                         <span className="text-xs font-black text-foreground tabular-nums">{p.claimsScore}%</span>
-                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">{t("telecom.validUntil", { date: String(p.avgClaimDays) }).replace(t("telecom.validUntil", { date: "" }), "").trim()}d avg</span>
                       </div>
                     </div>
                   )

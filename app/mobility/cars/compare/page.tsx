@@ -72,13 +72,12 @@ export default function CarComparePage() {
             {/* Comparison Table */}
             <div className="overflow-x-auto">
                 <div className="inline-block min-w-full align-middle">
-                    <div className="grid gap-4" style={{ gridTemplateColumns: `200px repeat(${selectedVehicles.length}, 1fr)` }}>
-                        {/* Header Row */}
-                        <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center">
+                    <div className="grid-dynamic-cols gap-4" data-columns={selectedVehicles.length}>
+                        <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center col-span-1">
                             Specs
                         </div>
                         {selectedVehicles.map((v) => (
-                            <div key={v.id} className="bg-primary/5 border border-primary/10 rounded-lg p-4">
+                            <div key={v.id} className="bg-primary/5 border border-primary/10 rounded-lg p-4 col-span-1">
                                 <h3 className="font-bold text-sm text-foreground uppercase tracking-tight mb-1">{v.make} {v.model}</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{v.year} • {v.location}</p>
                             </div>
@@ -146,7 +145,10 @@ export default function CarComparePage() {
                         <ComparisonRow label="Color">
                             {selectedVehicles.map((v) => (
                                 <div key={v.id} className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: v.color.toLowerCase() }}></div>
+                                    <div 
+                                        className="w-3 h-3 rounded-full border border-border" 
+                                        ref={(el) => { if (el) el.style.backgroundColor = v.color.toLowerCase(); }}
+                                    ></div>
                                     <span className="text-xs font-medium">{v.color}</span>
                                 </div>
                             ))}

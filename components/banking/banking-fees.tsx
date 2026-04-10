@@ -3,8 +3,11 @@
 import { useState } from "react"
 import { bankFees, banks } from "@/lib/mock/banks"
 import { Disclaimer } from "@/components/disclaimer"
-
-import { X } from "lucide-react"
+import { useAppStore } from "@/lib/store"
+import { cn } from "@/lib/utils"
+import { X, Plus, Check } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
+import { BankingCompareBar } from "./banking-compare-bar"
 
 interface BankingFeesProps {
   location?: string
@@ -13,6 +16,8 @@ interface BankingFeesProps {
 export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
   const [transfers, setTransfers] = useState(10)
   const [atmWithdrawals, setAtmWithdrawals] = useState(5)
+  const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
+  const { t } = useI18n()
 
   const filteredBanks = location === "All Locations"
     ? banks
@@ -25,7 +30,6 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
       return bank?.locations.includes(location)
     })
 
-  // Build fee comparison table for ZIPIT across banks
   const zipitFees = filteredBanks.map((b) => {
     const zipit = bankFees.find((f) => f.bankId === b.id && f.name.includes("ZIPIT"))
     const atm = bankFees.find((f) => f.bankId === b.id && f.name.includes("ATM"))
@@ -35,32 +39,36 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
 
   return (
     <div className="space-y-6">
+      <BankingCompareBar />
+
       {/* Monthly Cost Calculator */}
       <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
         <h3 className="text-sm font-semibold text-foreground mb-3">Typical Monthly Cost Calculator</h3>
         <div className="grid gap-4 sm:grid-cols-2 mb-4">
           <div>
             <label className="text-xs text-muted-foreground block mb-1">Monthly Transfers</label>
-            <input
-              type="range"
-              min={0}
-              max={30}
-              value={transfers}
-              onChange={(e) => setTransfers(Number(e.target.value))}
-              className="w-full accent-primary"
-            />
-            <span className="text-xs text-foreground">{transfers} transfers/month</span>
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground block mb-1">ATM Withdrawals</label>
-            <input
-              type="range"
-              min={0}
-              max={20}
-              value={atmWithdrawals}
-              onChange={(e) => setAtmWithdrawals(Number(e.target.value))}
-              className="w-full accent-primary"
-            />
+              <input
+                type="range"
+                min={0}
+                max={30}
+                value={transfers}
+                onChange={(e) => setTransfers(Number(e.target.value))}
+                className="w-full accent-primary"
+                title="Monthly Transfers"
+              />
+              <span className="text-xs text-foreground">{transfers} transfers/month</span>
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">ATM Withdrawals</label>
+              <input
+                type="range"
+                min={0}
+                max={20}
+                value={atmWithdrawals}
+                onChange={(e) => setAtmWithdrawals(Number(e.target.value))}
+                className="w-full accent-primary"
+                title="ATM Withdrawals"
+              />
             <span className="text-xs text-foreground">{atmWithdrawals} withdrawals/month</span>
           </div>
         </div>
@@ -132,21 +140,41 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredBankFees.map((f) => (
-              <div key={f.id} className="rounded-lg border border-border bg-card p-3">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-foreground">{f.name}</span>
-                  <span className="text-xs font-semibold text-primary">${f.amount.toFixed(2)}</span>
+            {filteredBankFees.map((f) => {
+              const inTray = compareTray.ids.includes(f.id)
+              return (
+                <div key={f.id} className={cn(
+                  "rounded-lg border bg-card p-3 transition-all",
+                  inTray ? "border-primary ring-1 ring-primary/20" : "border-border"
+                )}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-foreground">{f.name}</span>
+                    <span className="text-xs font-semibold text-primary">${f.amount.toFixed(2)}</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">{f.bankName} &middot; {f.unit}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{f.description}</p>
+                  
+                  <div className="mt-3 pt-2 border-t border-border/50 flex items-center justify-between">
+                    {f.category === "hidden" ? (
+                      <span className="text-[9px] bg-amber-500/15 text-amber-500 px-1.5 py-0.5 rounded font-black uppercase tracking-widest">
+                        Hidden Fee
+                      </span>
+                    ) : (
+                      <div />
+                    )}
+                    <button
+                      onClick={() => inTray ? removeFromCompareTray(f.id) : addToCompareTray("banking", f.id, "fees")}
+                      className={cn(
+                        "btn-compare-standard px-3 py-1.5",
+                        inTray && "opacity-60"
+                      )}
+                    >
+                      {inTray ? t("common.addedToCompare") : t("common.addToCompare")}
+                    </button>
+                  </div>
                 </div>
-                <p className="text-[10px] text-muted-foreground">{f.bankName} &middot; {f.unit}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{f.description}</p>
-                {f.category === "hidden" && (
-                  <span className="mt-1 inline-block text-[10px] bg-amber-500/15 text-amber-400 px-1.5 py-0.5 rounded">
-                    Hidden Fee
-                  </span>
-                )}
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </section>

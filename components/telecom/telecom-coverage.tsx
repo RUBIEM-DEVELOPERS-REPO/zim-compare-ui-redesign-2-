@@ -3,8 +3,11 @@
 import { telecomProviders } from "@/lib/mock/telecoms"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
-import { X } from "lucide-react"
+import { X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { useAppStore } from "@/lib/store"
+import { cn } from "@/lib/utils"
+import { TelecomCompareBar } from "./telecom-compare-bar"
 
 const coverageByRegion = [
   { regionKey: "harare", region: "Harare", econet: 98, netone: 95, telecel: 90, telone: 80, liquid: 85 },
@@ -39,6 +42,7 @@ interface TelecomCoverageProps {
 
 export function TelecomCoverage({ location = "All Locations" }: TelecomCoverageProps) {
   const { t } = useI18n()
+  const { addToCompareTray, compareTray } = useAppStore()
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   const filteredProviders = location === "All Locations"
@@ -47,6 +51,7 @@ export function TelecomCoverage({ location = "All Locations" }: TelecomCoverageP
 
   return (
     <div className="space-y-6">
+      <TelecomCompareBar />
       <section>
         <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.providerOverview", { location: displayLocation })}</h3>
         {filteredProviders.length === 0 ? (
@@ -60,10 +65,29 @@ export function TelecomCoverage({ location = "All Locations" }: TelecomCoverageP
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProviders.map((p) => (
-              <div key={p.id} className="rounded-xl border border-border bg-card p-4">
-                <p className="text-sm font-semibold text-foreground mb-1">{p.name}</p>
-                <p className="text-xs text-muted-foreground mb-2">{p.networkType}</p>
-                <div className="flex gap-2 flex-wrap">
+              <div key={p.id} className="rounded-xl border border-border bg-card p-4 flex flex-col transition-all hover:border-teal-200/50">
+                <div className="flex items-center justify-between mb-1">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground mb-1">{p.name}</p>
+                    <p className="text-xs text-muted-foreground mb-2">{p.networkType}</p>
+                  </div>
+                  {(() => {
+                    const inTray = compareTray.ids.includes(p.id)
+                    return (
+                      <button
+                        onClick={() => addToCompareTray("telecom", p.id, "coverage")}
+                        className={cn(
+                          "p-2 rounded-full transition-colors",
+                          inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
+                        )}
+                        title={inTray ? t("common.addedToCompare") : t("common.addToCompare")}
+                      >
+                        {inTray ? <CheckCircle2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                      </button>
+                    )
+                  })()}
+                </div>
+                <div className="flex gap-2 flex-wrap mt-auto">
                   <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />
                   <ScoreBadge score={p.transparencyScore} label={t("telecom.transparency")} />
                 </div>

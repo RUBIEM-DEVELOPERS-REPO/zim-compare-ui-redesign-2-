@@ -7,6 +7,8 @@ import { SchoolsFees } from "@/components/schools/schools-fees"
 import { SchoolsProfiles } from "@/components/schools/schools-profiles"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -19,6 +21,14 @@ const tabs = [
 export default function SchoolsPage() {
   const [tab, setTab] = useState<string>("overview")
   const [location, setLocation] = useState<string>("All Locations")
+  const { compareTray, clearCompareTray } = useAppStore()
+
+  // Clear stale comparison state if not schools
+  useEffect(() => {
+    if (compareTray.ids.length > 0 && compareTray.category !== "schools") {
+      clearCompareTray()
+    }
+  }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
   return (
     <div className="space-y-6">

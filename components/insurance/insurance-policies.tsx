@@ -9,11 +9,16 @@ import { X } from "lucide-react"
 import { insuranceProviders } from "@/lib/mock/insurance"
 import { useI18n } from "@/lib/i18n"
 
-type SortKey = "monthlyPremium" | "coverLimit" | "excess"
+const CATEGORY_SORT_OPTIONS: Record<string, string[]> = {
+  motor: ["Full Cover", "Third Party", "Third Party Fire and Theft"],
+  medical: ["Individual Cover", "Family Cover", "Corporate Cover", "In-Patient Cover", "Out-Patient Cover"],
+  life_funeral: ["Individual Plan", "Family Plan", "Extended Family Plan", "Cash Plan", "Service Plan"],
+  property_business: ["Building Cover", "Contents Cover", "Combined Home Cover", "All Risks Cover", "Landlord Cover"],
+}
 
 export function InsurancePolicies({ location = "All Locations" }: { location?: string }) {
   const [cat, setCat] = useState<string>("motor")
-  const [sort, setSort] = useState<SortKey>("monthlyPremium")
+  const [sort, setSort] = useState<string>(CATEGORY_SORT_OPTIONS["motor"][0])
   const { addToCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
 
@@ -24,19 +29,24 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
     { key: "property_business", label: t("insurance.subTabs.property_business") },
   ]
 
+  const handleCatChange = (newCat: string) => {
+    setCat(newCat)
+    setSort(CATEGORY_SORT_OPTIONS[newCat][0])
+  }
+
   const filtered = policies
     .filter((p) => {
       const categoryMatch = p.category === cat
       if (!categoryMatch) return false
+      
+      const typeMatch = p.type === sort
+      if (!typeMatch) return false
+
       if (location === "All Locations") return true
       const provider = insuranceProviders.find(ip => ip.id === p.providerId)
       return provider?.serviceAreas.includes(location)
     })
-    .sort((a, b) => {
-      if (sort === "monthlyPremium") return a.monthlyPremium - b.monthlyPremium
-      if (sort === "coverLimit") return b.coverLimit - a.coverLimit
-      return a.excess - b.excess
-    })
+    .sort((a, b) => a.monthlyPremium - b.monthlyPremium)
 
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
@@ -48,12 +58,12 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
             {categories.map((c) => (
               <button
                 key={c.key}
-                onClick={() => setCat(c.key)}
+                onClick={() => handleCatChange(c.key)}
                 className={cn(
-                  "rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-wider border transition-all duration-300 text-center",
+                  "glass-tab-base px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                   cat === c.key
-                    ? "bg-teal-50 border-teal-200 text-teal-700 shadow-sm"
-                    : "bg-white border-gray-100 text-gray-400 hover:border-gray-200 hover:bg-gray-50"
+                    ? "glass-tab-active"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {c.label}
@@ -64,12 +74,15 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
           <div className="flex justify-end">
             <select
               value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              className="rounded-full border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-wider text-gray-500 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all appearance-none cursor-pointer hover:border-gray-300 shadow-sm"
+              onChange={(e) => setSort(e.target.value)}
+              className="glass-input text-[11px] font-black uppercase tracking-widest text-muted-foreground px-4 py-2 focus:outline-none cursor-pointer hover:border-primary/40 transition-all appearance-none outline-none ring-0 shadow-lg"
+              title="Sort by"
             >
-              <option value="monthlyPremium">{t("insurance.sort.monthlyPremium")}</option>
-              <option value="coverLimit">{t("insurance.sort.coverLimit")}</option>
-              <option value="excess">{t("insurance.sort.excess")}</option>
+              {CATEGORY_SORT_OPTIONS[cat].map((option) => (
+                <option key={option} value={option} className="bg-background text-foreground">
+                  {option}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -90,10 +103,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
             return (
               <div
                 key={p.id}
-                className={cn(
-                  "rounded-2xl border bg-card p-5 flex flex-col transition-all duration-300 relative group overflow-hidden",
-                  "border-border hover:border-teal-200/50 hover:shadow-2xl hover:shadow-teal-500/5 hover:-translate-y-1"
-                )}
+                className="glass-card p-5 flex flex-col transition-all duration-300 relative group overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-sm font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{p.name}</p>

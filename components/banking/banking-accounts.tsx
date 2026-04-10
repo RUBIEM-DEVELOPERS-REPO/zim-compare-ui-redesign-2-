@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
 import { X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { BankingCompareBar } from "./banking-compare-bar"
 
 const subTabs = [
   { key: "savings", labelKey: "banking.subTabs.savings" },
@@ -40,17 +41,16 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
 
   return (
     <div className="space-y-4">
+      <BankingCompareBar />
       {/* Sub-tabs */}
-      <div className="grid grid-cols-5 gap-2 rounded-2xl bg-white/20 dark:bg-black/20 backdrop-blur-xl border border-white/25 dark:border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.08)] p-2">
+      <div className="glass-tab-container grid grid-cols-5 gap-1.5 p-1.5">
         {subTabs.map((t_item) => (
           <button
             key={t_item.key}
             onClick={() => setSub(t_item.key)}
             className={cn(
-              "rounded-xl px-2 py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-center",
-              sub === t_item.key
-                ? "bg-white/40 dark:bg-white/10 text-foreground shadow-[0_0_15px_rgba(45,212,191,0.5)]"
-                : "hover:bg-white/10 hover:backdrop-blur-2xl hover:brightness-125 hover:-translate-y-[1px] text-muted-foreground"
+              "glass-tab-base text-[10px] sm:text-[11px] font-bold uppercase tracking-wider h-10 w-full flex items-center justify-center",
+              sub === t_item.key ? "glass-tab-active" : "text-muted-foreground"
             )}
           >
             {t(t_item.labelKey)}
@@ -78,7 +78,7 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
             return (
               <div
                 key={p.id}
-                className="rounded-xl border border-border bg-card p-4 flex flex-col hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 backdrop-blur-sm bg-card/60"
+                className="glass-card p-4 flex flex-col hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-semibold text-foreground">{p.name}</p>

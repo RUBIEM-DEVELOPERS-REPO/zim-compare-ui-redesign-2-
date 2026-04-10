@@ -61,7 +61,7 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+      <div className="glass-panel p-5 bg-primary/5 border-primary/20">
         <p className="text-xs text-muted-foreground mb-1">{t("insurance.bestForYou")}</p>
         <p className="text-lg font-semibold text-foreground">Old Mutual Comprehensive Cover</p>
         <p className="text-sm text-muted-foreground mt-1">
@@ -72,7 +72,7 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {localizedSummaryCards.map((c) => (
-          <div key={c.label} className="rounded-xl border border-border bg-card p-4">
+            <div key={c.label} className="glass-card p-4 h-full">
             <p className="text-xs text-muted-foreground">{c.label}</p>
             <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
             <p className="text-xs text-primary mt-1">{c.detail}</p>
@@ -85,7 +85,7 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
           <button
             key={card.labelKey}
             onClick={() => onTabChange(card.key)}
-            className="rounded-xl border border-border bg-card p-4 text-left hover:border-primary/20 hover:shadow-md transition-all"
+            className="glass-card p-4 text-left group h-full"
           >
             <p className="text-sm font-semibold text-foreground">{t(card.labelKey)}</p>
             <p className="text-xs text-muted-foreground mt-1">{t(card.subtitleKey)}</p>
@@ -128,8 +128,8 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
                 <div
                   key={p.id}
                   className={cn(
-                    "rounded-2xl border bg-card p-5 transition-all duration-300 relative group overflow-hidden",
-                    "border-border hover:border-teal-200/50 hover:shadow-2xl hover:shadow-teal-500/5 hover:-translate-y-1"
+                    "glass-card p-5 transition-all duration-300 relative group h-full",
+                    "hover:border-primary/40"
                   )}
                 >
                   <div className="flex items-center justify-between mb-3">

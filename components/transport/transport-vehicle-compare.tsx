@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import { vehicles } from "@/lib/mock/transport"
 import { cn } from "@/lib/utils"
 import { Car, X } from "lucide-react"
+import { useAppStore } from "@/lib/store"
 
 const fuelColors: Record<string, string> = {
     petrol: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -13,13 +13,18 @@ const fuelColors: Record<string, string> = {
 }
 
 export function TransportVehicleCompare() {
-    const [selected, setSelected] = useState<string[]>([])
+    const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
+    const selected = compareTray.ids
 
     const selectedVehicles = vehicles.filter(v => selected.includes(v.id))
     const available = vehicles.filter(v => !selected.includes(v.id))
 
     const toggleSelect = (id: string) => {
-        setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.length < 3 ? [...prev, id] : prev)
+        if (selected.includes(id)) {
+            removeFromCompareTray(id)
+        } else {
+            addToCompareTray("mobility", id, "cars")
+        }
     }
 
     const specs = [
@@ -70,7 +75,11 @@ export function TransportVehicleCompare() {
                                     {selectedVehicles.map(v => (
                                         <th key={v.id} className="px-4 py-3 text-center">
                                             <div className="flex flex-col items-center gap-1">
-                                                <button onClick={() => toggleSelect(v.id)} className="self-end text-muted-foreground hover:text-foreground">
+                                                <button 
+                                                    onClick={() => toggleSelect(v.id)} 
+                                                    className="self-end text-muted-foreground hover:text-foreground"
+                                                    title="Remove from comparison"
+                                                >
                                                     <X className="w-3 h-3" />
                                                 </button>
                                                 <p className="font-semibold text-foreground">{v.make} {v.model}</p>

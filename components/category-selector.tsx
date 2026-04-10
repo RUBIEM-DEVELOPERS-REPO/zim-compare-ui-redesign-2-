@@ -35,21 +35,21 @@ export function CategorySelector({
                 <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>
             </div>
             <Select value={value} onValueChange={onValueChange}>
-                <SelectTrigger className="h-9 w-full sm:w-[220px] bg-primary text-white border-primary rounded-xl shadow-lg hover:brightness-110 transition-all font-semibold text-xs border-2">
+                <SelectTrigger className="h-10 w-full sm:w-[220px] glass-tab-base border-primary/40 text-foreground rounded-xl shadow-lg hover:border-primary transition-all font-semibold text-xs border-2">
                     <SelectValue placeholder="Select Category">
                         {selectedCategory?.label}
                     </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border-border bg-popover shadow-xl animate-in fade-in zoom-in-95">
+                <SelectContent className="rounded-2xl border-white/20 bg-background/60 backdrop-blur-2xl shadow-2xl animate-in fade-in zoom-in-95">
                     {categories.map((category) => (
                         <SelectItem
                             key={category.key}
                             value={category.key}
                             className={cn(
-                                "rounded-lg text-xs transition-colors",
+                                "rounded-lg text-xs transition-colors m-1",
                                 value === category.key
-                                    ? "bg-primary text-white focus:bg-primary focus:text-white"
-                                    : "hover:bg-primary/10"
+                                    ? "bg-primary text-white focus:bg-primary focus:text-white shadow-lg"
+                                    : "hover:bg-primary/20 text-foreground"
                             )}
                         >
                             {category.label}

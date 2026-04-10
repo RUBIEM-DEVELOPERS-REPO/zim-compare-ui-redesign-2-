@@ -43,10 +43,10 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "flex items-center gap-2 rounded-full border px-4 py-1.5 h-9 text-xs font-bold transition-all w-full md:w-auto justify-between md:justify-start shadow-sm",
+                    "flex items-center gap-2 px-4 py-1.5 h-10 text-xs font-bold transition-all w-full md:w-auto justify-between md:justify-start shadow-xl glass-tab-base",
                     selectedLocation !== "All Locations"
-                        ? "bg-teal-50 border-teal-200 text-teal-700 ring-1 ring-teal-100"
-                        : "bg-white border-border text-muted-foreground hover:border-gray-300 hover:bg-gray-50"
+                        ? "glass-tab-active border-primary/40"
+                        : "border-white/10 text-muted-foreground hover:border-primary/40 hover:bg-white/10"
                 )}
             >
                 <div className="flex items-center gap-1.5 uppercase tracking-widest">
@@ -56,6 +56,8 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
                 {selectedLocation !== "All Locations" ? (
                     <div
                         role="button"
+                        title="Remove location filter"
+                        aria-label="Remove location filter"
                         onClick={(e) => {
                             e.stopPropagation()
                             onLocationChange("All Locations")
@@ -72,7 +74,7 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl border border-border bg-popover p-1.5 shadow-xl z-[110] animate-in fade-in zoom-in-95 duration-200 ring-1 ring-black/5">
+                <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl border border-white/20 bg-background/60 backdrop-blur-2xl p-1.5 shadow-2xl z-[110] animate-in fade-in zoom-in-95 duration-200">
                     <div className="max-h-72 overflow-y-auto no-scrollbar py-1">
                         {ZIMBABWE_CITIES.map((loc) => (
                             <button
@@ -84,8 +86,8 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
                                 className={cn(
                                     "w-full rounded-xl px-3 py-2.5 text-xs font-bold text-left transition-all flex items-center justify-between mb-0.5 last:mb-0",
                                     selectedLocation === loc
-                                        ? "bg-teal-50 text-teal-700 ring-1 ring-teal-100/50"
-                                        : "text-foreground hover:bg-secondary/80 hover:translate-x-1"
+                                        ? "bg-primary text-white shadow-lg"
+                                        : "text-foreground hover:bg-primary/20 hover:translate-x-1"
                                 )}
                             >
                                 <span className="uppercase tracking-wide">{loc}</span>

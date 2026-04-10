@@ -27,14 +27,14 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
     return (
         <div className="space-y-6">
             {/* Highlight Section */}
-            <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 relative overflow-hidden">
+            <div className="glass-panel p-6 relative overflow-hidden bg-primary/5 border-primary/20 shadow-xl">
                 <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <Car className="h-24 w-24" />
+                    <Car className="h-24 w-24 text-primary" />
                 </div>
                 <div className="relative z-10">
-                    <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Featured Insight</p>
-                    <h2 className="text-2xl font-bold text-foreground">Simplify Your Mobility</h2>
-                    <p className="text-sm text-muted-foreground mt-2 max-w-lg">
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2 px-2 py-1 bg-primary/10 rounded-full inline-block">Featured Insight</p>
+                    <h2 className="text-2xl font-bold text-foreground tracking-tight">Simplify Your Mobility</h2>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-lg leading-relaxed">
                         From finding your next car to choosing the best driving school or planning a cross-border bus trip,
                         we've aggregated the best deals in {location}.
                     </p>
@@ -45,15 +45,15 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
             {/* Summary Cards */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryCards.map((c) => (
-                    <div key={c.label} className="rounded-2xl border border-border bg-card/50 p-4 backdrop-blur-sm transition-all hover:border-primary/30 group">
+                    <div key={c.label} className="glass-card p-4 group h-full">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className={`p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors`}>
+                            <div className={`p-2 rounded-xl bg-muted/50 group-hover:bg-primary/10 transition-colors shadow-inner`}>
                                 <c.icon className={`h-4 w-4 ${c.color}`} />
                             </div>
-                            <p className="text-xs font-medium text-muted-foreground">{c.label}</p>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">{c.label}</p>
                         </div>
                         <p className="text-sm font-bold text-foreground">{c.value}</p>
-                        <p className="text-[10px] text-primary mt-1 font-medium">{c.detail}</p>
+                        <p className="text-[10px] text-primary mt-1 font-black uppercase tracking-tighter">{c.detail}</p>
                     </div>
                 ))}
             </div>
@@ -69,17 +69,17 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
                     </div>
                     <div className="space-y-3">
                         {filteredDealers.slice(0, 3).map((d) => (
-                            <div key={d.id} className="flex items-center justify-between p-3 rounded-xl border border-border bg-card/30 hover:bg-card/50 transition-colors">
+                            <div key={d.id} className="glass-card flex items-center justify-between p-4 hover:border-primary/40">
                                 <div>
-                                    <p className="text-sm font-semibold">{d.name}</p>
-                                    <p className="text-xs text-muted-foreground">{d.brands.join(", ")}</p>
+                                    <p className="text-sm font-bold text-foreground">{d.name}</p>
+                                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-tight">{d.brands.join(", ")}</p>
                                 </div>
                                 <div className="text-right">
-                                    <div className="flex items-center gap-1 text-xs font-bold text-yellow-500">
+                                    <div className="flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full">
                                         <Star className="h-3 w-3 fill-current" />
                                         {d.rating}
                                     </div>
-                                    <p className="text-[10px] text-muted-foreground">{d.stockCount} vehicles</p>
+                                    <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-tighter">{d.stockCount} vehicles</p>
                                 </div>
                             </div>
                         ))}
@@ -95,12 +95,12 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
                     </div>
                     <div className="space-y-3">
                         {busRoutes.slice(0, 3).map((r) => (
-                            <div key={r.id} className="flex items-center justify-between p-3 rounded-xl border border-border bg-card/30 hover:bg-card/50 transition-colors">
+                            <div key={r.id} className="glass-card flex items-center justify-between p-4 hover:border-primary/40">
                                 <div>
-                                    <p className="text-sm font-semibold">{r.origin} → {r.destination}</p>
-                                    <p className="text-xs text-muted-foreground">{r.providerName} &middot; {r.busType}</p>
+                                    <p className="text-sm font-bold text-foreground">{r.origin} → {r.destination}</p>
+                                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-tight">{r.providerName} &middot; {r.busType}</p>
                                 </div>
-                                <div className="text-right font-bold text-primary">
+                                <div className="text-right font-black text-primary text-sm bg-primary/10 px-3 py-1 rounded-lg">
                                     ${r.price}
                                 </div>
                             </div>

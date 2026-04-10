@@ -25,7 +25,7 @@ export function RecentViews() {
           <Link
             key={v.id + v.timestamp}
             href={`/${v.category}`}
-            className="rounded-lg border border-border bg-card px-3 py-2 text-sm hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md transition-all duration-300 backdrop-blur-sm bg-card/60"
+            className="glass-card px-3 py-2 text-sm flex items-center group h-auto"
           >
             <span className="text-foreground">{v.name}</span>
             <span className="text-xs text-muted-foreground ml-2 capitalize">{t(`nav.${v.category}`)}</span>

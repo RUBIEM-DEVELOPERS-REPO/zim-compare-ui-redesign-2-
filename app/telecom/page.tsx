@@ -11,6 +11,8 @@ import { TelecomFees } from "@/components/telecom/telecom-fees"
 import { TelecomProfiles } from "@/components/telecom/telecom-profiles"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -25,6 +27,14 @@ const tabs = [
 export default function TelecomPage() {
   const [tab, setTab] = useState<string>("overview")
   const [location, setLocation] = useState<string>("All Locations")
+  const { compareTray, clearCompareTray } = useAppStore()
+
+  // Clear stale comparison state if not telecom
+  useEffect(() => {
+    if (compareTray.ids.length > 0 && compareTray.category !== "telecom") {
+      clearCompareTray()
+    }
+  }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
   return (
     <div className="space-y-6">

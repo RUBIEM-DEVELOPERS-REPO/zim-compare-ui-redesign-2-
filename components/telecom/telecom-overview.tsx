@@ -5,7 +5,9 @@ import { useAppStore } from "@/lib/store"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
 import { useI18n } from "@/lib/i18n"
-import { X } from "lucide-react"
+import { X, Plus, CheckCircle2 } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { TelecomCompareBar } from "./telecom-compare-bar"
 
 const summaryCards = [
   { labelKey: "bestNetwork", value: "Econet Wireless", detailKey: "coverageDetail", detailVars: { score: "92" } },
@@ -19,7 +21,7 @@ interface TelecomOverviewProps {
 }
 
 export function TelecomOverview({ location = "All Locations" }: TelecomOverviewProps) {
-  const { preferences } = useAppStore()
+  const { preferences, addToCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
   const bestProvider = preferences.scenario === "sme" ? "Liquid Telecom" : preferences.scenario === "student" ? "NetOne" : "Econet Wireless"
 
@@ -29,7 +31,8 @@ export function TelecomOverview({ location = "All Locations" }: TelecomOverviewP
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+      <TelecomCompareBar />
+      <div className="glass-panel p-5 bg-primary/5 border-primary/20">
         <p className="text-xs text-muted-foreground mb-1">{t("telecom.bestNetworkForYou")}</p>
         <p className="text-lg font-semibold text-foreground">{bestProvider}</p>
         <p className="text-sm text-muted-foreground mt-1">
@@ -50,7 +53,7 @@ export function TelecomOverview({ location = "All Locations" }: TelecomOverviewP
         <>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {summaryCards.map((c) => (
-              <div key={c.labelKey} className="rounded-xl border border-border bg-card p-4">
+              <div key={c.labelKey} className="glass-card p-4 h-full">
                 <p className="text-xs text-muted-foreground">{t(`telecom.highlights.${c.labelKey}`)}</p>
                 <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
                 <p className="text-xs text-primary mt-1">{t(`telecom.highlights.${c.detailKey}`, c.detailVars as any)}</p>
@@ -63,19 +66,34 @@ export function TelecomOverview({ location = "All Locations" }: TelecomOverviewP
               {t("telecom.providersAvailable", { location: location === "All Locations" ? t("common.allLocations") : location, count: filteredProviders.length })}
             </h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredProviders.map((p) => (
-                <div key={p.id} className="rounded-xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-semibold text-foreground">{p.name}</p>
-                    <span className="text-xs text-muted-foreground">{p.networkType}</span>
+              {filteredProviders.map((p) => {
+                const inTray = compareTray.ids.includes(p.id)
+                return (
+                  <div key={p.id} className="glass-card p-4 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-semibold text-foreground">{p.name}</p>
+                      {(() => {
+                        return (
+                          <button
+                            onClick={() => addToCompareTray("telecom", p.id, "overview")}
+                            className={cn(
+                              "p-1.5 rounded-full transition-colors",
+                              inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
+                            )}
+                          >
+                            {inTray ? <CheckCircle2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                          </button>
+                        )
+                      })()}
+                    </div>
+                    <div className="flex gap-2 flex-wrap mb-2">
+                      <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />
+                      <ScoreBadge score={p.transparencyScore} label={t("telecom.transparency")} />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-auto">{p.type} &middot; {p.networkType}</p>
                   </div>
-                  <div className="flex gap-2 flex-wrap mb-2">
-                    <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />
-                    <ScoreBadge score={p.transparencyScore} label={t("telecom.transparency")} />
-                  </div>
-                  <p className="text-xs text-muted-foreground">{p.type}</p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </section>
         </>

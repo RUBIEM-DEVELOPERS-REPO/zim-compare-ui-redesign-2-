@@ -7,6 +7,9 @@ import { TransportOverview } from "@/components/transport/transport-overview"
 import { TransportVehicles } from "@/components/transport/transport-vehicles"
 import { TransportDrivingSchools } from "@/components/transport/transport-driving-schools"
 import { TransportBusSection } from "@/components/transport/transport-bus-section"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
+import { TransportCompareBar } from "@/components/transport/transport-compare-bar"
 
 const tabs = [
     { key: "overview", label: "Overview" },
@@ -18,9 +21,22 @@ const tabs = [
 export default function MobilityPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
+    const { compareTray, clearCompareTray } = useAppStore()
+
+    // Clear stale comparison state if not mobility
+    useEffect(() => {
+        if (compareTray.ids.length > 0 && compareTray.category !== "mobility") {
+            clearCompareTray()
+        }
+    }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
     return (
         <div className="space-y-6">
+            <div>
+                <h1 className="text-xl font-semibold text-foreground">Mobility</h1>
+                <p className="text-sm text-muted-foreground">Compare vehicle dealerships, driving schools and bus routes in Zimbabwe</p>
+            </div>
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <CategorySelector
                     value={tab}
@@ -35,6 +51,8 @@ export default function MobilityPage() {
                     />
                 )}
             </div>
+
+            <TransportCompareBar />
 
             {/* Tab Content */}
             <div className="mt-6">

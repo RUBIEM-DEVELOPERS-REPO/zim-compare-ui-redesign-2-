@@ -19,19 +19,18 @@ export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
         ? universities.filter((u) => u.city === location)
         : universities
 
-    const handleCompare = (uniId: string, programName: string) => {
-        const compositeId = `${uniId}:${programName}`
-        const isSelected = compareTray.ids.includes(compositeId)
+    const handleCompare = (uniId: string) => {
+        const isSelected = compareTray.ids.includes(uniId)
 
         if (isSelected) {
-            removeFromCompareTray(compositeId)
+            removeFromCompareTray(uniId)
         } else {
             if (compareTray.ids.length >= 3) {
-                setError("You can only compare up to 3 programs.")
+                setError("You can only compare up to 3 institutions.")
                 setTimeout(() => setError(null), 3000)
                 return
             }
-            addToCompareTray("universities", compositeId, "programs")
+            addToCompareTray("universities", uniId, "programs")
         }
     }
 
@@ -44,7 +43,7 @@ export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
                         <div
                             key={uni.id}
                             className={cn(
-                                "rounded-2xl border bg-card p-5 transition-all duration-300",
+                                "glass-card p-5 transition-all duration-300",
                                 "border-border hover:border-teal-200/50 hover:shadow-lg hover:shadow-teal-500/5"
                             )}
                         >
@@ -76,15 +75,13 @@ export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
                                 </div>
 
                                 <div>
-                                    <p className="text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wide">Key Programs ({uni.programs.length})</p>
                                     <div className="flex flex-wrap gap-2">
                                         {uni.programs.map((program) => {
-                                            const compositeId = `${uni.id}:${program}`
-                                            const isSelected = compareTray.ids.includes(compositeId)
+                                            const isSelected = compareTray.ids.includes(uni.id)
                                             return (
                                                 <button
                                                     key={program}
-                                                    onClick={() => handleCompare(uni.id, program)}
+                                                    onClick={() => handleCompare(uni.id)}
                                                     className={cn(
                                                         "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border",
                                                         isSelected

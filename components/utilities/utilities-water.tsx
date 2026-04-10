@@ -5,7 +5,7 @@ import { waterProviders } from "@/lib/mock/utilities"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { Droplets, Calculator } from "lucide-react"
+import { Droplets } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
 type WaterType = "All" | "Municipal" | "Borehole Delivery" | "Subscription"
@@ -14,18 +14,11 @@ interface UtilitiesWaterProps {
     location?: string
 }
 
-const householdSizes = [
-    { label: "1–2 people", m3: 8 },
-    { label: "3–4 people", m3: 15 },
-    { label: "5+ people", m3: 25 },
-]
 
 export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterProps) {
     const { addToCompareTray, compareTray } = useAppStore()
     const { t } = useI18n()
     const [typeFilter, setTypeFilter] = useState<WaterType>("All")
-    const [showCalculator, setShowCalculator] = useState(false)
-    const [monthlyM3, setMonthlyM3] = useState(15)
 
     const filtered = waterProviders.filter((p) => {
         if (typeFilter !== "All" && p.type !== typeFilter) return false
@@ -33,9 +26,6 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
         return true
     })
 
-    const estimateBill = (p: typeof waterProviders[0]) => {
-        return p.costPerCubicMeter * monthlyM3 + p.monthlyFixedCharge + (p.deliveryCost ?? 0)
-    }
 
     const reliabilityColor = (score: number) => {
         if (score >= 80) return "text-green-600 dark:text-green-400"
@@ -46,83 +36,21 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
     return (
         <div className="space-y-6">
             {/* Filters */}
-            <div className="flex flex-wrap gap-3">
-                <div className="flex flex-wrap gap-1">
-                    {(["All", "Municipal", "Borehole Delivery", "Subscription"] as WaterType[]).map((f) => (
-                        <button
-                            key={f}
-                            onClick={() => setTypeFilter(f)}
-                            className={cn(
-                                "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                                typeFilter === f
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary"
-                            )}
-                        >
-                            {f}
-                        </button>
-                    ))}
-                </div>
-                <button
-                    onClick={() => setShowCalculator(!showCalculator)}
-                    className={cn(
-                        "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors border",
-                        showCalculator
-                            ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
-                            : "border-border text-muted-foreground hover:bg-secondary"
-                    )}
-                >
-                    <Calculator className="h-3.5 w-3.5" />
-                    Usage Calculator
-                </button>
+            <div className="glass-tab-container flex flex-wrap gap-1.5 p-1.5 w-fit">
+                {(["All", "Municipal", "Borehole Delivery", "Subscription"] as WaterType[]).map((f) => (
+                    <button
+                        key={f}
+                        onClick={() => setTypeFilter(f)}
+                        className={cn(
+                            "glass-tab-base px-4 py-1.5 text-xs font-medium h-9 flex items-center justify-center",
+                            typeFilter === f ? "glass-tab-active" : "text-muted-foreground"
+                        )}
+                    >
+                        {f}
+                    </button>
+                ))}
             </div>
 
-            {/* Usage Calculator */}
-            {showCalculator && (
-                <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-                        <Calculator className="h-4 w-4 text-blue-600" />
-                        Water Usage Calculator
-                    </h3>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="text-xs font-medium text-muted-foreground mb-2 block">
-                                Monthly Usage: <span className="text-foreground font-bold">{monthlyM3} m³</span>
-                            </label>
-                            <input
-                                type="range"
-                                min={2}
-                                max={60}
-                                step={1}
-                                value={monthlyM3}
-                                onChange={(e) => setMonthlyM3(Number(e.target.value))}
-                                className="w-full accent-blue-500"
-                            />
-                            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>2 m³</span>
-                                <span>60 m³</span>
-                            </div>
-                        </div>
-                        <div className="grid gap-2 sm:grid-cols-3">
-                            {householdSizes.map((h) => (
-                                <button
-                                    key={h.label}
-                                    onClick={() => setMonthlyM3(h.m3)}
-                                    className={cn(
-                                        "rounded-lg p-3 text-left text-xs border transition-colors",
-                                        monthlyM3 === h.m3
-                                            ? "border-blue-400 bg-blue-100 dark:bg-blue-900/40"
-                                            : "border-border bg-card hover:border-blue-300"
-                                    )}
-                                >
-                                    <p className="font-bold text-foreground">{h.label}</p>
-                                    <p className="text-muted-foreground">~{h.m3} m³/month</p>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* Provider cards */}
             {filtered.length === 0 ? (
@@ -135,7 +63,6 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {filtered.map((p) => {
                         const inTray = compareTray.ids.includes(p.id)
-                        const estimatedBill = estimateBill(p)
                         return (
                             <div
                                 key={p.id}
@@ -179,12 +106,6 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
                                     </div>
                                 </div>
 
-                                {showCalculator && (
-                                    <div className="rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-3 mb-4 text-[11px] font-bold">
-                                        <p className="text-blue-700 dark:text-blue-300 uppercase tracking-tight mb-0.5">Est. Monthly Bill</p>
-                                        <p className="text-blue-700 dark:text-blue-300 text-base">${estimatedBill.toFixed(2)}</p>
-                                    </div>
-                                )}
 
                                 <div className="flex flex-wrap gap-1 mb-4">
                                     {p.features.slice(0, 3).map((f) => (

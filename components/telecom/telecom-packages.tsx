@@ -3,8 +3,10 @@
 import { dataBundles, telecomProviders } from "@/lib/mock/telecoms"
 import { Disclaimer } from "@/components/disclaimer"
 import { cn } from "@/lib/utils"
-import { X } from "lucide-react"
+import { X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { useAppStore } from "@/lib/store"
+import { TelecomCompareBar } from "./telecom-compare-bar"
 
 const promos = [
   { providerId: "econet", provider: "Econet Wireless", name: "Weekend Data Blast", detail: "Double data on all bundles purchased Friday-Sunday", validUntil: "2026-03-31" },
@@ -20,6 +22,7 @@ interface TelecomPackagesProps {
 
 export function TelecomPackages({ location = "All Locations" }: TelecomPackagesProps) {
   const { t } = useI18n()
+  const { addToCompareTray, compareTray } = useAppStore()
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   const filteredProviders = location === "All Locations"
@@ -41,10 +44,11 @@ export function TelecomPackages({ location = "All Locations" }: TelecomPackagesP
 
   return (
     <div className="space-y-6">
+      <TelecomCompareBar />
       <section>
         <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.activePromos", { location: displayLocation })}</h3>
         {filteredPromos.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-border p-8 text-center bg-card">
+          <div className="glass-panel border-dashed p-8 text-center">
             <p className="text-sm text-muted-foreground">{t("telecom.noPromosFound", { location: displayLocation })}</p>
           </div>
         ) : (
@@ -53,8 +57,8 @@ export function TelecomPackages({ location = "All Locations" }: TelecomPackagesP
               <div
                 key={p.name}
                 className={cn(
-                  "rounded-2xl border bg-teal-50 border-teal-200/50 p-5 transition-all duration-300 relative group overflow-hidden",
-                  "hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1"
+                  "glass-card bg-teal-50/10 border-teal-200/20 p-5 transition-all duration-300 relative group h-full",
+                  "hover:border-primary/40"
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -78,7 +82,7 @@ export function TelecomPackages({ location = "All Locations" }: TelecomPackagesP
       <section>
         <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.bestValueMonthly", { location: displayLocation })}</h3>
         {bestValue.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center bg-card col-span-full">
+          <div className="glass-panel border-dashed p-12 text-center col-span-full">
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
@@ -93,8 +97,8 @@ export function TelecomPackages({ location = "All Locations" }: TelecomPackagesP
                 <div
                   key={item.provider}
                   className={cn(
-                    "rounded-2xl border border-border bg-card p-5 transition-all duration-300 group",
-                    "hover:border-teal-200/50 hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-1"
+                    "glass-card p-5 transition-all duration-300 group h-full",
+                    "hover:border-primary/40"
                   )}
                 >
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{item.provider}</p>
@@ -108,6 +112,20 @@ export function TelecomPackages({ location = "All Locations" }: TelecomPackagesP
                       <span className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">{t("telecom.price")}</span>
                       <span className="text-sm font-black text-teal-600">${item.bundle.price.toFixed(2)}</span>
                     </div>
+                    {(() => {
+                      const inTray = compareTray.ids.includes(item.bundle.id)
+                      return (
+                        <button
+                          onClick={() => addToCompareTray("telecom", item.bundle.id, "packages")}
+                          className={cn(
+                            "flex items-center justify-center ml-auto p-2 rounded-full transition-colors",
+                            inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
+                          )}
+                        >
+                          {inTray ? <CheckCircle2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                        </button>
+                      )
+                    })()}
                   </div>
                   <p className="text-[10px] font-bold text-muted-foreground mt-2 italic">${item.bundle.costPerGB.toFixed(2)} / GB Value</p>
                 </div>

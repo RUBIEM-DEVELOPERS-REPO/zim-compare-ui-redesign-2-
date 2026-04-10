@@ -4,6 +4,10 @@ import { telecomProviders, dataBundles } from "@/lib/mock/telecoms"
 import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
+import { X, Plus, CheckCircle2 } from "lucide-react"
+import { useAppStore } from "@/lib/store"
+import { TelecomCompareBar } from "./telecom-compare-bar"
+import { useI18n } from "@/lib/i18n"
 
 const providerDetails: Record<string, { summary: string; strengths: string[]; weaknesses: string[]; ussd: string }> = {
   econet: {
@@ -38,19 +42,20 @@ const providerDetails: Record<string, { summary: string; strengths: string[]; we
   },
 }
 
-import { X } from "lucide-react"
-
 interface TelecomProfilesProps {
   location?: string
 }
 
 export function TelecomProfiles({ location = "All Locations" }: TelecomProfilesProps) {
+  const { t } = useI18n()
+  const { addToCompareTray, compareTray } = useAppStore()
   const filteredProviders = location === "All Locations"
     ? telecomProviders
     : telecomProviders.filter(p => p.coverageCities.includes(location))
 
   return (
     <div className="space-y-6">
+      <TelecomCompareBar />
       {filteredProviders.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -69,7 +74,7 @@ export function TelecomProfiles({ location = "All Locations" }: TelecomProfilesP
             <div
               key={p.id}
               className={cn(
-                "rounded-2xl border bg-card p-6 transition-all duration-300 relative group overflow-hidden",
+                "glass-card p-6 transition-all duration-300 relative group overflow-hidden",
                 "border-border hover:border-teal-200/50 hover:shadow-2xl hover:shadow-teal-500/5 hover:-translate-y-1"
               )}
             >
@@ -79,9 +84,33 @@ export function TelecomProfiles({ location = "All Locations" }: TelecomProfilesP
                   <h3 className="text-lg font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{p.name}</h3>
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{p.type} &middot; {p.networkType}</p>
                 </div>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap items-center">
                   <ScoreBadge score={p.coverageScore} label="Coverage" />
                   <ScoreBadge score={p.transparencyScore} label="Transparency" />
+                  {(() => {
+                    const inTray = compareTray.ids.includes(p.id)
+                    return (
+                      <button
+                        onClick={() => addToCompareTray("telecom", p.id, "profiles")}
+                        className={cn(
+                          "btn-compare-standard ml-2",
+                          inTray && "opacity-60"
+                        )}
+                      >
+                        {inTray ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                            {t("common.addedToCompare")}
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-3.5 h-3.5 mr-1" />
+                            {t("common.addToCompare")}
+                          </>
+                        )}
+                      </button>
+                    )
+                  })()}
                 </div>
               </div>
 

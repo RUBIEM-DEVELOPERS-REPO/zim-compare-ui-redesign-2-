@@ -13,8 +13,6 @@ interface TransportBusSectionProps {
 
 const subTabs = [
     { key: "routes", label: "Bus Routes" },
-    { key: "selector", label: "Route Selector" },
-    { key: "emi", label: "EMI Calculator" },
     { key: "crossborder", label: "Cross-Border" },
 ]
 
@@ -44,8 +42,6 @@ export function TransportBusSection({ location = "All Locations" }: TransportBus
             {/* Sub-tab Content */}
             <div className="pt-2">
                 {activeSubTab === "routes" && <TransportBusRoutes location={location} />}
-                {activeSubTab === "selector" && <TransportRouteSelector />}
-                {activeSubTab === "emi" && <TransportEmiCalculator />}
                 {activeSubTab === "crossborder" && <TransportCrossBorder />}
             </div>
         </div>

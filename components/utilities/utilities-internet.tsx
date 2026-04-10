@@ -1,14 +1,24 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { internetProviders } from "@/lib/mock/utilities"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { Wifi } from "lucide-react"
+import { Wifi, Globe, Zap, Cpu, ArrowRight, CheckCircle2, ShieldCheck, Clock } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
 type ConnectionType = "All" | "Fibre" | "LTE/5G" | "Satellite"
+
+const ProgressBar = ({ progress }: { progress: number }) => {
+    const ref = React.useRef<HTMLDivElement>(null);
+    React.useEffect(() => {
+        if (ref.current) {
+            ref.current.style.width = `${progress}%`;
+        }
+    }, [progress]);
+    return <div ref={ref} className="h-full bg-teal-500 rounded-full transition-all duration-500" />;
+};
 
 interface UtilitiesInternetProps {
     location?: string
@@ -91,6 +101,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                             value={maxPrice}
                             onChange={(e) => setMaxPrice(Number(e.target.value))}
                             className="w-full accent-teal-500"
+                            title="Max Price"
                         />
                     </div>
                     <div>
@@ -105,6 +116,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                             value={minSpeed}
                             onChange={(e) => setMinSpeed(Number(e.target.value))}
                             className="w-full accent-teal-500"
+                            title="Min Speed"
                         />
                     </div>
                 </div>
@@ -122,10 +134,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                                 <div key={p.id} className="flex items-center gap-3 text-xs">
                                     <span className="w-28 shrink-0 text-muted-foreground truncate">{p.planName}</span>
                                     <div className="flex-1 bg-secondary/30 rounded-full h-2 overflow-hidden">
-                                        <div
-                                            className="h-full bg-teal-500 rounded-full transition-all duration-500"
-                                            style={{ width: `${widthPct}%` }}
-                                        />
+                                        <ProgressBar progress={widthPct} />
                                     </div>
                                     <span className="w-16 shrink-0 text-right font-bold text-foreground">{p.speedMbps}Mbps</span>
                                     <span className="w-14 shrink-0 text-right text-primary">${p.monthlyPrice}/mo</span>

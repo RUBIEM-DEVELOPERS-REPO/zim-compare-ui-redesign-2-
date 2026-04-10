@@ -5,7 +5,7 @@ import { electricityProviders, usageTiers } from "@/lib/mock/utilities"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { Zap, Calculator } from "lucide-react"
+import { Zap } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
 type PlanFilter = "All" | "Prepaid" | "Postpaid"
@@ -20,8 +20,6 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
     const { t } = useI18n()
     const [planFilter, setPlanFilter] = useState<PlanFilter>("All")
     const [customerFilter, setCustomerFilter] = useState<CustomerFilter>("Residential")
-    const [usageKwh, setUsageKwh] = useState<number>(350)
-    const [showCalculator, setShowCalculator] = useState(false)
 
     const filtered = electricityProviders.filter((p) => {
         if (planFilter !== "All" && p.planType !== planFilter) return false
@@ -30,9 +28,6 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
         return true
     })
 
-    const estimateBill = (provider: typeof electricityProviders[0]) => {
-        return provider.tariffPerKwh * usageKwh + provider.fixedMonthlyCharge
-    }
 
     const reliabilityColor = (score: number) => {
         if (score >= 80) return "text-green-600 dark:text-green-400"
@@ -76,67 +71,8 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
                         </button>
                     ))}
                 </div>
-                <button
-                    onClick={() => setShowCalculator(!showCalculator)}
-                    className={cn(
-                        "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors border",
-                        showCalculator
-                            ? "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800"
-                            : "border-border text-muted-foreground hover:bg-secondary"
-                    )}
-                >
-                    <Calculator className="h-3.5 w-3.5" />
-                    Bill Calculator
-                </button>
             </div>
 
-            {/* Bill Calculator */}
-            {showCalculator && (
-                <div className="rounded-xl border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20 p-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-                        <Calculator className="h-4 w-4 text-yellow-600" />
-                        Monthly Bill Estimator
-                    </h3>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="text-xs font-medium text-muted-foreground mb-2 block">
-                                Monthly Usage: <span className="text-foreground font-bold">{usageKwh} kWh</span>
-                            </label>
-                            <input
-                                type="range"
-                                min={50}
-                                max={1500}
-                                step={50}
-                                value={usageKwh}
-                                onChange={(e) => setUsageKwh(Number(e.target.value))}
-                                className="w-full accent-yellow-500"
-                            />
-                            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>50 kWh</span>
-                                <span>1,500 kWh</span>
-                            </div>
-                        </div>
-                        <div className="grid gap-2 sm:grid-cols-3">
-                            {usageTiers.map((tier) => (
-                                <button
-                                    key={tier.label}
-                                    onClick={() => setUsageKwh(tier.kwh)}
-                                    className={cn(
-                                        "rounded-lg p-3 text-left text-xs border transition-colors",
-                                        usageKwh === tier.kwh
-                                            ? "border-yellow-400 bg-yellow-100 dark:bg-yellow-900/40"
-                                            : "border-border bg-card hover:border-yellow-300"
-                                    )}
-                                >
-                                    <p className="font-bold text-foreground">{tier.label}</p>
-                                    <p className="text-muted-foreground">{tier.kwh} kWh</p>
-                                    <p className="text-muted-foreground mt-0.5">{tier.description}</p>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* Provider cards */}
             {filtered.length === 0 ? (
@@ -149,7 +85,6 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {filtered.map((p) => {
                         const inTray = compareTray.ids.includes(p.id)
-                        const estimatedBill = estimateBill(p)
                         return (
                             <div
                                 key={p.id}
@@ -188,12 +123,6 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
                                         <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Reliability</p>
                                         <p className={reliabilityColor(p.reliabilityScore)}>{p.reliabilityScore}/100</p>
                                     </div>
-                                    {showCalculator && (
-                                        <div className="rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800 p-3">
-                                            <p className="text-yellow-700 dark:text-yellow-300 uppercase tracking-tight mb-0.5">Est. Bill</p>
-                                            <p className="text-yellow-700 dark:text-yellow-300">${estimatedBill.toFixed(2)}</p>
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div className="flex flex-wrap gap-1 mb-4">

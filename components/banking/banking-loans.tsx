@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
 import { Plus, Check, AlertCircle, X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { BankingCompareBar } from "./banking-compare-bar"
 
 const subTabs = [
   { key: "personal", label: "Personal" },
@@ -37,17 +38,16 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
 
   return (
     <div className="space-y-4">
+      <BankingCompareBar />
       {/* Sub-tabs - 3 Column Grid */}
-      <div className="grid grid-cols-3 gap-2 rounded-2xl bg-white/20 dark:bg-black/20 backdrop-blur-xl border border-white/25 dark:border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.08)] p-2">
+      <div className="glass-tab-container grid grid-cols-3 sm:grid-cols-5 gap-1.5 p-1.5">
         {subTabs.map((t) => (
           <button
             key={t.key}
             onClick={() => setSub(t.key)}
             className={cn(
-              "rounded-xl px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition-all duration-300 text-center",
-              sub === t.key
-                ? "bg-white/40 dark:bg-white/10 text-foreground shadow-[0_0_15px_rgba(45,212,191,0.5)]"
-                : "hover:bg-white/10 hover:backdrop-blur-2xl hover:brightness-125 hover:-translate-y-[1px] text-muted-foreground"
+              "glass-tab-base text-[10px] font-bold uppercase tracking-wider h-10 w-full flex items-center justify-center",
+              sub === t.key ? "glass-tab-active" : "text-muted-foreground"
             )}
           >
             {t.label}
@@ -66,8 +66,8 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
             <div
               key={l.id}
               className={cn(
-                "rounded-xl border bg-card p-4 transition-all duration-300 relative group",
-                inTray ? "border-primary ring-1 ring-primary/20 shadow-lg shadow-primary/5" : "border-border hover:border-primary/30"
+                "glass-card p-4 transition-all duration-300 relative group",
+                inTray ? "border-primary ring-1 ring-primary/20 shadow-lg shadow-primary/5" : ""
               )}
             >
               {inTray && (
@@ -101,7 +101,7 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
               </div>
 
               {/* Total cost preview */}
-              <div className="rounded-lg border border-border bg-secondary/20 p-3 mb-3">
+              <div className="glass-card bg-secondary/10 p-3 mb-3">
                 <p className="text-xs text-muted-foreground mb-1">Total cost of $1,000 borrowed</p>
                 <div className="flex gap-4 text-xs">
                   <div>

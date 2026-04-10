@@ -22,35 +22,40 @@ const borderPosts = [
 export function TransportCrossBorder() {
     return (
         <div className="space-y-6">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-                <div className="flex items-center gap-2 mb-1">
-                    <Globe className="w-4 h-4 text-primary" />
-                    <p className="text-sm font-semibold text-foreground">Cross-Border Travel Guide</p>
+            <div className="glass-panel p-4 bg-primary/5 border-primary/20 shadow-xl overflow-hidden relative">
+                <div className="absolute -top-4 -right-4 opacity-5 pointer-events-none">
+                    <Globe size={100} className="text-primary" />
                 </div>
-                <p className="text-xs text-muted-foreground">Everything you need to know about crossing Zimbabwe's borders by bus or car.</p>
+                <div className="relative z-10 flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-primary/10 rounded-xl shadow-inner">
+                        <Globe className="w-5 h-5 text-primary" />
+                    </div>
+                    <p className="text-sm font-black text-foreground uppercase tracking-widest">Cross-Border Travel Guide</p>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed max-w-lg">Everything you need to know about crossing Zimbabwe's borders by bus or car, including fees, wait times, and documents.</p>
             </div>
 
             <section>
                 <h3 className="text-sm font-semibold text-foreground mb-3">Cross-Border Bus Routes</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                     {crossBorderRoutes.map(route => (
-                        <div key={route.id} className="rounded-xl border border-border bg-card p-4">
-                            <div className="flex items-start justify-between mb-2">
+                        <div key={route.id} className="glass-card p-5 hover:border-primary/40 group">
+                            <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-semibold text-foreground">{route.origin} → {route.destination}</p>
-                                    <p className="text-xs text-muted-foreground">{route.providerName} · via {route.borderCrossing}</p>
+                                    <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">{route.origin} → {route.destination}</p>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{route.providerName} &middot; via {route.borderCrossing}</p>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-bold text-foreground">${route.price}</p>
-                                    <p className="text-[10px] text-muted-foreground">{route.durationHours}h journey</p>
+                                <div className="text-right bg-primary/10 px-3 py-1.5 rounded-xl border border-primary/10">
+                                    <p className="text-sm font-black text-primary tabular-nums">${route.price}</p>
+                                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{route.durationHours}h trip</p>
                                 </div>
                             </div>
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1.5">
                                 {route.departureTimes.map(t => (
-                                    <span key={t} className="text-[10px] bg-secondary px-1.5 py-0.5 rounded-full text-foreground">{t}</span>
+                                    <span key={t} className="text-[9px] bg-muted px-2 py-0.5 rounded-full text-foreground font-black tracking-tighter border border-border/40">{t}</span>
                                 ))}
                                 {route.amenities.map(a => (
-                                    <span key={a} className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">{a}</span>
+                                    <span key={a} className="text-[9px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-black uppercase tracking-tighter border border-primary/20">{a}</span>
                                 ))}
                             </div>
                         </div>
@@ -60,30 +65,30 @@ export function TransportCrossBorder() {
 
             <section>
                 <h3 className="text-sm font-semibold text-foreground mb-3">Border Posts</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                     {borderPosts.map(post => (
-                        <div key={post.name} className="rounded-xl border border-border bg-card p-4">
-                            <div className="flex items-start justify-between mb-2">
+                        <div key={post.name} className="glass-card p-5 hover:border-primary/40">
+                            <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-semibold text-foreground">{post.name}</p>
-                                    <p className="text-xs text-muted-foreground">To {post.country}</p>
+                                    <p className="text-sm font-bold text-foreground tracking-tight">{post.name}</p>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">To {post.country}</p>
                                 </div>
-                                <span className="text-[10px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold">{post.hours}</span>
+                                <span className="text-[9px] bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full font-black uppercase tracking-widest border border-emerald-500/20 shadow-sm">{post.hours}</span>
                             </div>
-                            <div className="grid grid-cols-2 gap-2">
-                                <div className="rounded-lg bg-secondary/50 p-2">
-                                    <div className="flex items-center gap-1 mb-0.5">
-                                        <Clock className="w-2.5 h-2.5 text-muted-foreground" />
-                                        <p className="text-[10px] text-muted-foreground">Avg Wait</p>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="rounded-xl bg-muted/30 p-2.5 border border-white/5">
+                                    <div className="flex items-center gap-1.5 mb-1">
+                                        <Clock className="w-3 h-3 text-muted-foreground" />
+                                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Avg Wait</p>
                                     </div>
-                                    <p className="text-xs font-bold text-foreground">{post.avgWait}</p>
+                                    <p className="text-xs font-black text-foreground tabular-nums">{post.avgWait}</p>
                                 </div>
-                                <div className="rounded-lg bg-amber-500/10 p-2">
-                                    <div className="flex items-center gap-1 mb-0.5">
-                                        <AlertTriangle className="w-2.5 h-2.5 text-amber-500" />
-                                        <p className="text-[10px] text-muted-foreground">Busy Period</p>
+                                <div className="rounded-xl bg-amber-500/10 p-2.5 border border-amber-500/10">
+                                    <div className="flex items-center gap-1.5 mb-1">
+                                        <AlertTriangle className="w-3 h-3 text-amber-500" />
+                                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Busy Period</p>
                                     </div>
-                                    <p className="text-xs font-bold text-foreground">{post.busyPeriod}</p>
+                                    <p className="text-xs font-black text-foreground">{post.busyPeriod}</p>
                                 </div>
                             </div>
                         </div>
@@ -93,18 +98,20 @@ export function TransportCrossBorder() {
 
             <section>
                 <h3 className="text-sm font-semibold text-foreground mb-3">Travel Requirements by Destination</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                     {Object.entries(requirements).map(([country, reqs]) => (
-                        <div key={country} className="rounded-xl border border-border bg-card p-4">
-                            <div className="flex items-center gap-2 mb-3">
-                                <FileText className="w-4 h-4 text-primary" />
-                                <p className="text-sm font-semibold text-foreground">{country}</p>
+                        <div key={country} className="glass-card p-5 hover:border-primary/40">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-primary/10 rounded-xl shadow-inner">
+                                    <FileText className="w-4 h-4 text-primary" />
+                                </div>
+                                <p className="text-sm font-black text-foreground uppercase tracking-widest">{country}</p>
                             </div>
-                            <ul className="space-y-1.5">
+                            <ul className="space-y-2.5">
                                 {reqs.map(req => (
-                                    <li key={req} className="flex items-start gap-2">
-                                        <span className="text-primary mt-0.5">•</span>
-                                        <p className="text-xs text-muted-foreground">{req}</p>
+                                    <li key={req} className="flex items-start gap-3 group/req">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1.5 shrink-0 group-hover/req:bg-primary transition-colors" />
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed">{req}</p>
                                     </li>
                                 ))}
                             </ul>

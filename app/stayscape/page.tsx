@@ -9,12 +9,22 @@ import { HotelsSeasonal } from "@/components/hotels/hotels-seasonal"
 import { HotelsReviews } from "@/components/hotels/hotels-reviews"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 
 export default function StayscapePage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
     const { t } = useI18n()
+    const { compareTray, clearCompareTray } = useAppStore()
+
+    // Clear stale comparison state if not stayscape
+    useEffect(() => {
+        if (compareTray.ids.length > 0 && compareTray.category !== "stayscape") {
+            clearCompareTray()
+        }
+    }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
     const tabs = [
         { key: "overview", label: t("common.overview") },

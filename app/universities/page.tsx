@@ -10,6 +10,9 @@ import { UniversitiesPrograms } from "@/components/universities/universities-pro
 import { UniversitiesCampus } from "@/components/universities/universities-campus"
 import { UniversitiesProfiles } from "@/components/universities/universities-profiles"
 import { CategorySelector } from "@/components/category-selector"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
+import { UniversitiesCompareBar } from "@/components/universities/universities-compare-bar"
 
 const tabs = [
     { key: "overview", label: "Overview" },
@@ -23,6 +26,14 @@ export default function UniversitiesPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
     const [isLocationOpen, setIsLocationOpen] = useState(false)
+    const { compareTray, clearCompareTray } = useAppStore()
+
+    // Clear stale comparison state if not universities
+    useEffect(() => {
+        if (compareTray.ids.length > 0 && compareTray.category !== "universities") {
+            clearCompareTray()
+        }
+    }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
     const uniqueLocations = useMemo(() => {
         const cities = universities.map(u => u.city)
@@ -103,6 +114,8 @@ export default function UniversitiesPage() {
                     )}
                 </div>
             </div>
+
+            <UniversitiesCompareBar />
 
             {tab === "overview" && <UniversitiesOverview onTabChange={setTab} location={location} />}
             {tab === "fees" && <UniversitiesFees location={location} />}

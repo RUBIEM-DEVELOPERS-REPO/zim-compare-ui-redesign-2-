@@ -28,7 +28,7 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
   return (
     <div className="space-y-6">
       {/* Best for you - only show if bank is in location or if All Locations */}
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+      <div className="glass-panel p-5 bg-primary/5 border-primary/20">
         <p className="text-xs text-muted-foreground mb-1">{t("banking.bestBankForYou")}</p>
         <p className="text-lg font-semibold text-foreground">{bestBank}</p>
         <p className="text-sm text-muted-foreground mt-1">
@@ -50,7 +50,7 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
           {/* Summary Cards */}
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {summaryCards.map((c) => (
-              <div key={c.labelKey} className="rounded-xl border border-border bg-card p-4">
+              <div key={c.labelKey} className="glass-card p-4 h-full">
                 <p className="text-xs text-muted-foreground">{t(`banking.highlights.${c.labelKey}`)}</p>
                 <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
                 <p className="text-xs text-primary mt-1">{t(`banking.highlights.${c.detailKey}`, c.detailVars as any)}</p>
@@ -62,12 +62,12 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
           <section>
             <h3 className="text-sm font-semibold text-foreground mb-3">{t("dashboard.marketHighlights")}</h3>
             <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-xl border border-border bg-card p-4">
+              <div className="glass-card p-4 h-full">
                 <p className="text-xs text-muted-foreground">{t("banking.bestSavingsRate")}</p>
                 <p className="text-sm font-semibold text-foreground">Stanbic PureSave</p>
                 <p className="text-xs text-primary">{t("banking.highlights.interestRate", { rate: "4.0" })}</p>
               </div>
-              <div className="rounded-xl border border-border bg-card p-4">
+              <div className="glass-card p-4 h-full">
                 <p className="text-xs text-muted-foreground">{t("banking.lowestZipitFee")}</p>
                 <p className="text-sm font-semibold text-foreground">POSB</p>
                 <p className="text-xs text-primary">{t("banking.highlights.zipitFee", { fee: "0.80" })}</p>
@@ -87,7 +87,7 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
             </h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {filteredBanks.map((b) => (
-                <div key={b.id} className="rounded-xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
+                <div key={b.id} className="glass-card p-4 h-full">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-foreground">{b.name}</p>
                     <span className="text-xs text-muted-foreground capitalize">{b.type.replace("_", " ")}</span>

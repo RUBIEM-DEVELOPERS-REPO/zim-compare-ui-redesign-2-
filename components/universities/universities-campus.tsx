@@ -31,7 +31,7 @@ export function UniversitiesCampus({ location }: UniversitiesCampusProps) {
                         <div
                             key={uni.id}
                             className={cn(
-                                "rounded-2xl border bg-card p-5 transition-all duration-300 relative group overflow-hidden",
+                                "glass-card p-5 transition-all duration-300 relative group overflow-hidden",
                                 compareTray.ids.includes(uni.id)
                                     ? "bg-teal-50 border-teal-200 shadow-teal-500/10 ring-1 ring-teal-200"
                                     : "border-border hover:border-teal-200/50 hover:shadow-2xl hover:shadow-teal-500/5 hover:-translate-y-1"

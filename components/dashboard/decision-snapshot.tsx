@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import React from "react"
 import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { Disclaimer } from "@/components/disclaimer"
@@ -46,13 +47,24 @@ const categories = [
   { key: "stayscape" as const, labelKey: "nav.stayscape", href: "/stayscape", icon: "St" },
 ]
 
+// Local ProgressBar component
+const ProgressBar = ({ progress }: { progress: number }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (ref.current) {
+      ref.current.style.width = `${progress}%`;
+    }
+  }, [progress]);
+  return <div ref={ref} className="h-full rounded-full bg-primary transition-all duration-500" />;
+};
+
 export function DecisionSnapshot() {
   const { preferences } = useAppStore()
   const { t } = useI18n()
   const recs = recommendations[preferences.scenario]
 
   return (
-    <section className="rounded-2xl border border-border bg-gradient-to-br from-card via-card to-secondary/20 p-6">
+    <section className="glass-panel p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h2 className="text-lg font-semibold text-foreground">{t("dashboard.personalizedSnapshot")}</h2>
@@ -62,13 +74,13 @@ export function DecisionSnapshot() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory lg:grid lg:grid-cols-7 lg:gap-3 lg:overflow-visible lg:pb-0 lg:snap-none lg:mx-0 lg:px-0">
         {categories.map((cat) => {
           const rec = recs[cat.key]
           return (
             <div
               key={cat.key}
-              className="rounded-xl border border-border bg-card/50 p-4 flex flex-col justify-between hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 backdrop-blur-sm bg-card/60 group"
+              className="glass-card p-4 flex flex-col justify-between group h-full min-w-[240px] sm:min-w-[280px] lg:min-w-0 snap-start"
             >
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -82,10 +94,7 @@ export function DecisionSnapshot() {
                 </div>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-primary transition-all"
-                      style={{ width: `${rec.confidence}%` }}
-                    />
+                    <ProgressBar progress={rec.confidence} />
                   </div>
                   <span className="text-xs font-medium text-primary">{rec.confidence}%</span>
                 </div>

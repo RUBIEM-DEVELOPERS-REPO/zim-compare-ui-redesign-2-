@@ -3,8 +3,11 @@
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { X } from "lucide-react"
+import { X, Plus, CheckCircle2 } from "lucide-react"
 import { telecomProviders } from "@/lib/mock/telecoms"
+import { useAppStore } from "@/lib/store"
+import { TelecomCompareBar } from "./telecom-compare-bar"
+import { useI18n } from "@/lib/i18n"
 
 const feeCategories = [
   { key: "activation", label: "Activation & SIM" },
@@ -46,6 +49,8 @@ interface TelecomFeesProps {
 
 export function TelecomFees({ location = "All Locations" }: TelecomFeesProps) {
   const [cat, setCat] = useState<string>("activation")
+  const { addToCompareTray, compareTray } = useAppStore()
+  const { t } = useI18n()
 
   const filtered = telecomFees.filter((f) => {
     const categoryMatch = f.category === cat
@@ -59,16 +64,15 @@ export function TelecomFees({ location = "All Locations" }: TelecomFeesProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-2">
+      <TelecomCompareBar />
+      <div className="glass-tab-container grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5">
         {feeCategories.map((c) => (
           <button
             key={c.key}
             onClick={() => setCat(c.key)}
             className={cn(
-              "rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-wider border transition-all duration-300 text-center tab-hover",
-              cat === c.key
-                ? "bg-teal-50 border-teal-200 text-teal-700 shadow-sm"
-                : "bg-white border-gray-100 text-gray-400 hover:border-gray-200 hover:bg-gray-50"
+              "glass-tab-base text-[10px] font-bold uppercase tracking-wider h-10 w-full flex items-center justify-center",
+              cat === c.key ? "glass-tab-active" : "text-muted-foreground"
             )}
           >
             {c.label}
@@ -94,20 +98,37 @@ export function TelecomFees({ location = "All Locations" }: TelecomFeesProps) {
                 <th className="text-right px-3 py-2 text-muted-foreground font-medium">Amount</th>
                 <th className="text-left px-3 py-2 text-muted-foreground font-medium">Unit</th>
                 <th className="text-left px-3 py-2 text-muted-foreground font-medium">Note</th>
+                <th className="w-[40px]"></th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((f, i) => (
-                <tr key={`${f.provider}-${f.name}`} className="border-b border-border last:border-0 hover:bg-secondary/20">
-                  <td className="px-3 py-2 text-foreground">{f.provider}</td>
-                  <td className="px-3 py-2 text-foreground">{f.name}</td>
-                  <td className="px-3 py-2 text-right text-foreground font-medium">
-                    {f.amount > 0 ? `$${f.amount.toFixed(2)}` : "--"}
-                  </td>
-                  <td className="px-3 py-2 text-muted-foreground">{f.unit}</td>
-                  <td className="px-3 py-2 text-muted-foreground max-w-[200px] truncate">{f.note}</td>
-                </tr>
-              ))}
+              {filtered.map((f, i) => {
+                const providerId = telecomProviders.find(p => p.name === f.provider)?.id || f.provider
+                const inTray = compareTray.ids.includes(providerId)
+                return (
+                  <tr key={`${f.provider}-${f.name}`} className="border-b border-border last:border-0 hover:bg-secondary/20">
+                    <td className="px-3 py-2 text-foreground">{f.provider}</td>
+                    <td className="px-3 py-2 text-foreground">{f.name}</td>
+                    <td className="px-3 py-2 text-right text-foreground font-medium">
+                      {f.amount > 0 ? `$${f.amount.toFixed(2)}` : "--"}
+                    </td>
+                    <td className="px-3 py-2 text-muted-foreground">{f.unit}</td>
+                    <td className="px-3 py-2 text-muted-foreground max-w-[200px] truncate">{f.note}</td>
+                    <td className="px-3 py-2 text-right">
+                      <button
+                        onClick={() => addToCompareTray("telecom", providerId, "fees")}
+                        className={cn(
+                          "p-1 rounded-full transition-colors",
+                          inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
+                        )}
+                        title={inTray ? t("common.addedToCompare") : t("common.addToCompare")}
+                      >
+                        {inTray ? <CheckCircle2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

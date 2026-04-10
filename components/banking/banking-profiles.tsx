@@ -7,6 +7,7 @@ import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 
 import { X } from "lucide-react"
+import { BankingCompareBar } from "./banking-compare-bar"
 
 type FilterType = "all" | "commercial" | "building_society" | "microfinance"
 
@@ -33,6 +34,7 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
 
     return (
       <div className="space-y-6">
+        <BankingCompareBar />
         <button
           onClick={() => setSelected(null)}
           className="text-sm text-primary hover:underline"
@@ -127,6 +129,7 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
 
   return (
     <div className="space-y-4">
+      <BankingCompareBar />
       {/* Filters */}
       {/* Filters - 4 Column Grid for consistency */}
       <div className="grid grid-cols-4 gap-2 rounded-2xl bg-white/20 dark:bg-black/20 backdrop-blur-xl border border-white/25 dark:border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.08)] p-2">

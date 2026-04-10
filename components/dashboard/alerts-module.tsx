@@ -19,8 +19,8 @@ export function AlertsModule() {
             key={alert.id}
             onClick={() => markAlertRead(alert.id)}
             className={cn(
-              "w-full flex items-start gap-3 rounded-lg border border-border p-3 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 backdrop-blur-sm bg-card/60",
-              !alert.read && "border-primary/30 bg-primary/5"
+              "w-full flex items-start gap-3 glass-card p-3 text-left group",
+              !alert.read ? "border-primary/40 bg-primary/10" : "bg-white/5"
             )}
           >
             <div

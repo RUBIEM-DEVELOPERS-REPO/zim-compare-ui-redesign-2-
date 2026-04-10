@@ -10,6 +10,8 @@ import { SolarRoiCalculator } from "@/components/solar/solar-roi-calculator"
 import { SolarRoiCharts } from "@/components/solar/solar-roi-charts"
 import { SolarMaintenance } from "@/components/solar/solar-maintenance"
 import { LocationFilterPill } from "@/components/location-filter-pill"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
 
 const tabs = [
     { key: "overview", label: "Overview" },
@@ -24,6 +26,14 @@ const tabs = [
 export default function SolarPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
+    const { compareTray, clearCompareTray } = useAppStore()
+
+    // Clear stale comparison state if not solar or boreholes
+    useEffect(() => {
+        if (compareTray.ids.length > 0 && !["solar", "boreholes"].includes(compareTray.category)) {
+            clearCompareTray()
+        }
+    }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
     return (
         <div className="space-y-6">

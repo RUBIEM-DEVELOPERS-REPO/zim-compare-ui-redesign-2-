@@ -58,136 +58,144 @@ export function LodgesList({ location = "All Locations" }: LodgesListProps) {
         <div className="space-y-6">
             {/* Compare Bar */}
             {selected.length > 0 && (
-                <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 px-6 py-4 flex items-center justify-between animate-in fade-in slide-in-from-top-4 backdrop-blur-md sticky top-20 z-40 shadow-xl shadow-primary/10">
-                    <div className="flex items-center gap-4">
-                        <div className="flex -space-x-3">
-                            {selected.map(id => {
+                <div className="glass-card px-6 py-5 flex items-center justify-between border-primary/50 bg-primary/10 shadow-2xl shadow-primary/20 animate-in slide-in-from-top-6 backdrop-blur-2xl sticky top-24 z-40 border-2">
+                    <div className="flex items-center gap-5">
+                        <div className="flex -space-x-4 relative">
+                            {selected.map((id, index) => {
                                 const h = hotels.find(x => x.id === id)
                                 return (
-                                    <div key={id} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted relative shadow-md">
+                                    <div key={id} className={cn("h-12 w-12 rounded-2xl border-2 border-background overflow-hidden bg-muted relative shadow-xl transform transition-transform hover:-translate-y-2 hover:z-10",
+                                        index === 0 ? "z-[10]" : index === 1 ? "z-[9]" : "z-[8]"
+                                    )}>
                                         <img src={h?.imageUrl || "/placeholder.svg"} alt={h?.name} className="h-full w-full object-cover" />
                                     </div>
                                 )
                             })}
                         </div>
                         <div>
-                            <p className="text-sm text-foreground font-black uppercase tracking-tight">
+                            <p className="text-xs text-foreground font-black uppercase tracking-widest">
                                 {t("stays.lodgesSelected", { count: selected.length })}
                             </p>
-                            <p className="text-[10px] text-muted-foreground">{t("stays.selectUpTo3")}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                                <Plus className="w-3.5 h-3.5 text-primary" />
+                                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tight">{t("stays.selectUpTo3")}</p>
+                            </div>
                         </div>
                     </div>
                     <button
                         onClick={handleCompare}
                         disabled={selected.length < 2}
-                        className={cn("rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest transition-all shadow-lg",
+                        className={cn("rounded-2xl px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-xl hover:scale-105 active:scale-95",
                             selected.length >= 2
-                                ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/30 hover:scale-105 active:scale-95"
-                                : "bg-slate-200 dark:bg-slate-800 text-muted-foreground cursor-not-allowed"
+                                ? "bg-primary text-primary-foreground shadow-primary/40 hover:shadow-primary/60"
+                                : "bg-muted/50 text-muted-foreground cursor-not-allowed opacity-50"
                         )}>
                         {t("stays.analyzeComparison")}
                     </button>
                 </div>
             )}
+ biographical description of this person.
 
             {/* Grid */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filtered.map(h => (
                     <div key={h.id}
-                        className={cn("group flex flex-col rounded-2xl border bg-card overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 relative",
-                            selected.includes(h.id) ? "border-primary ring-1 ring-primary/20" : "border-border"
+                        className={cn("group flex flex-col glass-card overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2",
+                            selected.includes(h.id) ? "border-primary/60 ring-2 ring-primary/20 z-10" : "hover:border-primary/40"
                         )}>
 
                         {/* Image Container */}
-                        <div className="relative h-56 w-full overflow-hidden">
+                        <div className="relative h-60 w-full overflow-hidden">
                             <img
                                 src={h.imageUrl || "/placeholder.svg"}
                                 alt={h.name}
-                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                 loading="lazy"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
 
                             {/* Top Badges */}
-                            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+                            <div className="absolute top-4 left-4 flex flex-col gap-2">
                                 {h.bestValue && (
-                                    <span className="px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg">
+                                    <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-xl">
                                         {t("stays.bestValue")}
                                     </span>
                                 )}
                                 {h.recommended && (
-                                    <span className="px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg">
+                                    <span className="px-3 py-1 bg-primary text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-xl border border-white/20">
                                         {t("stays.safariPick")}
                                     </span>
                                 )}
                             </div>
 
                             {/* Price Overlay */}
-                            <div className="absolute bottom-3 right-3 text-right">
-                                <p className="text-2xl font-black text-white drop-shadow-md">${h.pricePerNight}</p>
-                                <p className="text-[10px] text-white/80 font-bold uppercase tracking-widest">{t("stays.perNight")}</p>
+                            <div className="absolute bottom-4 right-4 text-right transform group-hover:translate-x-[-4px] transition-transform">
+                                <p className="text-3xl font-black text-white leading-none">${h.pricePerNight}</p>
+                                <p className="text-[9px] text-white/70 font-black uppercase tracking-[0.2em] mt-1">{t("stays.perNight")}</p>
                             </div>
                         </div>
 
                         {/* Content */}
-                        <div className="p-5 flex-1 flex flex-col">
+                        <div className="p-6 flex-1 flex flex-col relative">
                             <div className="flex-1">
-                                <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{h.name}</h3>
+                                <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors tracking-tight line-clamp-1">{h.name}</h3>
 
-                                <div className="flex items-center justify-between mt-2">
-                                    <div className="flex items-center gap-1.5">
-                                        <MapPin className="w-3.5 h-3.5 text-primary" />
-                                        <p className="text-xs font-medium text-muted-foreground">{h.city}</p>
+                                <div className="flex items-center justify-between mt-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="p-1 bg-primary/10 rounded-lg shadow-inner">
+                                            <MapPin className="w-3.5 h-3.5 text-primary" />
+                                        </div>
+                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{h.city}</p>
                                     </div>
                                     <StarRating stars={h.stars} />
                                 </div>
 
-                                <p className="text-xs text-muted-foreground mt-4 line-clamp-2 italic leading-relaxed">
+                                <p className="text-[11px] text-muted-foreground mt-5 line-clamp-2 italic leading-relaxed font-medium">
                                     "{h.description}"
                                 </p>
 
                                 {/* Amenities Row */}
-                                <div className="flex flex-wrap gap-2 mt-4">
+                                <div className="flex flex-wrap gap-2 mt-5">
                                     {h.amenities.slice(0, 4).map(a => (
-                                        <div key={a} className="flex items-center gap-1.5 bg-secondary/50 dark:bg-secondary/10 px-2.5 py-1.5 rounded-xl border border-border/50">
-                                            <span className="text-primary">{amenityIcons[a] ?? null}</span>
-                                            <span className="text-[10px] font-bold text-muted-foreground uppercase">{t(`stays.amenities.${a}`)}</span>
+                                        <div key={a} className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner group/amenity">
+                                            <span className="text-primary transition-transform group-hover/amenity:scale-110">{amenityIcons[a] ?? null}</span>
+                                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
                                         </div>
                                     ))}
                                     {h.amenities.length > 4 && (
-                                        <span className="text-[10px] font-bold text-muted-foreground self-center ml-1">{t("stays.moreAmenities", { count: h.amenities.length - 4 })}</span>
+                                        <span className="text-[9px] font-black text-primary/60 self-center ml-2 uppercase tracking-tighter">+{h.amenities.length - 4} More</span>
                                     )}
                                 </div>
                             </div>
 
                             {/* Footer / Stats */}
-                            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center font-black text-primary text-sm">
+                            <div className="mt-8 pt-5 border-t border-border/10 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-11 w-11 rounded-2xl bg-primary/10 flex items-center justify-center font-black text-primary text-base shadow-inner border border-primary/5">
                                         {h.rating}
                                     </div>
                                     <div>
-                                        <p className="text-[11px] font-bold text-foreground leading-none">{t("stays.safariRating")}</p>
-                                        <p className="text-[10px] text-muted-foreground mt-0.5">{t("stays.guestReviews", { count: h.reviewCount })}</p>
+                                        <p className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none">{t("stays.safariRating")}</p>
+                                        <p className="text-[9px] font-black text-muted-foreground mt-1 uppercase tracking-tighter">{t("stays.guestReviews", { count: h.reviewCount })}</p>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={(e) => toggleSelect(h.id, e)}
                                     className={cn(
-                                        "btn-compare-standard",
-                                        selected.includes(h.id) && "opacity-60"
+                                        "btn-compare-standard px-5 py-2.5 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all",
+                                        selected.includes(h.id) ? "bg-primary/20 text-primary border-primary/30" : "bg-primary text-primary-foreground"
                                     )}
                                 >
                                     {selected.includes(h.id) ? (
                                         <>
-                                            <CheckCircle2 className="w-3.5 h-3.5" />
-                                            {t("common.addedToCompare")}
+                                            <CheckCircle2 className="w-4 h-4" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest">{t("common.added")}</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Plus className="w-3.5 h-3.5" />
-                                            {t("common.addToCompare")}
+                                            <Plus className="w-4 h-4" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest">{t("common.addToCompare")}</span>
                                         </>
                                     )}
                                 </button>
@@ -195,6 +203,7 @@ export function LodgesList({ location = "All Locations" }: LodgesListProps) {
                         </div>
                     </div>
                 ))}
+ biographical description of this person.
             </div>
         </div>
     )

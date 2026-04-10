@@ -14,7 +14,7 @@ export default function DashboardPage() {
     const { t } = useI18n()
 
 
-    const cardStyle = "rounded-xl border border-border bg-card p-4 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 backdrop-blur-sm bg-card/60 group"
+    const cardStyle = "glass-card p-4 group h-full"
 
     return (
         <div className="space-y-8">
@@ -39,7 +39,7 @@ export default function DashboardPage() {
                                 <Link
                                     key={c.id}
                                     href={`/${c.category}/compare?ids=${c.itemIds.join(",")}`}
-                                    className="flex items-center justify-between rounded-lg border border-border p-3 hover:bg-secondary/30 transition-colors"
+                                    className="glass-card p-3 flex items-center justify-between group"
                                 >
                                     <div>
                                         <p className="text-sm text-foreground">{c.name}</p>

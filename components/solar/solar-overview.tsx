@@ -25,27 +25,32 @@ export function SolarOverview({ location = "All Locations" }: SolarOverviewProps
 
     return (
         <div className="space-y-6">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
-                <p className="text-xs text-muted-foreground mb-1">Zimbabwe Solar & Borehole Market</p>
-                <p className="text-lg font-semibold text-foreground">Go off-grid. Save money. Secure your water.</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                    Compare <span className="text-primary font-medium">{filteredProviders.length} providers</span> and{" "}
-                    <span className="text-primary font-medium">{totalPackages} packages</span> in {location}.
-                </p>
-                <Disclaimer />
+            <div className="glass-panel p-6 bg-primary/5 border-primary/20 shadow-xl overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <Sun className="h-24 w-24 text-primary" />
+                </div>
+                <div className="relative z-10 font-bold">
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2 px-2 py-1 bg-primary/10 rounded-full inline-block">Zimbabwe Solar & Borehole Market</p>
+                    <h2 className="text-2xl font-bold text-foreground tracking-tight">Go off-grid. Save money. Secure your water.</h2>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-lg leading-relaxed">
+                        Compare <span className="text-primary font-black uppercase tracking-tighter">{filteredProviders.length} providers</span> and{" "}
+                        <span className="text-primary font-black uppercase tracking-tighter">{totalPackages} packages</span> in {location}.
+                    </p>
+                    <Disclaimer />
+                </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryCards.map((c) => (
-                    <div key={c.label} className="rounded-xl border border-border bg-card p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <c.icon className="w-4 h-4 text-primary" />
+                    <div key={c.label} className="glass-card p-4 group">
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="w-8 h-8 rounded-xl bg-muted/50 group-hover:bg-primary/10 flex items-center justify-center shadow-inner transition-colors">
+                                <c.icon className="w-4.5 h-4.5 text-primary" />
                             </div>
-                            <p className="text-xs text-muted-foreground">{c.label}</p>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{c.label}</p>
                         </div>
-                        <p className="text-sm font-semibold text-foreground">{c.value}</p>
-                        <p className="text-xs text-primary mt-1">{c.detail}</p>
+                        <p className="text-sm font-bold text-foreground">{c.value}</p>
+                        <p className="text-[10px] text-primary mt-1 font-black uppercase tracking-tighter">{c.detail}</p>
                     </div>
                 ))}
             </div>
@@ -61,23 +66,23 @@ export function SolarOverview({ location = "All Locations" }: SolarOverviewProps
                     <h3 className="text-sm font-semibold text-foreground mb-3">
                         Providers in {location} ({filteredProviders.length})
                     </h3>
-                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {filteredProviders.map((p) => (
-                            <div key={p.id} className="rounded-xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
-                                <div className="flex items-start justify-between mb-2">
+                            <div key={p.id} className="glass-card p-5 hover:border-primary/40 group">
+                                <div className="flex items-start justify-between mb-4">
                                     <div>
-                                        <p className="text-sm font-semibold text-foreground">{p.name}</p>
-                                        <p className="text-xs text-muted-foreground capitalize">{p.type === "both" ? "Solar & Borehole" : p.type}</p>
+                                        <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">{p.name}</p>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight italic">{p.type === "both" ? "Solar & Borehole" : p.type}</p>
                                     </div>
                                     {p.verified && (
-                                        <span className="text-[10px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold">✓ Verified</span>
+                                        <span className="text-[9px] bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-black uppercase tracking-tighter border border-emerald-500/20 shadow-sm">✓ Verified</span>
                                     )}
                                 </div>
-                                <div className="flex gap-2 flex-wrap mb-2">
+                                <div className="flex gap-2 flex-wrap mb-4">
                                     <ScoreBadge score={p.qualityScore} label="Quality" />
                                     <ScoreBadge score={p.transparencyScore} label="Transparency" />
                                 </div>
-                                <p className="text-xs text-muted-foreground">{p.projectsCompleted} projects · {p.yearsActive} yrs active</p>
+                                <p className="text-[11px] font-bold text-muted-foreground mt-auto">{p.projectsCompleted} projects · {p.yearsActive} yrs active</p>
                             </div>
                         ))}
                     </div>

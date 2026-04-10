@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
 import { X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { TelecomCompareBar } from "./telecom-compare-bar"
 
 const subTabs = [
   { key: "daily", labelKey: "telecom.subTabs.daily" },
@@ -35,19 +36,18 @@ export function TelecomData({ location = "All Locations" }: TelecomDataProps) {
 
   return (
     <div className="space-y-4">
+      <TelecomCompareBar />
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex flex-col gap-2">
           {/* Sub-tabs - 3 Column Grid */}
-          <div className="grid grid-cols-3 gap-2 rounded-2xl bg-white/20 dark:bg-black/20 backdrop-blur-xl border border-white/25 dark:border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.08)] p-2">
+          <div className="glass-tab-container grid grid-cols-3 sm:grid-cols-6 gap-1.5 p-1.5">
             {subTabs.map((t_item) => (
               <button
                 key={t_item.key}
                 onClick={() => setSub(t_item.key)}
                 className={cn(
-                  "rounded-xl px-4 py-1 h-8 text-xs font-medium leading-none transition-all duration-300 text-center",
-                  sub === t_item.key
-                    ? "bg-white/40 dark:bg-white/10 text-foreground font-bold shadow-[0_0_15px_rgba(45,212,191,0.5)]"
-                    : "hover:bg-white/10 hover:backdrop-blur-2xl hover:brightness-125 hover:-translate-y-[1px] text-muted-foreground"
+                  "glass-tab-base px-2 py-1 h-9 text-xs font-medium transition-all duration-300 text-center",
+                  sub === t_item.key ? "glass-tab-active" : "text-muted-foreground"
                 )}
               >
                 {t(t_item.labelKey)}
@@ -60,6 +60,7 @@ export function TelecomData({ location = "All Locations" }: TelecomDataProps) {
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
               className="rounded-full border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-wider text-gray-500 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all appearance-none cursor-pointer hover:border-gray-300 shadow-sm"
+              title="Sort by"
             >
               <option value="costPerGB">{t("telecom.sort.costPerGB")}</option>
               <option value="price">{t("telecom.sort.price")}</option>
@@ -89,7 +90,7 @@ export function TelecomData({ location = "All Locations" }: TelecomDataProps) {
               <div
                 key={b.id}
                 className={cn(
-                  "rounded-2xl border bg-card p-5 flex flex-col transition-all duration-300 group relative overflow-hidden",
+                  "glass-card p-5 flex flex-col transition-all duration-300 group relative overflow-hidden",
                   "border-border hover:border-teal-200/50 hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-1"
                 )}
               >

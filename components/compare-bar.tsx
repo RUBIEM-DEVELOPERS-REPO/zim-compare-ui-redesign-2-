@@ -10,7 +10,10 @@ import { policies } from "@/lib/mock/insurance"
 import { schools } from "@/lib/mock/schools"
 import { universities } from "@/lib/mock/universities"
 import { vehicles } from "@/lib/mock/transport"
+import { solarPackages, boreholePackages } from "@/lib/mock/solar"
+import { hotels } from "@/lib/mock/hotels"
 import { cn } from "@/lib/utils"
+import { SmartRecommendation } from "./smart-recommendation"
 
 export function CompareBar() {
     const { compareTray, removeFromCompareTray, clearCompareTray } = useAppStore()
@@ -20,13 +23,23 @@ export function CompareBar() {
     // Draggable state
     const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
     const [isDragging, setIsDragging] = useState(false)
+    const [isMounted, setIsMounted] = useState(false)
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
     const barRef = useRef<HTMLDivElement>(null)
 
-    // Auto-hide logic
-    const isHiddenPage = pathname.includes("/compare") ||
-        pathname.includes("/comparison") ||
-        pathname.includes("/results")
+    // Hydration guard
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
+    const isBankingPage = pathname?.includes("/banking")
+    const isTelecomPage = pathname?.includes("/telecom")
+    const isSchoolsPage = pathname?.includes("/schools")
+    const isUniversitiesPage = pathname?.includes("/universities")
+    const isInsurancePage = pathname?.includes("/insurance")
+
+    // Get current category from pathname (e.g., /insurance -> insurance)
+    const currentCategory = pathname?.split('/')[1] || ""
 
     // Load saved position
     useEffect(() => {
@@ -98,62 +111,104 @@ export function CompareBar() {
         localStorage.removeItem("compare-bar-pos")
     }
 
-    if (compareTray.ids.length === 0 || isHiddenPage) return null
+    // Sync dynamic position via ref to avoid inline style warnings
+    useEffect(() => {
+        if (barRef.current && position) {
+            barRef.current.style.setProperty("--x", `${position.x}px`);
+            barRef.current.style.setProperty("--y", `${position.y}px`);
+        } else if (barRef.current) {
+            barRef.current.style.removeProperty("--x");
+            barRef.current.style.removeProperty("--y");
+        }
+    }, [position]);
+
+    if (
+        !isMounted || 
+        compareTray.ids.length === 0 || 
+        isBankingPage || 
+        isTelecomPage || 
+        isSchoolsPage || 
+        isUniversitiesPage ||
+        isInsurancePage ||
+        (compareTray.category !== "" && compareTray.category !== currentCategory)
+    ) return null
+
+    const allItems = [
+        ...bankLoans,
+        ...bankingProducts,
+        ...dataBundles,
+        ...policies,
+        ...schools,
+        ...universities,
+        ...vehicles,
+        ...solarPackages,
+        ...boreholePackages,
+        ...hotels
+    ]
 
     const items = compareTray.ids.map(id => {
-        const loan = bankLoans.find(l => l.id === id)
-        const product = bankingProducts.find(p => p.id === id)
-        const bundle = dataBundles.find(b => b.id === id)
-        const policy = policies.find(pol => pol.id === id)
-        const school = schools.find(s => s.id === id)
-        const university = universities.find(u => u.id === id)
-        const vehicle = vehicles.find(v => v.id === id)
-
-        const item = loan || product || bundle || policy || school || university || vehicle
+        const item = allItems.find(i => i.id === id) as any
 
         let providerName = ""
         if (item) {
-            if ("bankName" in item) providerName = (item as any).bankName
-            else if ("providerName" in item) providerName = (item as any).providerName
-            else if ("city" in item) providerName = (item as any).city // Fallback for schools/unis
-            else if ("dealershipName" in item) providerName = (item as any).dealershipName
+            providerName = item.bankName || item.providerName || item.dealershipName || item.city || item.location || ""
         }
 
-        let name = (item as any)?.name || id
-        if (vehicle) {
-            name = `${vehicle.make} ${vehicle.model}`
+        let name = item?.name || id
+        if (item && "make" in item && "model" in item) {
+            name = `${item.make} ${item.model}`
         }
 
         return { id, name, provider: providerName }
     })
 
-    // Style for position
-    const dragStyle: React.CSSProperties = position ? {
-        position: "fixed",
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        transform: "none",
-        bottom: "auto"
-    } : {
-        position: "fixed",
-        bottom: "1.5rem",
-        left: "50%",
-        transform: "translateX(-50%)"
+    const handleCompareClick = () => {
+        const categoryRoutes: Record<string, string> = {
+            telecom: "data",
+            banking: "accounts",
+            insurance: "policies",
+            schools: "overview",
+            universities: "fees",
+            mobility: "cars",
+            solar: "overview",
+            boreholes: "overview",
+            stayscape: "hotels"
+        }
+
+        const sub = compareTray.subcategory || categoryRoutes[compareTray.category] || "overview"
+
+        if (compareTray.category === "universities" && sub !== "programs") {
+            router.push(`/universities/compare?ids=${compareTray.ids.join(",")}`)
+        } else if (compareTray.category === "mobility") {
+            router.push(`/mobility/${sub}/compare?ids=${compareTray.ids.join(",")}`)
+        } else {
+            const base = `/${compareTray.category}/compare/${sub}`
+            router.push(`${base}?ids=${compareTray.ids.join(",")}`)
+        }
+
+        // Clear the tray after successful navigation trigger
+        setTimeout(() => {
+            clearCompareTray()
+        }, 500)
     }
 
     return (
         <div
             ref={barRef}
-            style={dragStyle}
             className={cn(
-                "z-[100] w-full max-w-2xl px-4 animate-in slide-in-from-bottom-8 duration-500",
+                "fixed z-[9999] w-full max-w-2xl px-4 animate-in fade-in slide-in-from-bottom-4 duration-300",
+                position 
+                    ? "left-[var(--x)] top-[var(--y)] transform-none" 
+                    : "bottom-8 left-1/2 -translate-x-1/2",
                 isDragging && "cursor-grabbing"
             )}
-        >
-            <div className="bg-card/90 backdrop-blur-xl border border-primary/20 shadow-2xl rounded-2xl overflow-hidden ring-1 ring-black/5">
+    >
+        <div className="relative">
+            <SmartRecommendation />
+            <div className="glass-card !rounded-2xl border-2 border-primary/20 shadow-2xl overflow-hidden shadow-primary/10">
                 <div
                     onMouseDown={onMouseDown}
-                    className="px-4 py-2 flex items-center justify-between border-b border-border/50 bg-primary/5 cursor-grab active:cursor-grabbing hover:bg-primary/10 transition-colors"
+                    className="px-4 py-2 flex items-center justify-between border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing hover:bg-white/10 transition-colors"
                 >
                     <div className="flex items-center gap-3">
                         <GripHorizontal size={16} className="text-muted-foreground" />
@@ -191,7 +246,7 @@ export function CompareBar() {
                         {items.map((item) => (
                             <div
                                 key={item.id}
-                                className="shrink-0 flex items-center gap-2 bg-secondary/80 border border-border rounded-xl pl-3 pr-2 py-1.5 group hover:border-primary/50 transition-colors"
+                                className="shrink-0 flex items-center gap-2 bg-white/10 border border-white/10 backdrop-blur-sm rounded-xl pl-3 pr-2 py-1.5 group hover:border-primary/50 transition-colors"
                             >
                                 <div className="flex flex-col">
                                     <span className="text-[9px] font-black text-primary leading-tight uppercase tracking-tighter truncate max-w-[70px]">
@@ -204,6 +259,7 @@ export function CompareBar() {
                                 <button
                                     onClick={() => removeFromCompareTray(item.id)}
                                     className="p-1 rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all"
+                                    title="Remove item"
                                 >
                                     <X size={12} />
                                 </button>
@@ -213,7 +269,7 @@ export function CompareBar() {
                         {Array.from({ length: Math.max(0, 3 - items.length) }).map((_, i) => (
                             <div
                                 key={i}
-                                className="shrink-0 w-32 border border-dashed border-border rounded-xl flex items-center justify-center bg-secondary/20"
+                                className="shrink-0 w-32 border border-dashed border-white/20 rounded-xl flex items-center justify-center bg-white/5"
                             >
                                 <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-50">Slot {items.length + i + 1}</span>
                             </div>
@@ -222,28 +278,7 @@ export function CompareBar() {
 
                     <div className="flex shrink-0">
                         <button
-                            onClick={() => {
-                                const sub = compareTray.subcategory || (
-                                    compareTray.category === "telecom" ? "data" :
-                                        compareTray.category === "banking" ? "accounts" :
-                                            compareTray.category === "insurance" ? "policies" :
-                                                compareTray.category === "schools" ? "overview" :
-                                                    compareTray.category === "universities" ? "fees" :
-                                                        compareTray.category === "mobility" ? "cars" : "overview"
-                                )
-
-                                if (compareTray.category === "universities" && sub !== "programs") {
-                                    router.push(`/universities/compare?ids=${compareTray.ids.join(",")}`)
-                                } else {
-                                    const base = `/${compareTray.category}/compare/${sub}`
-                                    router.push(`${base}?ids=${compareTray.ids.join(",")}`)
-                                }
-
-                                // Clear the tray after successful navigation trigger
-                                setTimeout(() => {
-                                    clearCompareTray()
-                                }, 500)
-                            }}
+                            onClick={handleCompareClick}
                             disabled={compareTray.ids.length < 2}
                             className={cn(
                                 "rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg",
@@ -259,5 +294,6 @@ export function CompareBar() {
                 </div>
             </div>
         </div>
-    )
+    </div>
+)
 }

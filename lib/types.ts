@@ -180,6 +180,7 @@ export interface Policy {
   coverLimit: number
   benefits: string[]
   exclusions: string[]
+  type: string
 }
 
 // ── Mobility ──
@@ -258,7 +259,7 @@ export interface UserPreference {
 
 export interface SavedComparison {
   id: string
-  category: "banking" | "telecom" | "schools" | "insurance" | "universities"
+  category: "banking" | "telecom" | "schools" | "insurance" | "universities" | "utilities" | "solar" | "mobility" | "transport" | "hotels"
   itemIds: string[]
   createdAt: string
   name: string
@@ -282,7 +283,7 @@ export interface PricingSnapshot {
 export interface Alert {
   id: string
   type: "price_drop" | "new_promo" | "fee_increase" | "claims_change"
-  category: "banking" | "telecom" | "schools" | "insurance"
+  category: "banking" | "telecom" | "schools" | "insurance" | "utilities" | "solar" | "mobility" | "transport" | "hotels"
   itemId: string
   message: string
   createdAt: string

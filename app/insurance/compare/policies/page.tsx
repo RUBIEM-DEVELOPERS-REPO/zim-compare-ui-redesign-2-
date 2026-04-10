@@ -123,6 +123,7 @@ function InsuranceCompareContent() {
                                             <button
                                                 onClick={() => handleRemove(p.id)}
                                                 className="absolute -top-4 -right-2 p-1 rounded-full bg-secondary hover:bg-destructive/10 hover:text-destructive transition-all"
+                                                title="Remove item"
                                             >
                                                 <X size={14} />
                                             </button>

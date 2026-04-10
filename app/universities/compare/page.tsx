@@ -72,13 +72,13 @@ export default function UniversitiesComparePage() {
             {/* Comparison Table */}
             <div className="overflow-x-auto">
                 <div className="inline-block min-w-full align-middle">
-                    <div className="grid gap-4" style={{ gridTemplateColumns: `200px repeat(${selectedUniversities.length}, 1fr)` }}>
+                    <div className="grid-dynamic-cols gap-4" data-columns={selectedUniversities.length}>
                         {/* Header Row */}
-                        <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center">
+                        <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center col-span-1">
                             Criteria
                         </div>
                         {selectedUniversities.map((uni) => (
-                            <div key={uni.id} className="bg-teal-50 border border-teal-100 rounded-lg p-4">
+                            <div key={uni.id} className="bg-teal-50 border border-teal-100 rounded-lg p-4 col-span-1">
                                 <h3 className="font-bold text-sm text-foreground uppercase tracking-tight mb-1">{uni.name}</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{uni.city}</p>
                             </div>

@@ -11,6 +11,8 @@ import { BankingDigital } from "@/components/banking/banking-digital"
 import { BankingProfiles } from "@/components/banking/banking-profiles"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
+import { useEffect } from "react"
+import { useAppStore } from "@/lib/store"
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -25,6 +27,14 @@ const tabs = [
 export default function BankingPage() {
   const [tab, setTab] = useState<string>("overview")
   const [location, setLocation] = useState<string>("All Locations")
+  const { compareTray, clearCompareTray } = useAppStore()
+
+  // Clear stale comparison state if not banking
+  useEffect(() => {
+    if (compareTray.ids.length > 0 && compareTray.category !== "banking") {
+      clearCompareTray()
+    }
+  }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
   return (
     <div className="space-y-6">
