@@ -1,9 +1,16 @@
 "use client"
 
 import { useState } from "react"
+import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
+<<<<<<< Updated upstream
 import { X, Plus, CheckCircle2 } from "lucide-react"
+=======
+import { AlertCircle, HelpCircle, X } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
+import type { TelecomProvider } from "@prisma/client"
+>>>>>>> Stashed changes
 import { telecomProviders } from "@/lib/mock/telecoms"
 import { useAppStore } from "@/lib/store"
 import { TelecomCompareBar } from "./telecom-compare-bar"
@@ -45,9 +52,10 @@ const telecomFees = [
 
 interface TelecomFeesProps {
   location?: string
+  providers?: TelecomProvider[]
 }
 
-export function TelecomFees({ location = "All Locations" }: TelecomFeesProps) {
+export function TelecomFees({ location = "All Locations", providers = [] }: TelecomFeesProps) {
   const [cat, setCat] = useState<string>("activation")
   const { addToCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
@@ -58,7 +66,7 @@ export function TelecomFees({ location = "All Locations" }: TelecomFeesProps) {
 
     if (location === "All Locations") return true
 
-    const provider = telecomProviders.find(p => p.name === f.provider)
+    const provider = providers.find(p => p.name === f.provider)
     return provider?.coverageCities.includes(location)
   })
 

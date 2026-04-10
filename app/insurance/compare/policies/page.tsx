@@ -1,12 +1,12 @@
 "use client"
 
 import { useSearchParams, useRouter } from "next/navigation"
-import { policies, insuranceProviders } from "@/lib/mock/insurance"
+import { apiGet } from "@/lib/api"
 import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { ArrowLeft, CheckCircle2, TrendingUp, Clock, ShieldCheck, ChevronLeft, X, Zap, Award, BarChart3, HeartHandshake } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -18,11 +18,27 @@ function InsuranceCompareContent() {
     const { t } = useI18n()
     const { addSavedComparison, removeFromCompareTray, clearCompareTray } = useAppStore()
 
+    const [policies, setPolicies] = useState<any[]>([])
+    const [insuranceProviders, setInsuranceProviders] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         clearCompareTray()
+        Promise.all([
+            apiGet('/insurance/policies').catch(() => ({ policies: [] })),
+            apiGet('/insurance/providers').catch(() => ({ providers: [] }))
+        ]).then(([pRes, prRes]) => {
+            setPolicies(pRes.policies || [])
+            setInsuranceProviders(prRes.providers || [])
+            setLoading(false)
+        })
     }, [clearCompareTray])
 
     const selectedPolicies = policies.filter((p) => ids.includes(p.id))
+
+    if (loading) {
+        return <div className="flex items-center justify-center py-20 text-muted-foreground">Loading insurance...</div>
+    }
 
     if (selectedPolicies.length === 0) {
         return (
@@ -216,7 +232,7 @@ function InsuranceCompareContent() {
                             {selectedPolicies.map((p) => (
                                 <td key={p.id} className="p-6 border-l border-border/50">
                                     <div className="flex flex-wrap justify-center gap-1">
-                                        {p.benefits.map(b => (
+                                        {p.benefits.map((b: string) => (
                                             <span key={b} className="text-[9px] font-black uppercase tracking-tight bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100">
                                                 {b}
                                             </span>
@@ -230,7 +246,7 @@ function InsuranceCompareContent() {
                             {selectedPolicies.map((p) => (
                                 <td key={p.id} className="p-6 border-l border-border/50">
                                     <div className="flex flex-wrap justify-center gap-1">
-                                        {p.exclusions.map(e => (
+                                        {p.exclusions.map((e: string) => (
                                             <span key={e} className="text-[9px] font-black uppercase tracking-tight bg-red-50 text-red-700 px-2 py-0.5 rounded-full border border-red-100">
                                                 {e}
                                             </span>

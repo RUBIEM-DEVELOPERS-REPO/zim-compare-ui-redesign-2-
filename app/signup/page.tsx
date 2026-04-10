@@ -91,6 +91,7 @@ export default function SignUpPage() {
     const router = useRouter()
     const { login } = useAppStore()
 
+<<<<<<< Updated upstream
     const updateFormData = (data: Partial<FormData>) => {
         setFormData(prev => ({ ...prev, ...data }))
     }
@@ -118,6 +119,28 @@ export default function SignUpPage() {
         localStorage.setItem("zim_auth_token", mockToken)
         login(formData.email, formData.name, formData.userType)
         router.push("/dashboard")
+=======
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        try {
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, name, role: userType })
+            })
+            const data = await response.json()
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to sign up')
+            }
+
+            localStorage.setItem("zim_auth_token", data.token)
+            login(data.user.email, data.user.name, data.user.role)
+            router.push("/dashboard")
+        } catch (error: any) {
+            alert(error.message)
+        }
+>>>>>>> Stashed changes
     }
 
     const toggleMultiSelect = (field: "interests" | "needs", value: string) => {

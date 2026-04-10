@@ -1,8 +1,8 @@
 "use client"
 
 import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { vehicles } from "@/lib/mock/transport"
+import { useEffect, useState } from "react"
+import { apiGet } from "@/lib/api"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { ArrowLeft, Check, X, Sparkles, Car, Fuel, Settings, Zap, Shield, Wallet } from "lucide-react"
@@ -15,13 +15,29 @@ export default function CarComparePage() {
     const { clearCompareTray } = useAppStore()
     const ids = searchParams.get("ids")?.split(",") || []
 
+    const [vehicles, setVehicles] = useState<Vehicle[]>([])
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         clearCompareTray()
+        apiGet('/mobility/vehicles')
+            .then(res => {
+                setVehicles(res.vehicles || [])
+                setLoading(false)
+            })
+            .catch(() => {
+                setVehicles([])
+                setLoading(false)
+            })
     }, [clearCompareTray])
 
     const selectedVehicles = ids
         .map((id) => vehicles.find((v) => v.id === id))
         .filter((v): v is Vehicle => !!v)
+
+    if (loading) {
+        return <div className="flex items-center justify-center min-h-[60vh] text-muted-foreground">Loading vehicles...</div>
+    }
 
     // Empty state
     if (selectedVehicles.length === 0) {

@@ -1,9 +1,11 @@
 "use client"
 
-import { telecomProviders } from "@/lib/mock/telecoms"
 import { useAppStore } from "@/lib/store"
+import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
+import { Signal, Activity, Zap, Shield, Smartphone } from "lucide-react"
+import type { TelecomProvider } from "@prisma/client"
 import { useI18n } from "@/lib/i18n"
 import { X, Plus, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -18,16 +20,23 @@ const summaryCards = [
 
 interface TelecomOverviewProps {
   location?: string
+  providers?: TelecomProvider[]
 }
 
+<<<<<<< Updated upstream
 export function TelecomOverview({ location = "All Locations" }: TelecomOverviewProps) {
   const { preferences, addToCompareTray, compareTray } = useAppStore()
+=======
+export function TelecomOverview({ location = "All Locations", providers = [] }: TelecomOverviewProps) {
+  const { preferences } = useAppStore()
+>>>>>>> Stashed changes
   const { t } = useI18n()
+  const providerContext = "Based on aggregate analysis of all available mobile network operators and fixed-line fibre ISPs across Zimbabwe's coverage areas."
   const bestProvider = preferences.scenario === "sme" ? "Liquid Telecom" : preferences.scenario === "student" ? "NetOne" : "Econet Wireless"
 
   const filteredProviders = location === "All Locations"
-    ? telecomProviders
-    : telecomProviders.filter(p => p.coverageCities.includes(location))
+    ? providers
+    : providers.filter(p => (p.coverageCities || "[]").includes(location))
 
   return (
     <div className="space-y-6">

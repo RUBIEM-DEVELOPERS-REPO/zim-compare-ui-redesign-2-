@@ -12,13 +12,26 @@ export default function SignInPage() {
     const router = useRouter()
     const { login } = useAppStore()
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Simple mock auth
-        const mockToken = "mock_token_" + Date.now()
-        localStorage.setItem("zim_auth_token", mockToken)
-        login(email, "User", "registered")
-        router.push("/dashboard")
+        try {
+            const response = await fetch('/api/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+            const data = await response.json()
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to sign in')
+            }
+
+            localStorage.setItem("zim_auth_token", data.token)
+            login(data.user.email, data.user.name, data.user.role)
+            router.push("/dashboard")
+        } catch (error: any) {
+            alert(error.message)
+        }
     }
 
     return (

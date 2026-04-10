@@ -1,13 +1,21 @@
 "use client"
 
-import { telecomProviders } from "@/lib/mock/telecoms"
+import { useState } from "react"
+import { useAppStore } from "@/lib/store"
+import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
+<<<<<<< Updated upstream
 import { X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { TelecomCompareBar } from "./telecom-compare-bar"
+=======
+import { X, MapPin, Signal, Battery, Network, Globe2, AlertTriangle, ShieldCheck } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
+import type { TelecomProvider } from "@prisma/client"
+>>>>>>> Stashed changes
 
 const coverageByRegion = [
   { regionKey: "harare", region: "Harare", econet: 98, netone: 95, telecel: 90, telone: 80, liquid: 85 },
@@ -38,16 +46,17 @@ function getCellColor(val: number) {
 
 interface TelecomCoverageProps {
   location?: string
+  providers?: TelecomProvider[]
 }
 
-export function TelecomCoverage({ location = "All Locations" }: TelecomCoverageProps) {
+export function TelecomCoverage({ location = "All Locations", providers = [] }: TelecomCoverageProps) {
   const { t } = useI18n()
   const { addToCompareTray, compareTray } = useAppStore()
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   const filteredProviders = location === "All Locations"
-    ? telecomProviders
-    : telecomProviders.filter(p => p.coverageCities.includes(location))
+    ? providers
+    : providers.filter(p => (p.coverageCities || "[]").includes(location))
 
   return (
     <div className="space-y-6">

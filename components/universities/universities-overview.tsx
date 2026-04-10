@@ -1,9 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { universities } from "@/lib/mock/universities"
+import type { University } from "@/lib/types"
 import { cn } from "@/lib/utils"
-import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
 import { useAppStore } from "@/lib/store"
 import { Check, Plus, AlertCircle, X } from "lucide-react"
@@ -31,19 +30,24 @@ const institutionTypes = [
     { key: "private", label: "Private Institutions" },
 ] as const
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 interface UniversitiesOverviewProps {
+    universities: University[]
     onTabChange: (tab: string) => void
     location?: string
 }
 
-export function UniversitiesOverview({ onTabChange, location = "All Locations" }: UniversitiesOverviewProps) {
+export function UniversitiesOverview({ universities, onTabChange, location = "All Locations" }: UniversitiesOverviewProps) {
     const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
     const [typeFilter, setTypeFilter] = useState<string>("all")
     const [error, setError] = useState<string | null>(null)
 
     const filtered = universities.filter((u) => {
         const typeMatch = typeFilter === "all" || u.type === typeFilter
-        const locationMatch = location === "All Locations" || u.city === location
+        const locationMatch = location === "All Locations" || u.location === location
         return typeMatch && locationMatch
     })
 
@@ -51,6 +55,7 @@ export function UniversitiesOverview({ onTabChange, location = "All Locations" }
 
     return (
         <div className="space-y-6">
+<<<<<<< Updated upstream
             {/* Best for You Highlight - Premium Glass Panel */}
             <div className="glass-panel p-6 bg-primary/5 border-primary/20 shadow-2xl relative overflow-hidden group">
                 <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
@@ -58,12 +63,21 @@ export function UniversitiesOverview({ onTabChange, location = "All Locations" }
                 <h2 className="text-2xl font-bold text-foreground tracking-tight uppercase">{bestUniversity.name}</h2>
                 <p className="text-xs text-muted-foreground mt-2 max-w-lg leading-relaxed font-medium">
                     Based on your affordability, academic strength, and employability preferences.
+=======
+            {/* Best for You Highlight */}
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+                <p className="text-xs text-muted-foreground mb-1">Best University for You {location !== "All Locations" ? `in ${location}` : ""}</p>
+                <p className="text-lg font-semibold text-foreground">{bestUniversity?.university || "Multiple Options Available"}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                    Based on your affordability and location availability.
+>>>>>>> Stashed changes
                 </p>
                 <div className="mt-6 pt-4 border-t border-white/5">
                     <Disclaimer />
                 </div>
             </div>
 
+<<<<<<< Updated upstream
             {/* Quick Recommendation Cards - Premium Glass Cards */}
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryCards.map((c) => {
@@ -79,6 +93,27 @@ export function UniversitiesOverview({ onTabChange, location = "All Locations" }
                     )
                 })}
             </div>
+=======
+            {/* Quick Recommendation Cards - computed dynamically */}
+            {(() => {
+                const sorted = [...filtered].sort((a, b) => (a.feeMinUSD || 999999) - (b.feeMinUSD || 999999))
+                const mostAffordable = sorted[0]
+                const dynamicCards = [
+                    mostAffordable && { label: "Most Affordable", value: mostAffordable.university, detail: `$${mostAffordable.feeMinUSD?.toLocaleString() || "N/A"}/sem` },
+                ].filter(Boolean)
+                return dynamicCards.length > 0 ? (
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                        {dynamicCards.map((c: any) => (
+                            <div key={c.label} className="rounded-xl border border-border bg-card p-4">
+                                <p className="text-xs text-muted-foreground">{c.label}</p>
+                                <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
+                                <p className="text-xs text-primary mt-1">{c.detail}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : null
+            })()}
+>>>>>>> Stashed changes
 
             {/* Overview Highlight Cards - Navigation Tiles */}
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -144,6 +179,7 @@ export function UniversitiesOverview({ onTabChange, location = "All Locations" }
                                         {error}
                                     </div>
                                 )}
+<<<<<<< Updated upstream
                                 <div className="flex items-start justify-between gap-3 mb-4">
                                     <p className="text-sm font-black text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{uni.name}</p>
                                     <span className="shrink-0 text-[10px] font-black uppercase tracking-widest bg-muted/40 text-muted-foreground px-2.5 py-1 rounded-lg border border-white/5">
@@ -158,6 +194,18 @@ export function UniversitiesOverview({ onTabChange, location = "All Locations" }
                                     <div>
                                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{uni.city}, {uni.province}</p>
                                         <p className="text-sm font-black text-primary mt-1 tabular-nums tracking-tighter">${uni.annualFees.toLocaleString()}/year</p>
+=======
+                                <div className="flex items-center justify-between mb-2 mt-4">
+                                    <p className="text-sm font-semibold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{uni.university}</p>
+                                    <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
+                                        {uni.type.replace("_", " ")}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between mt-auto pt-2 border-t border-border/50">
+                                    <div>
+                                        <p className="text-[10px] text-muted-foreground">{uni.location}, {uni.provinceArea}</p>
+                                        <p className="text-xs font-bold text-teal-600 mt-0.5">${(uni.feeMinUSD || 0).toLocaleString()}/year</p>
+>>>>>>> Stashed changes
                                     </div>
                                     <button
                                         onClick={(e) => {

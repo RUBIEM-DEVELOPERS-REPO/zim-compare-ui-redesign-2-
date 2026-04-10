@@ -1,0 +1,375 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("guest")
+  isPaid    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  savedComparisons SavedComparison[]
+}
+
+// ── Banking ──
+
+model Bank {
+  id                String  @id
+  name              String
+  type              String // "commercial", "building_society", "microfinance"
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  branches          Int
+  digitalFeatures   String // JSON stringified array
+  locations         String // JSON stringified array
+
+  products BankingProduct[]
+  fees     BankFee[]
+  loans    BankLoan[]
+}
+
+model BankingProduct {
+  id           String @id
+  bankId       String
+  bankName     String
+  category     String // "savings", "current", "student", "salary", "sme"
+  name         String
+  interestRate Float
+  minBalance   Float
+  monthlyFee   Float
+  perks        String // JSON stringified array
+
+  bank Bank @relation(fields: [bankId], references: [id])
+}
+
+model BankFee {
+  id          String @id
+  bankId      String
+  bankName    String
+  category    String // "transaction", "atm_card", "fx_transfers", "penalties", "hidden"
+  name        String
+  amount      Float
+  unit        String
+  description String
+
+  bank Bank @relation(fields: [bankId], references: [id])
+}
+
+model BankLoan {
+  id                     String @id
+  bankId                 String
+  bankName               String
+  category               String // "personal", "sme", "mortgage", "vehicle", "salary_based"
+  name                   String
+  apr                    Float
+  initiationFee          Float
+  earlySettlementPenalty Float
+  maxTermMonths          Int
+  requirements           String // JSON stringified array
+
+  bank Bank @relation(fields: [bankId], references: [id])
+}
+
+// ── Telecom ──
+
+model TelecomProvider {
+  id                String  @id
+  name              String
+  type              String
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  coverageScore     Int
+  networkType       String
+  coverageCities    String // JSON stringified array
+
+  bundles    DataBundle[]
+  voiceRates VoiceRate[]
+}
+
+model DataBundle {
+  id                    String  @id @default(cuid())
+  operator              String
+  currency              String
+  bundle_group          String
+  bundle_name           String
+  price                 Float
+  validity_type         String
+  validity_value        Int
+  validity_unit         String
+  total_data_mb         Float
+  peak_data_mb          Float?
+  offpeak_data_mb       Float?
+  onnet_minutes         Float?
+  other_minutes         Float?
+  cug_minutes           Float?
+  international_minutes Float?
+  sms_count             Float?
+  facebook_mb           Float?
+  instagram_mb          Float?
+  x_mb                  Float?
+  extras                String?
+  ussd_code             String?
+  source_url            String?
+  source_name           String?
+
+  provider TelecomProvider @relation(fields: [operator], references: [id])
+}
+
+model VoiceRate {
+  id                  String  @id @default(cuid())
+  operator            String
+  offer_type          String
+  bundle_group        String
+  bundle_name         String
+  price               Float
+  validity_type       String
+  validity_value      Int
+  validity_unit       String
+  offpeak_type        String?
+  price_unit          String?
+  onnet_min_count     Float?
+  offnet_min_count    Float?
+  landline_min_count  Float?
+  intl_min_count      Float?
+  sms_count           Float?
+  offpeak_sms_count   Float?
+  extras              String?
+  ussd_code           String?
+  source_url          String?
+  source_name         String?
+
+  provider TelecomProvider @relation(fields: [operator], references: [id])
+}
+
+// ── Schools ──
+
+model School {
+  id                  String  @id
+  name                String
+  type                String // "boarding", "day", "both"
+  logo                String?
+  transparencyScore   Int
+  digitalScore        Int?
+  website             String?
+  headOfficeAddress   String?
+  contactPhone        String?
+  contactEmail        String?
+  curriculum          String // JSON stringified array
+  province            String
+  city                String
+  tuitionPerTerm      Float
+  boardingFeePerTerm  Float?
+  totalAnnualCost     Float
+  passRate            Float
+  studentTeacherRatio Float
+  facilities          String // JSON stringified array
+  sports              String // JSON stringified array
+  academicScore       Int
+  safetyScore         Int
+}
+
+// ── Universities ──
+
+model University {
+  id                 String  @id
+  university         String
+  location           String
+  provinceArea       String
+  type               String
+  programmeSummary   String?
+  feeMinUSD          Float?
+  feeMaxUSD          Float?
+  feeNote            String?
+  feeConfidence      String?
+  programmeSourceUrl String?
+
+  @@map("universities")
+}
+
+// ── Insurance ──
+
+model InsuranceProvider {
+  id                String  @id
+  name              String
+  type              String
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  claimsScore       Int
+  avgClaimDays      Int
+  serviceAreas      String // JSON stringified array
+
+  policies Policy[]
+}
+
+model Policy {
+  id                String @id
+  providerId        String
+  providerName      String
+  category          String // "motor", "medical", "life_funeral", "property_business"
+  name              String
+  monthlyPremium    Float
+  annualPremium     Float
+  excess            Float
+  waitingPeriodDays Int
+  coverLimit        Float
+  benefits          String // JSON stringified array
+  exclusions        String // JSON stringified array
+
+  provider InsuranceProvider @relation(fields: [providerId], references: [id])
+}
+
+// ── App State ──
+
+model SavedComparison {
+  id        String   @id @default(cuid())
+  userId    String
+  category  String
+  name      String
+  itemIds   String // JSON stringified array
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String? // nullable for global alerts
+  type      String
+  category  String
+  itemId    String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model RecentView {
+  id        String   @id @default(cuid())
+  userId    String
+  category  String
+  itemId    String
+  name      String
+  timestamp DateTime @default(now())
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String?
+  role      String // "user", "assistant"
+  content   String
+  timestamp DateTime @default(now())
+}
+
+// Additional models needed based on routes:
+model Vehicle {
+  id                 String  @id
+  dealershipId       String
+  dealershipName     String
+  make               String
+  model              String
+  year               Int
+  price              Float
+  engineCC           Float
+  fuelType           String
+  mileage            Int
+  transmission       String
+  color              String
+  financingAvailable Boolean
+  condition          String
+  bestValue          Boolean @default(false)
+  location           String
+  range              Float?
+  batterySize        Float?
+  owners             Int?
+}
+
+model CarDealership {
+  id                 String  @id
+  name               String
+  city               String
+  brands             String // JSON string
+  verified           Boolean
+  yearsActive        Int
+  stockCount         Int
+  financingAvailable Boolean
+  rating             Float
+  phone              String
+}
+
+model DrivingSchool {
+  id               String  @id
+  name             String
+  city             String
+  pricePerLesson   Float
+  packagePrice     Float
+  lessonsInPackage Int
+  passRate         Float
+  yearsActive      Int
+  verified         Boolean
+  phone            String
+}
+
+model BusRoute {
+  id             String  @id
+  providerId     String
+  providerName   String
+  origin         String
+  destination    String
+  price          Float
+  durationHours  Float
+  departureTimes String // JSON string
+  crossBorder    Boolean
+  borderCrossing String?
+  amenities      String // JSON string
+  busType        String
+}
+
+model Hotel {
+  id            String @id
+  name          String
+  location      String
+  stars         Int
+  pricePerNight Float
+  amenities     String // JSON string
+  rating        Float
+}
+
+model SolarProvider {
+  id       String @id
+  name     String
+  rating   Float
+  packages String // JSON string
+}
+
+model UtilityProvider {
+  id     String @id
+  name   String
+  type   String // electricity, water, internet
+  rating Float
+}

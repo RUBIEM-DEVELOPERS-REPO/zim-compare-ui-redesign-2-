@@ -1,0 +1,29 @@
+import jwt from "jsonwebtoken"
+
+const JWT_SECRET = process.env.JWT_SECRET || "zimcompare_super_secret_key_123"
+
+export interface AuthPayload {
+  id: string
+  email: string
+  name: string
+  role: string
+}
+
+export function signToken(payload: AuthPayload): string {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" })
+}
+
+export function verifyToken(token: string): AuthPayload | null {
+  try {
+    return jwt.verify(token, JWT_SECRET) as AuthPayload
+  } catch (error) {
+    return null
+  }
+}
+
+export function getTokenFromHeader(authHeader: string | null): string | null {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return null
+  }
+  return authHeader.split(" ")[1]
+}

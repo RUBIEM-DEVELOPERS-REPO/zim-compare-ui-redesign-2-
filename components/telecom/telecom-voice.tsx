@@ -1,23 +1,38 @@
 "use client"
 
 import { useState } from "react"
-import { voiceRates, telecomProviders } from "@/lib/mock/telecoms"
+import { useAppStore } from "@/lib/store"
 import { Disclaimer } from "@/components/disclaimer"
 import { cn } from "@/lib/utils"
+<<<<<<< Updated upstream
 import { LucideIcon, X, Check, Plus, CheckCircle2 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { TelecomCompareBar } from "./telecom-compare-bar"
+=======
+import { LucideIcon, X, Check } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
+import type { VoiceRate, TelecomProvider } from "@prisma/client"
+>>>>>>> Stashed changes
 
 interface TelecomVoiceProps {
   location?: string
+  voiceRates?: VoiceRate[]
+  providers?: TelecomProvider[]
 }
 
+<<<<<<< Updated upstream
 export function TelecomVoice({ location = "All Locations" }: TelecomVoiceProps) {
   const { addToCompareTray, compareTray } = useAppStore()
+=======
+export function TelecomVoice({ location = "All Locations", voiceRates = [], providers = [] }: TelecomVoiceProps) {
+  const [minutes, setMinutes] = useState(60)
+  const [sms, setSms] = useState(30)
+  const { t } = useI18n()
+>>>>>>> Stashed changes
 
   const filteredProviders = location === "All Locations"
-    ? telecomProviders
-    : telecomProviders.filter(p => p.coverageCities.includes(location))
+    ? providers
+    : providers.filter(p => (p.coverageCities || "[]").includes(location))
 
   const providerData = filteredProviders
     .filter((p) => p.type === "MNO")

@@ -82,16 +82,37 @@ export interface TelecomProvider extends Institution {
 
 export interface DataBundle {
   id: string
+<<<<<<< Updated upstream
   providerId: string
   providerName: string
   category: "daily" | "weekly" | "monthly" | "night" | "social" | "unlimited" | "internet"
   name: string
+=======
+  operator: string
+  currency: string
+  bundle_group: string
+  bundle_name: string
+>>>>>>> Stashed changes
   price: number
-  dataGB: number
-  validityDays: number
-  costPerGB: number
-  speedClass: string
-  fupNote: string
+  validity_type: string
+  validity_value: number
+  validity_unit: string
+  total_data_mb: number
+  peak_data_mb?: number | null
+  offpeak_data_mb?: number | null
+  onnet_minutes?: number | null
+  other_minutes?: number | null
+  cug_minutes?: number | null
+  international_minutes?: number | null
+  sms_count?: number | null
+  facebook_mb?: number | null
+  instagram_mb?: number | null
+  x_mb?: number | null
+  extras?: string | null
+  ussd_code?: string | null
+  source_url?: string | null
+  source_name?: string | null
+  provider?: TelecomProvider
 }
 
 export interface VoiceRate {
@@ -135,28 +156,16 @@ export interface School {
 
 export interface University {
   id: string
-  name: string
-  type: "university" | "college" | "polytechnic" | "teacher_training" | "private"
-  province: string
-  city: string
-  annualFees: number
-  applicationFee: number
-  ranking: {
-    local?: number
-    global?: number
-  }
-  accreditationStatus: string
-  acceptanceRate?: number
-  academicScore: number
-  affordabilityScore: number
-  employabilityScore: number
-  faculties: string[]
-  programs: string[]
-  accommodationAvailable: boolean
-  onlineLearningAvailable: boolean
-  studentLifeRating: number
-  graduateEmployabilityScore: number
-  applicationRequirements: string[]
+  university: string
+  location: string
+  provinceArea: string
+  type: string
+  programmeSummary?: string | null
+  feeMinUSD?: number | null
+  feeMaxUSD?: number | null
+  feeNote?: string | null
+  feeConfidence?: string | null
+  programmeSourceUrl?: string | null
 }
 
 // ── Insurance ──

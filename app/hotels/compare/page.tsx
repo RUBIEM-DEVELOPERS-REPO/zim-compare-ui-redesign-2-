@@ -1,11 +1,11 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { hotels } from "@/lib/mock/hotels"
+import { apiGet } from "@/lib/api"
 import { useI18n } from "@/lib/i18n"
 import { Badge } from "@/components/ui/badge"
 import { Star, Check, X, Shield, Award, Users, Heart, Briefcase, ShoppingCart } from "lucide-react"
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useAppStore } from "@/lib/store"
 
 function CompareContent() {
@@ -14,11 +14,27 @@ function CompareContent() {
     const ids = searchParams.get("ids")?.split(",") ?? []
     const { t } = useI18n()
 
+    const [hotels, setHotels] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         clearCompareTray()
+        apiGet('/hotels')
+            .then(res => {
+                setHotels(res.hotels || [])
+                setLoading(false)
+            })
+            .catch(() => {
+                setHotels([])
+                setLoading(false)
+            })
     }, [clearCompareTray])
 
     const selectedHotels = hotels.filter((h) => ids.includes(h.id))
+
+    if (loading) {
+        return <div className="flex items-center justify-center min-h-[400px] text-muted-foreground">Loading comparison...</div>
+    }
 
     if (selectedHotels.length < 2) {
         return (

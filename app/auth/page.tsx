@@ -31,7 +31,7 @@ export default function AuthPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    login(email, name || email.split("@")[0])
+    login(email, name || email.split("@")[0], "registered")
     router.push("/")
   }
 

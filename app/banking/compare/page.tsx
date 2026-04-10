@@ -1,12 +1,12 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { banks, bankingProducts, bankFees } from "@/lib/mock/banks"
+import { apiGet } from "@/lib/api"
 import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, useState } from "react"
 
 function CompareContent() {
   const searchParams = useSearchParams()
@@ -14,9 +14,29 @@ function CompareContent() {
   const { addSavedComparison, clearCompareTray } = useAppStore()
   const { t } = useI18n()
 
+  const [banks, setBanks] = useState<any[]>([])
+  const [bankingProducts, setBankingProducts] = useState<any[]>([])
+  const [bankFees, setBankFees] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     clearCompareTray()
+    
+    Promise.all([
+      apiGet('/banking/banks').catch(() => ({ banks: [] })),
+      apiGet('/banking/products').catch(() => ({ products: [] })),
+      apiGet('/banking/fees').catch(() => ({ fees: [] }))
+    ]).then(([bRes, pRes, fRes]) => {
+      setBanks(bRes.banks || [])
+      setBankingProducts(pRes.products || [])
+      setBankFees(fRes.fees || [])
+      setLoading(false)
+    })
   }, [clearCompareTray])
+
+  if (loading) {
+    return <div className="text-center py-12 text-muted-foreground">Loading comparison...</div>
+  }
 
   const compareBanks = banks.filter((b) => ids.includes(b.id))
   const compareProducts = bankingProducts.filter((p) => ids.includes(p.id))

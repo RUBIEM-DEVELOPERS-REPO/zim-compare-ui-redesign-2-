@@ -1,18 +1,10 @@
 import type { InsuranceProvider, Policy } from "@/lib/types"
 
-export const insuranceProviders: InsuranceProvider[] = [
-  { id: "old-mutual", name: "Old Mutual", type: "life_general", transparencyScore: 85, claimsScore: 82, avgClaimDays: 14, serviceAreas: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Chinhoyi", "Marondera", "Kwekwe", "Kadoma", "Victoria Falls"] },
-  { id: "first-mutual", name: "First Mutual", type: "life_general", transparencyScore: 80, claimsScore: 78, avgClaimDays: 18, serviceAreas: ["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo"] },
-  { id: "zimnat", name: "Zimnat", type: "general", transparencyScore: 82, claimsScore: 80, avgClaimDays: 12, serviceAreas: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Victoria Falls"] },
-  { id: "nicoz-diamond", name: "Nicoz Diamond", type: "general", transparencyScore: 75, claimsScore: 72, avgClaimDays: 20, serviceAreas: ["Harare", "Bulawayo", "Mutare", "Gweru"] },
-  { id: "sanctuary", name: "Sanctuary Insurance", type: "general", transparencyScore: 70, claimsScore: 68, avgClaimDays: 22, serviceAreas: ["Harare", "Bulawayo"] },
-  { id: "cellinsure", name: "Cell Insurance", type: "general", transparencyScore: 68, claimsScore: 65, avgClaimDays: 25, serviceAreas: ["Harare", "Bulawayo"] },
-  { id: "cimas", name: "CIMAS", type: "medical", transparencyScore: 88, claimsScore: 85, avgClaimDays: 7, serviceAreas: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Chinhoyi", "Marondera", "Kwekwe", "Kadoma", "Victoria Falls"] },
-  { id: "psmas", name: "PSMAS", type: "medical", transparencyScore: 72, claimsScore: 70, avgClaimDays: 15, serviceAreas: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Chinhoyi", "Marondera", "Kwekwe", "Kadoma", "Victoria Falls"] },
-  { id: "femas", name: "FEMAS", type: "medical", transparencyScore: 74, claimsScore: 73, avgClaimDays: 12, serviceAreas: ["Harare", "Bulawayo", "Gweru", "Mutare"] },
-  { id: "alliance", name: "Alliance Health", type: "medical", transparencyScore: 78, claimsScore: 76, avgClaimDays: 10, serviceAreas: ["Harare", "Bulawayo", "Mutare", "Victora Falls"] },
-]
+export const insuranceProviders: InsuranceProvider[] = [];
 
+export const policies: Policy[] = [];
+
+<<<<<<< Updated upstream
 export const policies: Policy[] = [
   // Motor
   { id: "om-motor-comp", providerId: "old-mutual", providerName: "Old Mutual", category: "motor", name: "Comprehensive Motor", monthlyPremium: 45, annualPremium: 500, excess: 200, waitingPeriodDays: 0, coverLimit: 50000, benefits: ["Accident cover", "Theft cover", "Third party", "Windscreen", "Roadside assist"], exclusions: ["Racing", "Unlicensed drivers", "Intoxication"], type: "Full Cover" },
@@ -52,3 +44,5 @@ export const policies: Policy[] = [
   { id: "nicoz-biz", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "property_business", name: "Nicoz Business Protect", monthlyPremium: 55, annualPremium: 610, excess: 700, waitingPeriodDays: 0, coverLimit: 120000, benefits: ["Property", "Liability", "Stock cover"], exclusions: ["Cyber", "Employee fraud"], type: "Landlord Cover" },
   { id: "om-biz", providerId: "old-mutual", providerName: "Old Mutual", category: "property_business", name: "Old Mutual Business Suite", monthlyPremium: 90, annualPremium: 1000, excess: 1200, waitingPeriodDays: 0, coverLimit: 250000, benefits: ["All risks", "Business interruption", "Liability", "Fidelity", "Money"], exclusions: ["War", "Nuclear", "Cyber"], type: "All Risks Cover" },
 ]
+=======
+>>>>>>> Stashed changes

@@ -1,13 +1,19 @@
 "use client"
 
-import { telecomProviders, dataBundles } from "@/lib/mock/telecoms"
+import { useState } from "react"
+import type { TelecomProvider, DataBundle } from "@prisma/client"
+import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
+<<<<<<< Updated upstream
 import { X, Plus, CheckCircle2 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { TelecomCompareBar } from "./telecom-compare-bar"
 import { useI18n } from "@/lib/i18n"
+=======
+import { X, Search } from "lucide-react"
+>>>>>>> Stashed changes
 
 const providerDetails: Record<string, { summary: string; strengths: string[]; weaknesses: string[]; ussd: string }> = {
   econet: {
@@ -56,14 +62,29 @@ const providerDetails: Record<string, { summary: string; strengths: string[]; we
 
 interface TelecomProfilesProps {
   location?: string
+  providers?: TelecomProvider[]
+  bundles?: DataBundle[]
 }
 
+<<<<<<< Updated upstream
 export function TelecomProfiles({ location = "All Locations" }: TelecomProfilesProps) {
   const { t } = useI18n()
   const { addToCompareTray, compareTray } = useAppStore()
   const filteredProviders = location === "All Locations"
     ? telecomProviders
     : telecomProviders.filter(p => p.coverageCities.includes(location))
+=======
+export function TelecomProfiles({ location = "All Locations", providers = [], bundles = [] }: TelecomProfilesProps) {
+  const [search, setSearch] = useState("")
+  const { addToCompareTray, compareTray } = useAppStore()
+
+  const filteredProviders = providers.filter((p) => {
+    if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false
+    const citiesStr = (p.coverageCities || "[]")
+    if (location !== "All Locations" && !citiesStr.includes(location)) return false
+    return true
+  })
+>>>>>>> Stashed changes
 
   return (
     <div className="space-y-6">
@@ -78,9 +99,9 @@ export function TelecomProfiles({ location = "All Locations" }: TelecomProfilesP
         </div>
       ) : (
         filteredProviders.map((p) => {
-          const details = providerDetails[p.id]
-          const bundleCount = dataBundles.filter((b) => b.providerId === p.id).length
-          const cheapest = dataBundles.filter((b) => b.providerId === p.id).sort((a, b) => a.costPerGB - b.costPerGB)[0]
+          const details = providerDetails[p.id.toLowerCase().replace('tel-','')] || providerDetails['econet'] // fallback details
+          const bundleCount = bundles.filter((b) => b.operator === p.id).length
+          const cheapest = [...bundles].filter((b) => b.operator === p.id && b.total_data_mb > 0).sort((a, b) => (a.price / a.total_data_mb) - (b.price / b.total_data_mb))[0]
 
           return (
             <div

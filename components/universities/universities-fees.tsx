@@ -1,26 +1,26 @@
 "use client"
 
-import { universities } from "@/lib/mock/universities"
+import type { University } from "@/lib/types"
 import { cn } from "@/lib/utils"
-import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
 import { useAppStore } from "@/lib/store"
 import { Check, Plus, AlertCircle } from "lucide-react"
 import { useState } from "react"
 
 interface UniversitiesFeesProps {
+    universities: University[]
     location?: string
 }
 
-export function UniversitiesFees({ location }: UniversitiesFeesProps) {
+export function UniversitiesFees({ universities, location }: UniversitiesFeesProps) {
     const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
     const [error, setError] = useState<string | null>(null)
 
     const filteredUniversities = location && location !== "All Locations"
-        ? universities.filter(u => u.city === location)
+        ? universities.filter(u => u.location === location)
         : universities
 
-    const sorted = [...filteredUniversities].sort((a, b) => a.annualFees - b.annualFees)
+    const sorted = [...filteredUniversities].sort((a, b) => (a.feeMinUSD || 999999) - (b.feeMinUSD || 999999))
 
     const handleCompare = (e: React.MouseEvent, id: string) => {
         e.stopPropagation()
@@ -39,6 +39,7 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
 
     return (
         <div className="space-y-6">
+<<<<<<< Updated upstream
             <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
                 <div className="glass-card p-5 group hover:-translate-y-1 transition-all duration-300">
                     <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none mb-3">Most Affordable</p>
@@ -69,6 +70,23 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
                     <p className="text-[11px] font-black text-primary mt-2 uppercase tracking-tighter">
                         {[...universities].sort((a, b) => b.employabilityScore - a.employabilityScore)[0].employabilityScore}% Employability
                     </p>
+=======
+            <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
+                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Most Affordable</p>
+                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">{sorted[0]?.university || "—"}</p>
+                    <p className="text-[11px] font-bold text-teal-600 mt-1">${(sorted[0]?.feeMinUSD || 0).toLocaleString()}/year</p>
+                </div>
+                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Fee Range</p>
+                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">Wide Options</p>
+                    <p className="text-[11px] font-bold text-teal-600 mt-1">{filteredUniversities.length} institutions listed</p>
+                </div>
+                <div className="rounded-2xl border border-teal-200/50 bg-teal-50/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5 hover:-translate-y-1">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Highest Fees</p>
+                    <p className="text-sm font-black text-foreground mt-2 uppercase tracking-tight">{sorted[sorted.length - 1]?.university || "—"}</p>
+                    <p className="text-[11px] font-bold text-teal-600 mt-1">${(sorted[sorted.length - 1]?.feeMaxUSD || 0).toLocaleString()}/year</p>
+>>>>>>> Stashed changes
                 </div>
             </div>
 
@@ -91,6 +109,7 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
                                     {error}
                                 </div>
                             )}
+<<<<<<< Updated upstream
                             <div className="flex items-start justify-between gap-3 mb-4">
                                 <p className="text-sm font-black text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{uni.name}</p>
                             </div>
@@ -118,13 +137,41 @@ export function UniversitiesFees({ location }: UniversitiesFeesProps) {
                                         {uni.ranking.global && `#${uni.ranking.global} Global`}
                                         {!uni.ranking.local && !uni.ranking.global && "Not Ranked"}
                                     </p>
+=======
+                            <div className="flex items-center justify-between mb-3">
+                                <p className="text-sm font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">
+                                    {uni.university}
+                                </p>
+                            </div>
+                            <p className="text-[10px] font-bold text-muted-foreground mb-4 uppercase tracking-wider">
+                                {uni.location}, {uni.provinceArea}
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
+                                <div className="rounded-xl bg-secondary/30 p-3">
+                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Min Fees</p>
+                                    <p className="text-teal-600">${(uni.feeMinUSD || 0).toLocaleString()}</p>
+                                </div>
+                                <div className="rounded-xl bg-secondary/30 p-3">
+                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Max Fees</p>
+                                    <p className="text-foreground">${(uni.feeMaxUSD || 0).toLocaleString()}</p>
+                                </div>
+                                <div className="rounded-xl bg-secondary/30 p-3 col-span-2">
+                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Type</p>
+                                    <p className="text-foreground capitalize">{uni.type.replace("_", " ")}</p>
+>>>>>>> Stashed changes
                                 </div>
                             </div>
 
                             <div className="pt-5 border-t border-white/5 flex items-center justify-between mt-auto">
                                 <div>
+<<<<<<< Updated upstream
                                     <p className="text-[9px] font-black text-muted-foreground mb-1 uppercase tracking-widest leading-none">Accreditation</p>
                                     <p className="text-[10px] font-black text-foreground uppercase tracking-tight">{uni.accreditationStatus}</p>
+=======
+                                    <p className="text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">Fee Confidence</p>
+                                    <p className="text-[10px] font-medium text-foreground">{uni.feeConfidence || "Unknown"}</p>
+>>>>>>> Stashed changes
                                 </div>
                                 <button
                                     onClick={(e) => handleCompare(e, uni.id)}

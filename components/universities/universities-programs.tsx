@@ -1,6 +1,6 @@
 "use client"
 
-import { universities } from "@/lib/mock/universities"
+import type { University } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
 import { useAppStore } from "@/lib/store"
@@ -8,25 +8,33 @@ import { Check, Plus, AlertCircle } from "lucide-react"
 import { useState } from "react"
 
 interface UniversitiesProgramsProps {
+    universities: University[]
     location?: string
 }
 
-export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
+export function UniversitiesPrograms({ universities, location }: UniversitiesProgramsProps) {
     const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
     const [error, setError] = useState<string | null>(null)
 
     const filteredUniversities = location && location !== "All Locations"
-        ? universities.filter((u) => u.city === location)
+        ? universities.filter((u) => u.location === location)
         : universities
 
     const handleCompare = (uniId: string) => {
         const isSelected = compareTray.ids.includes(uniId)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (isSelected) {
             removeFromCompareTray(uniId)
         } else {
             if (compareTray.ids.length >= 3) {
+<<<<<<< Updated upstream
                 setError("You can only compare up to 3 institutions.")
+=======
+                setError("You can only compare up to 3 universities.")
+>>>>>>> Stashed changes
                 setTimeout(() => setError(null), 3000)
                 return
             }
@@ -37,7 +45,7 @@ export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
     return (
         <div className="space-y-6">
             <section>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Programs & Faculties by Institution</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-3">Programmes by Institution</h3>
                 <div className="grid gap-4">
                     {filteredUniversities.map((uni) => (
                         <div
@@ -49,11 +57,12 @@ export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">{uni.name}</h4>
+                                    <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">{uni.university}</h4>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1">
-                                        {uni.city}, {uni.province}
+                                        {uni.location}, {uni.provinceArea}
                                     </p>
                                 </div>
+<<<<<<< Updated upstream
                                 <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
                                     {uni.type.replace("_", " ")}
                                 </span>
@@ -105,9 +114,51 @@ export function UniversitiesPrograms({ location }: UniversitiesProgramsProps) {
                                             )
                                         })}
                                     </div>
+=======
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
+                                        {uni.type.replace("_", " ")}
+                                    </span>
+                                    <button
+                                        onClick={() => handleCompare(uni.id)}
+                                        className={cn(
+                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border",
+                                            compareTray.ids.includes(uni.id)
+                                                ? "bg-teal-600 text-white border-teal-600 shadow-lg shadow-teal-600/20"
+                                                : "bg-teal-50 text-teal-700 border-teal-100 hover:bg-teal-100"
+                                        )}
+                                    >
+                                        {compareTray.ids.includes(uni.id) ? (
+                                            <>
+                                                <Check size={12} strokeWidth={3} />
+                                                <span>Added</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Plus size={12} strokeWidth={3} />
+                                                <span>Compare</span>
+                                            </>
+                                        )}
+                                    </button>
+>>>>>>> Stashed changes
                                 </div>
                             </div>
-                            {/* Error Toast locally */}
+
+                            {uni.programmeSummary && (
+                                <div className="rounded-xl bg-secondary/30 p-3">
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight mb-1">Programme Summary</p>
+                                    <p className="text-xs font-medium">{uni.programmeSummary}</p>
+                                </div>
+                            )}
+
+                            {uni.programmeSourceUrl && (
+                                <p className="mt-2 text-[11px] text-blue-600">
+                                    <a href={uni.programmeSourceUrl} target="_blank" rel="noreferrer" className="hover:underline">
+                                        View Programme Details →
+                                    </a>
+                                </p>
+                            )}
+
                             {error && compareTray.ids.length >= 3 && (
                                 <div className="mt-3 flex items-center gap-1.5 text-[10px] text-destructive font-bold animate-in fade-in slide-in-from-left-1">
                                     <AlertCircle size={12} />

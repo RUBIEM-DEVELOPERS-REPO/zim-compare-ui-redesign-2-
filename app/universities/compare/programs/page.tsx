@@ -4,20 +4,18 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { universities } from "@/lib/mock/universities"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
-import { ArrowLeft, Check, X, Sparkles, GraduationCap } from "lucide-react"
+import { ArrowLeft, Sparkles, GraduationCap } from "lucide-react"
 import Link from "next/link"
 import { useEffect } from "react"
 import { University } from "@/lib/types"
 
 interface SelectedProgram {
     university: University
-    programName: string
     id: string
 }
 
 export default function UniversityProgramsComparePage() {
     const searchParams = useSearchParams()
-    const router = useRouter()
     const { clearCompareTray } = useAppStore()
     const ids = searchParams.get("ids")?.split(",") || []
 
@@ -26,11 +24,10 @@ export default function UniversityProgramsComparePage() {
     }, [clearCompareTray])
 
     const selectedPrograms: SelectedProgram[] = ids
-        .map((compositeId) => {
-            const [uniId, programName] = compositeId.split(":")
+        .map((uniId) => {
             const university = universities.find((u) => u.id === uniId)
-            if (university && university.programs.includes(programName)) {
-                return { university, programName, id: compositeId }
+            if (university) {
+                return { university, id: uniId }
             }
             return null
         })
@@ -44,9 +41,9 @@ export default function UniversityProgramsComparePage() {
                     <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <GraduationCap className="w-8 h-8 text-teal-600" />
                     </div>
-                    <h2 className="text-xl font-bold text-foreground mb-2">No programs selected for comparison</h2>
+                    <h2 className="text-xl font-bold text-foreground mb-2">No institutions selected for comparison</h2>
                     <p className="text-sm text-muted-foreground mb-6">
-                        Please select at least 2 programs from the Universities page to compare.
+                        Please select at least 2 institutions from the Universities page to compare.
                     </p>
                     <Link
                         href="/universities"
@@ -65,9 +62,9 @@ export default function UniversityProgramsComparePage() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-semibold text-foreground">Program Comparison</h1>
+                    <h1 className="text-xl font-semibold text-foreground">Programme Comparison</h1>
                     <p className="text-sm text-muted-foreground">
-                        Comparing {selectedPrograms.length} academic program{selectedPrograms.length > 1 ? "s" : ""}
+                        Comparing {selectedPrograms.length} institution{selectedPrograms.length > 1 ? "s" : ""}
                     </p>
                 </div>
                 <Link
@@ -84,6 +81,7 @@ export default function UniversityProgramsComparePage() {
                 <div className="inline-block min-w-full align-middle">
                     <div className="grid-dynamic-cols gap-4" data-columns={selectedPrograms.length}>
                         {/* Header Row */}
+<<<<<<< Updated upstream
                         <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center col-span-1">
                             Program Detail
                         </div>
@@ -91,11 +89,20 @@ export default function UniversityProgramsComparePage() {
                             <div key={p.id} className="bg-teal-50 border border-teal-100 rounded-lg p-4 col-span-1">
                                 <h3 className="font-bold text-sm text-foreground uppercase tracking-tight mb-1">{p.programName}</h3>
                                 <p className="text-[10px] text-teal-700 font-bold uppercase tracking-wider">{p.university.name}</p>
+=======
+                        <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center">
+                            Detail
+                        </div>
+                        {selectedPrograms.map((p) => (
+                            <div key={p.id} className="bg-teal-50 border border-teal-100 rounded-lg p-4">
+                                <h3 className="font-bold text-sm text-foreground uppercase tracking-tight mb-1">{p.university.university}</h3>
+                                <p className="text-[10px] text-teal-700 font-bold uppercase tracking-wider">{p.university.location}</p>
+>>>>>>> Stashed changes
                             </div>
                         ))}
 
                         {/* University Details */}
-                        <ComparisonRow label="University Type">
+                        <ComparisonRow label="Institution Type">
                             {selectedPrograms.map((p) => (
                                 <span key={p.id} className="text-xs font-medium capitalize">
                                     {p.university.type.replace("_", " ")}
@@ -103,79 +110,52 @@ export default function UniversityProgramsComparePage() {
                             ))}
                         </ComparisonRow>
 
-                        <ComparisonRow label="Location">
+                        <ComparisonRow label="Region">
                             {selectedPrograms.map((p) => (
                                 <span key={p.id} className="text-xs font-medium">
-                                    {p.university.city}
+                                    {p.university.provinceArea}
                                 </span>
                             ))}
                         </ComparisonRow>
 
-                        {/* Program Scores */}
-                        <ComparisonRow label="Academic Strength" highlight>
-                            {selectedPrograms.map((p) => (
-                                <span key={p.id} className="text-sm font-bold text-foreground">
-                                    {p.university.academicScore}%
-                                </span>
-                            ))}
-                        </ComparisonRow>
-
-                        <ComparisonRow label="Employability" highlight>
-                            {selectedPrograms.map((p) => (
-                                <span key={p.id} className="text-sm font-bold text-foreground">
-                                    {p.university.employabilityScore}%
-                                </span>
-                            ))}
-                        </ComparisonRow>
-
-                        {/* Fees associated with University */}
-                        <ComparisonRow label="Estimated Annual Fees">
+                        <ComparisonRow label="Min Fees (USD)" highlight>
                             {selectedPrograms.map((p) => (
                                 <span key={p.id} className="text-sm font-bold text-teal-600">
-                                    ${p.university.annualFees.toLocaleString()}
+                                    ${p.university.feeMinUSD || 0}
                                 </span>
                             ))}
                         </ComparisonRow>
 
-                        {/* Rankings */}
-                        <ComparisonRow label="Uni Local Ranking">
+                        <ComparisonRow label="Max Fees (USD)">
                             {selectedPrograms.map((p) => (
                                 <span key={p.id} className="text-xs font-medium">
-                                    {p.university.ranking.local ? `#${p.university.ranking.local}` : "N/A"}
+                                    ${p.university.feeMaxUSD || 0}
                                 </span>
                             ))}
                         </ComparisonRow>
 
-                        {/* Facilities/Amenities */}
-                        <ComparisonRow label="On-Campus Housing">
-                            {selectedPrograms.map((p) => (
-                                <div key={p.id}>
-                                    {p.university.accommodationAvailable ? (
-                                        <Check className="w-4 h-4 text-teal-600" />
-                                    ) : (
-                                        <X className="w-4 h-4 text-gray-400" />
-                                    )}
-                                </div>
-                            ))}
-                        </ComparisonRow>
-
-                        <ComparisonRow label="Online Learning">
-                            {selectedPrograms.map((p) => (
-                                <div key={p.id}>
-                                    {p.university.onlineLearningAvailable ? (
-                                        <Check className="w-4 h-4 text-teal-600" />
-                                    ) : (
-                                        <X className="w-4 h-4 text-gray-400" />
-                                    )}
-                                </div>
-                            ))}
-                        </ComparisonRow>
-
-                        {/* Duration (Mocked since not in dataset) */}
-                        <ComparisonRow label="Typical Duration">
+                        <ComparisonRow label="Fee Confidence">
                             {selectedPrograms.map((p) => (
                                 <span key={p.id} className="text-xs font-medium">
-                                    3-4 Years
+                                    {p.university.feeConfidence || "—"}
+                                </span>
+                            ))}
+                        </ComparisonRow>
+
+                        <ComparisonRow label="Programme Summary">
+                            {selectedPrograms.map((p) => (
+                                <span key={p.id} className="text-xs font-medium">
+                                    {p.university.programmeSummary || "Data unavailable"}
+                                </span>
+                            ))}
+                        </ComparisonRow>
+
+                        <ComparisonRow label="Source URL">
+                            {selectedPrograms.map((p) => (
+                                <span key={p.id} className="text-xs font-medium">
+                                    {p.university.programmeSourceUrl ? (
+                                        <a href={p.university.programmeSourceUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">View →</a>
+                                    ) : "—"}
                                 </span>
                             ))}
                         </ComparisonRow>
@@ -187,29 +167,22 @@ export default function UniversityProgramsComparePage() {
             <div className="rounded-2xl border border-teal-200 bg-gradient-to-br from-teal-50 to-blue-50 p-6">
                 <div className="flex items-center gap-2 mb-4">
                     <Sparkles className="w-5 h-5 text-teal-600" />
-                    <h2 className="text-lg font-bold text-foreground">Program Insights</h2>
+                    <h2 className="text-lg font-bold text-foreground">Programme Insights</h2>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2">
                     <div className="bg-white rounded-xl p-4 border border-teal-100 shadow-sm">
-                        <p className="text-[10px] font-bold text-teal-600 uppercase mb-1">Most Renowned</p>
+                        <p className="text-[10px] font-bold text-teal-600 uppercase mb-1">Most Affordable</p>
                         <p className="text-sm font-bold text-foreground">
-                            {selectedPrograms.sort((a, b) => b.university.academicScore - a.university.academicScore)[0].programName}
+                            {[...selectedPrograms].sort((a, b) => (a.university.feeMinUSD || 999999) - (b.university.feeMinUSD || 999999))[0].university.university}
                         </p>
-                        <p className="text-[10px] text-muted-foreground mt-1">Based on university academic rating.</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">Lowest minimum fees among selected.</p>
                     </div>
                     <div className="bg-white rounded-xl p-4 border border-teal-100 shadow-sm">
-                        <p className="text-[10px] font-bold text-teal-600 uppercase mb-1">Best Career Path</p>
+                        <p className="text-[10px] font-bold text-teal-600 uppercase mb-1">Highest Fee Band</p>
                         <p className="text-sm font-bold text-foreground">
-                            {selectedPrograms.sort((a, b) => b.university.employabilityScore - a.university.employabilityScore)[0].programName}
+                            {[...selectedPrograms].sort((a, b) => (b.university.feeMaxUSD || 0) - (a.university.feeMaxUSD || 0))[0].university.university}
                         </p>
-                        <p className="text-[10px] text-muted-foreground mt-1">Based on graduate employability scores.</p>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 border border-teal-100 shadow-sm">
-                        <p className="text-[10px] font-bold text-teal-600 uppercase mb-1">Best Value</p>
-                        <p className="text-sm font-bold text-foreground">
-                            {selectedPrograms.sort((a, b) => a.university.annualFees - b.university.annualFees)[0].programName}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground mt-1">Lowest annual fees among selected.</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">Highest maximum fees among selected.</p>
                     </div>
                 </div>
             </div>

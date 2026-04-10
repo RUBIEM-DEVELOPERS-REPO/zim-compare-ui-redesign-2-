@@ -11,6 +11,8 @@ import { telecomProviders } from "@/lib/mock/telecoms"
 import { insuranceProviders } from "@/lib/mock/insurance"
 import { schools } from "@/lib/mock/schools"
 import { universities } from "@/lib/mock/universities"
+import { apiPost } from "@/lib/api"
+import * as XLSX from "xlsx"
 
 export default function AdminPage() {
   const { role, alerts, uploadLogs, addUploadLog, addAlert } = useAppStore()
@@ -19,6 +21,12 @@ export default function AdminPage() {
   const [alertMessage, setAlertMessage] = useState("")
   const [alertCategory, setAlertCategory] = useState("banking")
   const [alertType, setAlertType] = useState("price_drop")
+
+  // For Bulk Data Upload (XLSX, CSV)
+  const [parsedData, setParsedData] = useState<any[] | null>(null)
+  const [importCategory, setImportCategory] = useState("universities")
+  const [isImporting, setIsImporting] = useState(false)
+  const [importSuccessMessage, setImportSuccessMessage] = useState("")
 
   if (role !== "admin") {
     return (
@@ -35,14 +43,22 @@ export default function AdminPage() {
     )
   }
 
-  function handleUpload() {
-    addUploadLog({
-      id: Date.now().toString(),
-      category: uploadCategory,
-      uploadedBy: "admin@zimcompare.co.zw",
-      uploadedAt: new Date().toISOString(),
-      recordCount: Math.floor(Math.random() * 50) + 10,
-    })
+  async function handleUpload() {
+    try {
+      const res = await apiPost('/admin/upload', { category: uploadCategory })
+      if (res.success) {
+        addUploadLog({
+          id: Date.now().toString(),
+          category: uploadCategory,
+          uploadedBy: "admin@zimcompare.co.zw",
+          uploadedAt: new Date().toISOString(),
+          recordCount: res.recordCount || 0,
+        })
+        alert(`Successfully uploaded ${res.recordCount} records to database.`)
+      }
+    } catch (e: any) {
+      alert(e.message || "Upload failed")
+    }
   }
 
   function handleCreateAlert(e: React.FormEvent) {
@@ -58,6 +74,70 @@ export default function AdminPage() {
       read: false,
     })
     setAlertMessage("")
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setImportSuccessMessage("")
+
+    const arrayBuffer = await file.arrayBuffer()
+    const wb = XLSX.read(arrayBuffer, { type: "array" })
+    const wsname = wb.SheetNames[0]
+    const ws = wb.Sheets[wsname]
+    
+    // Auto-detect if headers are pushed down by a title row
+    const rawData = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][]
+    let headerRowIndex = 0
+    for (let i = 0; i < Math.min(rawData.length, 10); i++) {
+        const validCells = (rawData[i] || []).map(c => String(c).trim()).filter(Boolean)
+        if (validCells.length < 4) continue // A real header row must have many columns
+
+        const rowVals = validCells.join(" ").toLowerCase()
+        const isUni = rowVals.includes("university") && (rowVals.includes("location") || rowVals.includes("fee"))
+        const isTelecom = rowVals.includes("provider") && (rowVals.includes("data") || rowVals.includes("price") || rowVals.includes("bundle"))
+        const isBanking = rowVals.includes("bank") && rowVals.includes("name")
+        
+        if (isUni || isTelecom || isBanking) {
+            headerRowIndex = i
+            break
+        }
+    }
+
+    const data = XLSX.utils.sheet_to_json(ws, { range: headerRowIndex })
+    
+    setParsedData(data as any[])
+  }
+
+  async function confirmBulkImport() {
+    if (!parsedData || parsedData.length === 0) return
+    setIsImporting(true)
+    setImportSuccessMessage("")
+    try {
+      const res = await apiPost('/admin/bulk-import', { category: importCategory, data: parsedData })
+      if (res.success) {
+        addUploadLog({
+          id: Date.now().toString(),
+          category: importCategory,
+          uploadedBy: "admin@zimcompare.co.zw",
+          uploadedAt: new Date().toISOString(),
+          recordCount: res.recordCount,
+        })
+        const failMsg = res.failed > 0 ? ` (${res.failed} rows failed)` : ""
+        setImportSuccessMessage(`Successfully imported ${res.recordCount} rows to the ${importCategory} database.${failMsg}`)
+        if (res.errors && res.errors.length > 0) {
+          alert("UPLOAD ERRORS DETECTED!\n\n" + res.errors.join("\n\n"))
+        }
+        setParsedData(null)
+      } else {
+        alert(res.error || "Bulk import failed")
+      }
+    } catch (e: any) {
+      alert(e.message || "Bulk import failed")
+    } finally {
+      setIsImporting(false)
+    }
   }
 
   return (
@@ -199,6 +279,87 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Bulk Custom File Import Section */}
+      <section className="rounded-xl border border-border bg-card p-5 mt-6">
+        <h3 className="text-sm font-semibold text-foreground mb-3">Bulk Data Upload (Excel / CSV)</h3>
+        <p className="text-xs text-muted-foreground mb-4">Upload a custom spreadsheet and map it into the database directly.</p>
+        
+        {importSuccessMessage && (
+          <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium rounded-lg">
+            {importSuccessMessage}
+          </div>
+        )}
+
+        <div className="flex gap-4 items-center mb-4">
+          <select
+            value={importCategory}
+            onChange={(e) => setImportCategory(e.target.value)}
+            className="rounded-lg border border-border bg-secondary text-xs text-foreground px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
+          >
+            <option value="universities">Universities</option>
+            <option value="telecom">Telecom Bundles</option>
+            <option value="banking">Banking</option>
+            <option value="schools" disabled>Schools (Coming Soon)</option>
+          </select>
+          <input
+            type="file"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            onChange={handleFileUpload}
+            className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+          />
+        </div>
+
+        {parsedData && parsedData.length > 0 && (
+          <div className="space-y-4">
+            <h4 className="text-xs font-semibold text-foreground">Data Preview ({parsedData.length} rows found)</h4>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full text-left text-[11px] whitespace-nowrap">
+                <thead className="bg-secondary/50">
+                  <tr>
+                    {Object.keys(parsedData[0]).slice(0, 7).map((key, i) => (
+                      <th key={i} className="px-3 py-2 font-medium text-foreground">{key}</th>
+                    ))}
+                    {Object.keys(parsedData[0]).length > 7 && (
+                      <th className="px-3 py-2 font-medium text-muted-foreground">...more</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {parsedData.slice(0, 5).map((row, i) => (
+                    <tr key={i} className="hover:bg-accent/50">
+                      {Object.values(row).slice(0, 7).map((val: any, j) => (
+                        <td key={j} className="px-3 py-2 text-muted-foreground truncate max-w-[150px]">{String(val)}</td>
+                      ))}
+                      {Object.keys(row).length > 7 && (
+                        <td className="px-3 py-2 text-muted-foreground">...</td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {parsedData.length > 5 && (
+              <p className="text-[10px] text-muted-foreground text-center">Showing first 5 rows only.</p>
+            )}
+            
+            <button
+              onClick={confirmBulkImport}
+              disabled={isImporting}
+              className="w-full rounded-lg bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isImporting ? (
+                <>
+                  <div className="h-3 w-3 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                  Uploading Data...
+                </>
+              ) : (
+                `Confirm & Upload ${parsedData.length} records to Database`
+              )}
+            </button>
+          </div>
+        )}
       </section>
     </div>
   )

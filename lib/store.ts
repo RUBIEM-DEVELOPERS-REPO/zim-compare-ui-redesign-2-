@@ -31,8 +31,8 @@ interface AppState {
   // Saved comparisons
   savedComparisons: SavedComparison[]
 
-  addSavedComparison: (c: SavedComparison) => void
-  removeSavedComparison: (id: string) => void
+  addSavedComparison: (c: SavedComparison) => Promise<void>
+  removeSavedComparison: (id: string) => Promise<void>
 
   // Compare tray
   compareTray: { category: string; subcategory?: string; ids: string[]; lastAddedId?: string }
@@ -47,6 +47,7 @@ interface AppState {
 
   // Alerts
   alerts: Alert[]
+  setAlerts: (alerts: Alert[]) => void
   addAlert: (a: Alert) => void
   markAlertRead: (id: string) => void
 
@@ -56,6 +57,7 @@ interface AppState {
 
   // Recent views
   recentViews: { category: string; id: string; name: string; timestamp: string }[]
+  setRecentViews: (views: { category: string; id: string; name: string; timestamp: string }[]) => void
   addRecentView: (view: { category: string; id: string; name: string }) => void
 }
 
@@ -91,10 +93,47 @@ export const useAppStore = create<AppState>()(
 
       savedComparisons: [],
 
-      addSavedComparison: (c) =>
-        set({ savedComparisons: [...get().savedComparisons, c] }),
-      removeSavedComparison: (id) =>
-        set({ savedComparisons: get().savedComparisons.filter((s) => s.id !== id) }),
+      addSavedComparison: async (c) => {
+        // Try calling the API if logged in, fallback to local state regardless
+        if (get().isAuthenticated) {
+            try {
+                // Ignore API prefix and fetch manually, or use apiPost if imported
+                // Since this is a store file, we will just use native fetch if api.ts isn't imported
+                const res = await fetch('/api/user/comparisons', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('zim_auth_token')}`
+                    },
+                    body: JSON.stringify({
+                        category: c.category,
+                        name: c.name,
+                        itemIds: c.itemIds
+                    })
+                })
+                if (res.ok) {
+                    const data = await res.json()
+                    c.id = data.comparison.id
+                }
+            } catch (e) {
+                // Ignore failure
+            }
+        }
+        set({ savedComparisons: [...get().savedComparisons, c] })
+      },
+      removeSavedComparison: async (id) => {
+        if (get().isAuthenticated) {
+            try {
+                await fetch(`/api/user/comparisons/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('zim_auth_token')}` }
+                })
+            } catch (e) {
+                // Ignore
+            }
+        }
+        set({ savedComparisons: get().savedComparisons.filter((s) => s.id !== id) })
+      },
 
       compareTray: { category: "", subcategory: "", ids: [], lastAddedId: "" },
       addToCompareTray: (category, id, subcategory) => {
@@ -132,6 +171,7 @@ export const useAppStore = create<AppState>()(
         { id: "a2", type: "new_promo", category: "banking", itemId: "stanbic", message: "Stanbic offering zero fees for new accounts this month", createdAt: "2026-02-04T08:00:00Z", read: false },
         { id: "a3", type: "fee_increase", category: "banking", itemId: "fbc", message: "FBC ZIPIT fees increased from $1.50 to $1.80", createdAt: "2026-02-03T12:00:00Z", read: true },
       ],
+      setAlerts: (alerts) => set({ alerts }),
       addAlert: (a) => set({ alerts: [a, ...get().alerts] }),
       markAlertRead: (id) =>
         set({ alerts: get().alerts.map((a) => (a.id === id ? { ...a, read: true } : a)) }),
@@ -140,6 +180,7 @@ export const useAppStore = create<AppState>()(
       addUploadLog: (log) => set({ uploadLogs: [...get().uploadLogs, log] }),
 
       recentViews: [],
+      setRecentViews: (views) => set({ recentViews: views }),
       addRecentView: (view) => {
         const views = get().recentViews.filter((v) => v.id !== view.id)
         set({

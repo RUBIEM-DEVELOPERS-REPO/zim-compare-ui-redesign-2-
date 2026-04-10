@@ -6,22 +6,7 @@ import { useState, useRef, useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 
-const sampleResponses: Record<string, string> = {
-  bank: "Based on your profile, I recommend **Stanbic Bank** for the best balance of transparency, digital features, and competitive fees. Their PureSave account offers 4.0% interest with goal savings features. For the lowest fees, POSB has ZIPIT at just $0.80 per transaction.",
-  telecom: "For mobile, **Econet Wireless** has the best coverage (92%) but is pricier. If you're budget-conscious, **Telecel** offers the cheapest data at $1.33/GB on their 15GB monthly plan. For home internet, **Liquid Telecom** provides the best fibre value at $0.30/GB.",
-  school: "For boarding schools, **Peterhouse Boys** leads with a 98% pass rate and 1:8 student-teacher ratio, though it costs $16,500/year. For a more affordable option, **Plumtree High School** at $4,200/year offers solid academics. Best day school is **Eaglesvale** with STEM focus.",
-  insurance: "For motor insurance, **Old Mutual Comprehensive** offers the most complete cover at $45/month. For medical, **CIMAS Premier** has the fastest claims (7 days average) and broadest coverage. If budget matters, **FEMAS Silver** starts at just $45/month for basic medical.",
-  default: "I can help you compare banks, telecoms, schools, and insurance in Zimbabwe. Try asking about the best bank for savings, cheapest data bundles, top schools, or most reliable insurance provider.",
-}
-
-function getResponse(input: string): string {
-  const lower = input.toLowerCase()
-  if (lower.includes("bank") || lower.includes("saving") || lower.includes("loan") || lower.includes("fee")) return sampleResponses.bank
-  if (lower.includes("telecom") || lower.includes("data") || lower.includes("network") || lower.includes("bundle") || lower.includes("fibre")) return sampleResponses.telecom
-  if (lower.includes("school") || lower.includes("education") || lower.includes("tuition") || lower.includes("boarding")) return sampleResponses.school
-  if (lower.includes("insurance") || lower.includes("medical") || lower.includes("motor") || lower.includes("cover") || lower.includes("claims")) return sampleResponses.insurance
-  return sampleResponses.default
-}
+import { apiPost } from "@/lib/api"
 
 export default function ChatPage() {
   const { chatMessages, addChatMessage, clearChat, role } = useAppStore()
@@ -47,16 +32,25 @@ export default function ChatPage() {
     setInput("")
     setIsTyping(true)
 
-    setTimeout(() => {
-      const response = getResponse(userMsg.content)
-      addChatMessage({
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: response,
-        timestamp: new Date().toISOString(),
-      })
-      setIsTyping(false)
-    }, 800)
+    apiPost('/chat', { message: userMsg.content })
+        .then(res => {
+            addChatMessage({
+              id: (Date.now() + 1).toString(),
+              role: "assistant",
+              content: res.message || "I could not generate a response. Please try again.",
+              timestamp: new Date().toISOString(),
+            })
+            setIsTyping(false)
+        })
+        .catch(() => {
+            addChatMessage({
+              id: (Date.now() + 1).toString(),
+              role: "assistant",
+              content: "I'm sorry, I'm having trouble connecting right now. Please try again later.",
+              timestamp: new Date().toISOString(),
+            })
+            setIsTyping(false)
+        })
   }
 
   const suggestedQuestions = [
