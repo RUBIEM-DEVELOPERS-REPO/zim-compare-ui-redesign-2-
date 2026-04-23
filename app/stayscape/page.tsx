@@ -12,8 +12,10 @@ import { CategorySelector } from "@/components/category-selector"
 import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
+import { PageHeader } from "@/components/page-header"
 
-export default function StayscapePage() {
+
+export default function HospitalityPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
     const { t } = useI18n()
@@ -47,10 +49,11 @@ export default function StayscapePage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-xl font-semibold text-foreground">Stayscape</h1>
-                <p className="text-sm text-muted-foreground">{t("stays.hospitalitySubtitle")}</p>
-            </div>
+            <PageHeader
+                title="Hospitality Intelligence"
+                subtitle={t("stays.hospitalitySubtitle")}
+            />
+
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <CategorySelector
@@ -71,3 +74,4 @@ export default function StayscapePage() {
         </div>
     )
 }
+

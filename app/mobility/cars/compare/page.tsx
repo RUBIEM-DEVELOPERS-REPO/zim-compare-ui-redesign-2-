@@ -47,7 +47,7 @@ export default function CarComparePage() {
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Car className="w-8 h-8 text-primary" />
                     </div>
-                    <h2 className="text-xl font-bold text-foreground mb-2">No vehicles selected for comparison</h2>
+                    <h2 className="text-xl font-medium text-foreground mb-2">No vehicles selected for comparison</h2>
                     <p className="text-sm text-muted-foreground mb-6">
                         Please select at least 2 vehicles from the Mobility page to compare.
                     </p>
@@ -71,7 +71,7 @@ export default function CarComparePage() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-semibold text-foreground">Vehicle Comparison</h1>
+                    <h1 className="text-xl font-medium text-foreground">Vehicle Comparison</h1>
                     <p className="text-sm text-muted-foreground">
                         Comparing {selectedVehicles.length} vehicle{selectedVehicles.length > 1 ? "s" : ""}
                     </p>
@@ -89,12 +89,12 @@ export default function CarComparePage() {
             <div className="overflow-x-auto">
                 <div className="inline-block min-w-full align-middle">
                     <div className="grid-dynamic-cols gap-4" data-columns={selectedVehicles.length}>
-                        <div className="font-bold text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center col-span-1">
+                        <div className="font-medium text-sm text-foreground bg-secondary/30 rounded-lg p-3 flex items-center col-span-1">
                             Specs
                         </div>
                         {selectedVehicles.map((v) => (
                             <div key={v.id} className="bg-primary/5 border border-primary/10 rounded-lg p-4 col-span-1">
-                                <h3 className="font-bold text-sm text-foreground uppercase tracking-tight mb-1">{v.make} {v.model}</h3>
+                                <h3 className="font-medium text-sm text-foreground uppercase tracking-tight mb-1">{v.make} {v.model}</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{v.year} • {v.location}</p>
                             </div>
                         ))}
@@ -102,7 +102,7 @@ export default function CarComparePage() {
                         {/* Price Row */}
                         <ComparisonRow label="Price" highlight>
                             {selectedVehicles.map((v) => (
-                                <span key={v.id} className="text-lg font-bold text-primary">
+                                <span key={v.id} className="text-lg font-medium text-primary">
                                     ${v.price.toLocaleString()}
                                 </span>
                             ))}
@@ -112,7 +112,7 @@ export default function CarComparePage() {
                         <ComparisonRow label="Condition">
                             {selectedVehicles.map((v) => (
                                 <span key={v.id} className={cn(
-                                    "text-[10px] font-bold px-2 py-0.5 rounded-full capitalize",
+                                    "text-[10px] font-medium px-2 py-0.5 rounded-full capitalize",
                                     v.condition === "new" ? "bg-emerald-500/10 text-emerald-600" : "bg-amber-500/10 text-amber-600"
                                 )}>
                                     {v.condition}
@@ -217,7 +217,7 @@ export default function CarComparePage() {
             <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5 p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-6">
                     <Sparkles className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-bold text-foreground">AI Buyer Insights</h2>
+                    <h2 className="text-lg font-medium text-foreground">AI Buyer Insights</h2>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -252,7 +252,7 @@ function ComparisonRow({ label, children, highlight = false }: { label: string; 
         <>
             <div className={cn(
                 "font-medium text-[10px] uppercase tracking-wider text-muted-foreground rounded-lg p-3 flex items-center bg-secondary/10",
-                highlight && "text-primary font-bold"
+                highlight && "text-primary font-medium"
             )}>
                 {label}
             </div>
@@ -273,9 +273,9 @@ function InsightCard({ title, icon, value, reason }: { title: string; icon: Reac
         <div className="bg-white dark:bg-card rounded-xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center gap-2 mb-3">
                 {icon}
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{title}</span>
+                <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">{title}</span>
             </div>
-            <p className="text-sm font-bold text-foreground mb-1">{value}</p>
+            <p className="text-sm font-medium text-foreground mb-1">{value}</p>
             <p className="text-xs text-muted-foreground leading-relaxed">{reason}</p>
         </div>
     )
@@ -305,3 +305,4 @@ function generateCarInsights(cars: Vehicle[]) {
         }
     }
 }
+

@@ -26,60 +26,60 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
 
     return (
         <div className="space-y-6">
-            {/* Highlight Section */}
-            <div className="glass-panel p-6 relative overflow-hidden bg-primary/5 border-primary/20 shadow-xl">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <Car className="h-24 w-24 text-primary" />
+            {/* Compact Mobility Hero/Highlight */}
+            <div className="glass-floating p-4 relative overflow-hidden bg-primary/5 border-primary/20 shadow-xl group teal-glow rounded-2xl">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-1000">
+                    <Car className="h-20 w-20 text-primary" />
                 </div>
-                <div className="relative z-10">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2 px-2 py-1 bg-primary/10 rounded-full inline-block">Featured Insight</p>
-                    <h2 className="text-2xl font-bold text-foreground tracking-tight">Simplify Your Mobility</h2>
-                    <p className="text-sm text-muted-foreground mt-2 max-w-lg leading-relaxed">
-                        From finding your next car to choosing the best driving school or planning a cross-border bus trip,
-                        we've aggregated the best deals in {location}.
-                    </p>
-                    <Disclaimer />
+                <div className="relative z-10 flex items-center justify-between">
+                    <div>
+                        <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1">{location !== "All Locations" ? `Mobility in ${location}` : "Unified Mobility"}</p>
+                        <h2 className="text-xl font-display font-medium text-white tracking-tight leading-tight">Neural Mobility Engine</h2>
+                    </div>
+                    <div className="pt-2">
+                        <Disclaimer />
+                    </div>
                 </div>
             </div>
 
             {/* Summary Cards */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryCards.map((c) => (
-                    <div key={c.label} className="glass-card p-4 group h-full">
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className={`p-2 rounded-xl bg-muted/50 group-hover:bg-primary/10 transition-colors shadow-inner`}>
-                                <c.icon className={`h-4 w-4 ${c.color}`} />
+                    <div key={c.label} className="glass-floating p-3 group h-full floating-hover rounded-xl">
+                        <div className="flex items-center gap-2 mb-2.5">
+                            <div className={`p-1.5 rounded-lg bg-white/5 group-hover:bg-primary/10 transition-all duration-500 shadow-inner border border-white/5 group-hover:border-primary/20`}>
+                                <c.icon className={`h-3.5 w-3.5 ${c.color} group-hover:scale-110 transition-transform`} />
                             </div>
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">{c.label}</p>
+                            <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-70 group-hover:text-primary transition-colors">{c.label}</p>
                         </div>
-                        <p className="text-sm font-bold text-foreground">{c.value}</p>
-                        <p className="text-[10px] text-primary mt-1 font-black uppercase tracking-tighter">{c.detail}</p>
+                        <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">{c.value}</p>
+                        <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{c.detail}</p>
                     </div>
                 ))}
             </div>
 
             {/* Market Highlights */}
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-2">
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                            <Car className="h-4 w-4 text-primary" />
-                            Top Dealerships in {location}
+                        <h3 className="text-[9px] font-medium text-white uppercase tracking-[0.3em] opacity-70 flex items-center gap-2">
+                            <Car size={12} className="text-primary" />
+                            Premium Dealers: {location}
                         </h3>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                         {filteredDealers.slice(0, 3).map((d) => (
-                            <div key={d.id} className="glass-card flex items-center justify-between p-4 hover:border-primary/40">
+                            <div key={d.id} className="glass-floating flex items-center justify-between p-3.5 floating-hover border-white/5 rounded-xl">
                                 <div>
-                                    <p className="text-sm font-bold text-foreground">{d.name}</p>
-                                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-tight">{d.brands.join(", ")}</p>
+                                    <p className="text-xs font-display font-medium text-white uppercase leading-tight">{d.name}</p>
+                                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.1em] mt-1 opacity-60 font-sans">{d.brands.join(", ")}</p>
                                 </div>
                                 <div className="text-right">
-                                    <div className="flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                                        <Star className="h-3 w-3 fill-current" />
+                                    <div className="flex items-center gap-1.5 text-[9px] font-medium text-amber-500 bg-amber-500/5 px-2.5 py-0.5 rounded-lg border border-amber-500/20 shadow-md">
+                                        <Star size={9} className="fill-current" />
                                         {d.rating}
                                     </div>
-                                    <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-tighter">{d.stockCount} vehicles</p>
+                                    <p className="text-[9px] font-medium text-muted-foreground mt-1.5 uppercase tracking-widest opacity-60 font-sans">{d.stockCount} UNITS</p>
                                 </div>
                             </div>
                         ))}
@@ -88,20 +88,22 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
 
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                            <Bus className="h-4 w-4 text-primary" />
-                            Popular Bus Routes
+                        <h3 className="text-[9px] font-medium text-white uppercase tracking-[0.3em] opacity-70 flex items-center gap-2">
+                            <Bus size={12} className="text-primary" />
+                            Intelligence Routes
                         </h3>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                         {busRoutes.slice(0, 3).map((r) => (
-                            <div key={r.id} className="glass-card flex items-center justify-between p-4 hover:border-primary/40">
+                            <div key={r.id} className="glass-floating flex items-center justify-between p-3.5 floating-hover border-white/5 rounded-xl">
                                 <div>
-                                    <p className="text-sm font-bold text-foreground">{r.origin} → {r.destination}</p>
-                                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-tight">{r.providerName} &middot; {r.busType}</p>
+                                    <p className="text-xs font-display font-medium text-white uppercase leading-tight">{r.origin} → {r.destination}</p>
+                                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.1em] mt-1 opacity-60 font-sans">{r.providerName} &middot; {r.busType}</p>
                                 </div>
-                                <div className="text-right font-black text-primary text-sm bg-primary/10 px-3 py-1 rounded-lg">
-                                    ${r.price}
+                                <div className="text-right">
+                                    <div className="font-display font-medium text-primary text-sm bg-primary/5 px-3 py-1 rounded-lg shadow-md border border-primary/20">
+                                        ${r.price}
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -111,3 +113,4 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
         </div>
     )
 }
+

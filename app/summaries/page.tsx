@@ -60,7 +60,7 @@ export default function SummariesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Market Summaries</h1>
+        <h1 className="text-xl font-medium text-foreground">Market Summaries</h1>
         <p className="text-sm text-muted-foreground">
           Overview of all sectors based on your <span className="text-primary capitalize">{preferences.scenario}</span> profile
         </p>
@@ -69,19 +69,19 @@ export default function SummariesPage() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Banks Tracked</p>
-          <p className="text-2xl font-semibold text-foreground">{banks.length}</p>
+          <p className="text-2xl font-medium text-foreground">{banks.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Telecom Providers</p>
-          <p className="text-2xl font-semibold text-foreground">{telecomProviders.length}</p>
+          <p className="text-2xl font-medium text-foreground">{telecomProviders.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Schools Listed</p>
-          <p className="text-2xl font-semibold text-foreground">{schools.length}</p>
+          <p className="text-2xl font-medium text-foreground">{schools.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Insurance Providers</p>
-          <p className="text-2xl font-semibold text-foreground">{insuranceProviders.length}</p>
+          <p className="text-2xl font-medium text-foreground">{insuranceProviders.length}</p>
         </div>
       </div>
 
@@ -89,7 +89,7 @@ export default function SummariesPage() {
         {categorySummaries.map((s) => (
           <div key={s.category} className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-base font-semibold text-foreground">{s.category}</h3>
+              <h3 className="text-base font-medium text-foreground">{s.category}</h3>
               <div className="text-right">
                 <p className="text-[10px] text-muted-foreground">Top Pick</p>
                 <p className="text-xs text-primary font-medium">{s.topPick}</p>
@@ -113,3 +113,4 @@ export default function SummariesPage() {
     </div>
   )
 }
+

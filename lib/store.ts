@@ -2,7 +2,11 @@
 
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { Role, UserPreference, SavedComparison, ChatMessage, Alert, PricingSnapshot } from "@/lib/types"
+import type { 
+  Role, UserPreference, SavedComparison, ChatMessage, Alert, PricingSnapshot,
+  AlertPreference, Transaction, ServiceApplication, PricingUpdate, RegulatedPrice, TaxLevy,
+  NewsItem
+} from "@/lib/types"
 
 interface AppState {
   // Auth
@@ -42,7 +46,11 @@ interface AppState {
 
   // Chat
   chatMessages: ChatMessage[]
+  chatHistory: { id: string; title: string; messages: ChatMessage[]; timestamp: string }[]
   addChatMessage: (msg: ChatMessage) => void
+  saveCurrentSession: () => void
+  loadSession: (id: string) => void
+  deleteSession: (id: string) => void
   clearChat: () => void
 
   // Alerts
@@ -50,15 +58,57 @@ interface AppState {
   setAlerts: (alerts: Alert[]) => void
   addAlert: (a: Alert) => void
   markAlertRead: (id: string) => void
+  alertPreferences: AlertPreference[]
+  setAlertPreference: (category: string, channels: ("in_app" | "sms" | "whatsapp")[], active: boolean) => void
+  subscriptionStatus: "basic" | "premium"
+  setSubscriptionStatus: (status: "basic" | "premium") => void
+  alertCredits: number
+  useAlertCredit: () => boolean
+
+  // Transactions
+  transactions: Transaction[]
+  addTransaction: (tx: Transaction) => void
+  
+  // Applications
+  applications: ServiceApplication[]
+  addApplication: (app: ServiceApplication) => void
+  updateApplication: (id: string, updates: Partial<ServiceApplication>) => void
 
   // Admin
   uploadLogs: PricingSnapshot[]
   addUploadLog: (log: PricingSnapshot) => void
+  pendingApprovals: PricingUpdate[]
+  approveUpdate: (id: string) => void
+  rejectUpdate: (id: string) => void
+  regulatedPrices: RegulatedPrice[]
+  updateRegulatedPrice: (id: string, price: number) => void
+  taxLevies: TaxLevy[]
+  auditLogs: { id: string; action: string; user: string; timestamp: string; details: string }[]
+  addAuditLog: (action: string, user: string, details: string) => void
 
   // Recent views
   recentViews: { category: string; id: string; name: string; timestamp: string }[]
   setRecentViews: (views: { category: string; id: string; name: string; timestamp: string }[]) => void
   addRecentView: (view: { category: string; id: string; name: string }) => void
+ 
+  // Workspace Navigation
+  activeSection: string
+  setActiveSection: (section: string) => void
+
+  // Social Intelligence
+  socialProfiles: {
+    instagram?: string
+    twitter?: string
+    facebook?: string
+    tiktok?: string
+    linkedin?: string
+  }
+  enableSocialInsights: boolean
+  setSocialData: (data: Partial<AppState["socialProfiles"]>, enable?: boolean) => void
+
+  // News Feed
+  news: NewsItem[]
+  addNews: (n: NewsItem) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -163,7 +213,36 @@ export const useAppStore = create<AppState>()(
       clearCompareTray: () => set({ compareTray: { category: "", subcategory: "", ids: [] } }),
 
       chatMessages: [],
-      addChatMessage: (msg) => set({ chatMessages: [...get().chatMessages, msg] }),
+      chatHistory: [],
+      addChatMessage: (msg) => {
+        if (get().chatMessages.some(m => m.id === msg.id)) return
+        set({ chatMessages: [...get().chatMessages, msg] })
+      },
+      saveCurrentSession: () => {
+        const messages = get().chatMessages
+        if (messages.length === 0) return
+        
+        const title = messages[0].content.substring(0, 40) + (messages[0].content.length > 40 ? "..." : "")
+        const newSession = {
+          id: Date.now().toString(),
+          title,
+          messages: [...messages],
+          timestamp: new Date().toISOString()
+        }
+        set({ 
+          chatHistory: [newSession, ...get().chatHistory],
+          chatMessages: [] 
+        })
+      },
+      loadSession: (id) => {
+        const session = get().chatHistory.find(s => s.id === id)
+        if (session) {
+          set({ chatMessages: [...session.messages] })
+        }
+      },
+      deleteSession: (id) => {
+        set({ chatHistory: get().chatHistory.filter(s => s.id !== id) })
+      },
       clearChat: () => set({ chatMessages: [] }),
 
       alerts: [
@@ -175,9 +254,99 @@ export const useAppStore = create<AppState>()(
       addAlert: (a) => set({ alerts: [a, ...get().alerts] }),
       markAlertRead: (id) =>
         set({ alerts: get().alerts.map((a) => (a.id === id ? { ...a, read: true } : a)) }),
+      alertPreferences: [],
+      setAlertPreference: (category, channels, active) => {
+        const current = get().alertPreferences
+        const existing = current.find(p => p.category === category)
+        if (existing) {
+          set({
+            alertPreferences: current.map(p => p.category === category ? { ...p, channels, active } : p)
+          })
+        } else {
+          set({
+            alertPreferences: [...current, { id: Math.random().toString(36).substr(2, 9), userId: "u1", category, channels, active }]
+          })
+        }
+      },
+      subscriptionStatus: "basic",
+      setSubscriptionStatus: (status) => set({ subscriptionStatus: status }),
+      alertCredits: 10,
+      useAlertCredit: () => {
+        const { alertCredits } = get()
+        if (alertCredits > 0) {
+          set({ alertCredits: alertCredits - 1 })
+          return true
+        }
+        return false
+      },
+
+      transactions: [],
+      addTransaction: (tx) => set({ transactions: [tx, ...get().transactions] }),
+
+      applications: [],
+      addApplication: (app) => set({ applications: [app, ...get().applications] }),
+      updateApplication: (id, updates) => set({
+        applications: get().applications.map(app => app.id === id ? { ...app, ...updates, updatedAt: new Date().toISOString() } : app)
+      }),
 
       uploadLogs: [],
       addUploadLog: (log) => set({ uploadLogs: [...get().uploadLogs, log] }),
+
+      pendingApprovals: [
+        { id: "p1", provider: "CBZ Bank", item: "ZIPIT Fee", old: "$1.50", new: "$1.85", status: "pending", category: "banking", createdAt: new Date().toISOString() },
+        { id: "p2", provider: "Econet", item: "Smart Data 5GB", old: "$12.00", new: "$11.00", status: "pending", category: "telecom", createdAt: new Date().toISOString() },
+      ],
+      approveUpdate: (id) => {
+        const update = get().pendingApprovals.find(p => p.id === id)
+        if (update) {
+          set({
+            pendingApprovals: get().pendingApprovals.filter(p => p.id !== id),
+            auditLogs: [{
+              id: Math.random().toString(36).substr(2, 9),
+              action: "APPROVE_PRICE",
+              user: get().userName,
+              timestamp: new Date().toISOString(),
+              details: `Approved ${update.item} for ${update.provider} (${update.old} -> ${update.new})`
+            }, ...get().auditLogs]
+          })
+        }
+      },
+      rejectUpdate: (id) => {
+        const update = get().pendingApprovals.find(p => p.id === id)
+        if (update) {
+          set({
+            pendingApprovals: get().pendingApprovals.filter(p => p.id !== id),
+            auditLogs: [{
+              id: Math.random().toString(36).substr(2, 9),
+              action: "REJECT_PRICE",
+              user: get().userName,
+              timestamp: new Date().toISOString(),
+              details: `Rejected ${update.item} for ${update.provider} (${update.old} -> ${update.new})`
+            }, ...get().auditLogs]
+          })
+        }
+      },
+      regulatedPrices: [
+        { id: "r1", category: "Banking", item: "ZIPIT Fee Cap", regulatedPrice: 2.00, unit: "USD", lastUpdated: new Date().toISOString() },
+        { id: "r2", category: "Telecom", item: "USSD Session Cap", regulatedPrice: 0.20, unit: "USD", lastUpdated: new Date().toISOString() },
+      ],
+      updateRegulatedPrice: (id, price) => set({
+        regulatedPrices: get().regulatedPrices.map(rp => rp.id === id ? { ...rp, regulatedPrice: price, lastUpdated: new Date().toISOString() } : rp)
+      }),
+      taxLevies: [
+        { id: "t1", name: "IMTT", sector: "Financial", rate: 0.02, type: "percentage", appliesTo: "Electronic Transfers" },
+        { id: "t2", name: "AIDS Levy", sector: "General", rate: 0.03, type: "percentage", appliesTo: "Payable Tax" },
+      ],
+      auditLogs: [],
+      addAuditLog: (action, user, details) => set({
+        auditLogs: [{
+          id: Math.random().toString(36).substr(2, 9),
+          action,
+          user,
+          timestamp: new Date().toISOString(),
+          details
+        }, ...get().auditLogs]
+      }),
 
       recentViews: [],
       setRecentViews: (views) => set({ recentViews: views }),
@@ -190,7 +359,33 @@ export const useAppStore = create<AppState>()(
           ],
         })
       },
+ 
+      activeSection: "chat",
+      setActiveSection: (section) => set({ activeSection: section }),
+
+      socialProfiles: {},
+      enableSocialInsights: false,
+      setSocialData: (data, enable) => set({
+        socialProfiles: { ...get().socialProfiles, ...data },
+        enableSocialInsights: enable !== undefined ? enable : get().enableSocialInsights
+      }),
+
+      news: [
+        { id: "n1", title: "RBZ introduces new gold-backed currency tokens", source: "Banking", category: "Banking", time: "2h ago", link: "#", createdAt: new Date().toISOString() },
+        { id: "n2", title: "Econet increases 5G coverage in Bulawayo", source: "Telecom", category: "Telecom", time: "5h ago", link: "#", createdAt: new Date().toISOString() },
+        { id: "n3", title: "CBZ Bank announces zero-fee student accounts", source: "Banking", category: "Banking", time: "1d ago", link: "#", createdAt: new Date().toISOString() },
+        { id: "n4", title: "New curriculum updates for 2026 academic year", source: "Schools", category: "Schools", time: "2d ago", link: "#", createdAt: new Date().toISOString() },
+      ],
+      addNews: (n) => set({ news: [n, ...get().news] }),
     }),
-    { name: "zimcompare-store" }
+    { name: "fintech-store" }
   )
 )
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "fintech-store") {
+      useAppStore.persist.rehydrate()
+    }
+  })
+}

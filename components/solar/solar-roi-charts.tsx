@@ -58,7 +58,7 @@ function ROITimelineChart() {
                     className="absolute top-0 bottom-0 w-0.5 bg-amber-500"
                     style={{ left: `${(breakEvenMonth / 36) * 100}%` }}
                 >
-                    <span className="absolute -top-5 -translate-x-1/2 text-[9px] text-amber-500 font-bold whitespace-nowrap">Break-even</span>
+                    <span className="absolute -top-5 -translate-x-1/2 text-[9px] text-amber-500 font-medium whitespace-nowrap">Break-even</span>
                 </div>
             </div>
             <div className="flex justify-between text-[9px] text-muted-foreground mt-1">
@@ -85,7 +85,7 @@ export function SolarRoiCharts() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                 <div className="flex items-center gap-2 mb-1">
                     <TrendingUp className="w-4 h-4 text-primary" />
-                    <p className="text-sm font-semibold text-foreground">ROI Charts & Trends</p>
+                    <p className="text-sm font-medium text-foreground">ROI Charts & Trends</p>
                 </div>
                 <p className="text-xs text-muted-foreground">Visual analysis of solar investment returns and seasonal generation patterns in Zimbabwe.</p>
             </div>
@@ -135,10 +135,10 @@ export function SolarRoiCharts() {
                                         className="h-5 rounded-sm bg-primary/30 flex items-center justify-end pr-1"
                                         style={{ width: `${(pkg.price / Math.max(...costData)) * 100}%` }}
                                     >
-                                        <span className="text-[9px] text-primary font-bold">${pkg.price.toLocaleString()}</span>
+                                        <span className="text-[9px] text-primary font-medium">${pkg.price.toLocaleString()}</span>
                                     </div>
                                 </div>
-                                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold w-16 text-right shrink-0">${pkg.monthlySavings}/mo</span>
+                                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium w-16 text-right shrink-0">${pkg.monthlySavings}/mo</span>
                             </div>
                         ))}
                     </div>
@@ -147,3 +147,4 @@ export function SolarRoiCharts() {
         </div>
     )
 }
+

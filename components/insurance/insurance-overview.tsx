@@ -17,6 +17,7 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     { key: "policies", labelKey: "insurance.highlight.premiums.label", subtitleKey: "insurance.highlight.premiums.subtitle" },
     { key: "claims", labelKey: "insurance.highlight.claims.label", subtitleKey: "insurance.highlight.claims.subtitle" },
     { key: "policies", labelKey: "insurance.highlight.profiles.label", subtitleKey: "insurance.highlight.profiles.subtitle" },
+    { key: "quote", labelKey: "insurance.highlight.propertyQuote.label", subtitleKey: "insurance.highlight.propertyQuote.subtitle" },
   ]
 
   const summaryCards = [
@@ -60,49 +61,52 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   return (
-    <div className="space-y-6">
-      <div className="glass-panel p-5 bg-primary/5 border-primary/20">
-        <p className="text-xs text-muted-foreground mb-1">{t("insurance.bestForYou")}</p>
-        <p className="text-lg font-semibold text-foreground">Old Mutual Comprehensive Cover</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t("insurance.bestRecommendation")}
+    <div className="space-y-4">
+      <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow rounded-2xl">
+        <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-1000" />
+        <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1.5">{t("insurance.bestForYou")}</p>
+        <h2 className="text-2xl font-display font-normal text-white tracking-tight leading-tight uppercase">Old Mutual Comprehensive</h2>
+        <p className="text-xs text-muted-foreground mt-2 max-w-xl font-sans opacity-80 leading-relaxed font-medium">
+          {t("insurance.bestRecommendation")} Optimized for risk mitigation and institutional reliability.
         </p>
-        <Disclaimer />
+        <div className="mt-4 pt-3 border-t border-white/10">
+          <Disclaimer />
+        </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         {localizedSummaryCards.map((c) => (
-            <div key={c.label} className="glass-card p-4 h-full">
-            <p className="text-xs text-muted-foreground">{c.label}</p>
-            <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
-            <p className="text-xs text-primary mt-1">{c.detail}</p>
+            <div key={c.label} className="glass-floating p-3 h-full floating-hover group rounded-xl">
+            <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70 group-hover:text-primary transition-colors">{c.label}</p>
+            <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">{c.value}</p>
+            <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{c.detail}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         {highlightCards.map((card) => (
           <button
             key={card.labelKey}
             onClick={() => onTabChange(card.key)}
-            className="glass-card p-4 text-left group h-full"
+            className="glass-floating p-3.5 text-left group h-full floating-hover rounded-xl"
           >
-            <p className="text-sm font-semibold text-foreground">{t(card.labelKey)}</p>
-            <p className="text-xs text-muted-foreground mt-1">{t(card.subtitleKey)}</p>
+            <p className="text-[13px] font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-none mb-1.5">{t(card.labelKey)}</p>
+            <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">{t(card.subtitleKey)}</p>
           </button>
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-1 p-1 rounded-xl bg-white/5 border border-white/10 w-fit backdrop-blur-3xl">
         {categoryFilters.map((t) => (
           <button
             key={t.key}
             onClick={() => setCategoryFilter(t.key)}
             className={cn(
-              "shrink-0 h-8 glass-tab-base",
+              "shrink-0 h-7 px-4 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500",
               categoryFilter === t.key
-                ? "glass-tab-active"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 teal-glow"
+                : "text-muted-foreground hover:text-white hover:bg-white/5"
             )}
           >
             {t.label}
@@ -111,45 +115,45 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
       </div>
 
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">{t("insurance.providersInLocation", { location: displayLocation, count: filteredProviders.length })}</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">{t("insurance.providersInLocation", { location: displayLocation, count: filteredProviders.length })}</h3>
         {filteredProviders.length === 0 ? (
           <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">{t("insurance.noProvidersFound", { location: displayLocation })}</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">{t("insurance.noProvidersFound", { location: displayLocation })}</h3>
             <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("insurance.noProvidersDetail")}</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProviders.map((p) => {
               const policyCount = policies.filter((pol) => pol.providerId === p.id).length
               return (
                 <div
                   key={p.id}
                   className={cn(
-                    "glass-card p-5 transition-all duration-300 relative group h-full",
+                    "glass-floating p-3.5 transition-all duration-500 relative group h-full flex flex-col floating-hover rounded-xl",
                     "hover:border-primary/40"
                   )}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{p.name}</p>
-                    <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
+                  <div className="flex items-start justify-between gap-3 mb-3.5">
+                    <p className="text-base font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{p.name}</p>
+                    <span className="shrink-0 text-[9px] font-medium uppercase tracking-[0.2em] bg-white/5 text-muted-foreground px-2 py-1 rounded-lg border border-white/10 shadow-inner">
                       {p.type.replace("_", " ")}
                     </span>
                   </div>
-                  <div className="flex gap-2 flex-wrap mb-4">
+                  <div className="flex gap-1.5 flex-wrap mb-4">
                     <ScoreBadge score={p.claimsScore} label={t("insurance.claimsScore")} />
                     <ScoreBadge score={p.transparencyScore} label={t("telecom.transparency")} />
                   </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                  <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
                     <div className="flex flex-col">
-                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">{t("insurance.avgClaim")}</span>
-                      <span className="text-xs font-bold text-foreground">{p.avgClaimDays} d</span>
+                      <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-60 mb-0.5">{t("insurance.avgClaim")}</span>
+                      <span className="text-xs font-display font-medium text-foreground tabular-nums">{p.avgClaimDays} d</span>
                     </div>
                     <div className="flex flex-col text-right">
-                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">{t("insurance.policiesCount")}</span>
-                      <span className="text-xs font-bold text-teal-600">{t("insurance.totalCount", { count: policyCount })}</span>
+                      <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-60 mb-0.5">{t("insurance.policiesCount")}</span>
+                      <span className="text-xs font-display font-medium text-primary tabular-nums">{t("insurance.totalCount", { count: policyCount })}</span>
                     </div>
                   </div>
                 </div>
@@ -161,3 +165,4 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     </div>
   )
 }
+

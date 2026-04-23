@@ -1,6 +1,6 @@
-// ── ZimCompare Types ──
+// ── Fintech Types ──
 
-export type Role = "guest" | "registered" | "paid" | "admin" | "ai"
+export type Role = "guest" | "registered" | "paid" | "admin" | "ai" | "corporate"
 
 export interface User {
   id: string
@@ -274,11 +274,24 @@ export interface SavedComparison {
   name: string
 }
 
+export interface AIAction {
+  type: "compare" | "apply" | "transact" | "alert"
+  payload: any
+  label: string
+}
+
 export interface ChatMessage {
   id: string
   role: "user" | "assistant"
   content: string
   timestamp: string
+  actions?: AIAction[]
+  attachments?: {
+    type: "image" | "audio" | "video" | "file"
+    url: string
+    name: string
+    size?: string
+  }[]
 }
 
 export interface PricingSnapshot {
@@ -289,12 +302,118 @@ export interface PricingSnapshot {
   recordCount: number
 }
 
+export interface PricingUpdate {
+  id: string
+  provider: string
+  item: string
+  old: string
+  new: string
+  status: "pending" | "approved" | "rejected"
+  category: string
+  createdAt: string
+}
+
 export interface Alert {
   id: string
-  type: "price_drop" | "new_promo" | "fee_increase" | "claims_change"
+  type: "price_drop" | "new_promo" | "fee_increase" | "claims_change" | "transaction" | "application"
   category: "banking" | "telecom" | "schools" | "insurance" | "utilities" | "solar" | "mobility" | "transport" | "hotels"
-  itemId: string
+  itemId?: string
   message: string
   createdAt: string
   read: boolean
+  channel?: "in_app" | "sms" | "whatsapp"
+  status?: "sent" | "delivered" | "failed"
+  isPaid?: boolean
+}
+
+export interface AlertPreference {
+  id: string
+  userId: string
+  category: string
+  channels: ("in_app" | "sms" | "whatsapp")[]
+  active: boolean
+}
+
+// ── Transactions ──
+
+export interface TransactionMethod {
+  id: string
+  name: string // ATM, Swipe, ZIPIT, RTGS, Mobile Money
+  speed: "instant" | "fast" | "same_day" | "next_day"
+  category: "online" | "physical" | "both"
+}
+
+export interface TransactionQuote {
+  methodId: string
+  methodName: string
+  bankId: string
+  bankName: string
+  amount: number
+  fee: number
+  tax: number // e.g. IMTT
+  levy: number
+  total: number
+  isBest?: boolean
+}
+
+export interface Transaction {
+  id: string
+  userId: string
+  bankId: string
+  methodId: string
+  amount: number
+  fee: number
+  tax: number
+  total: number
+  status: "pending" | "completed" | "failed"
+  createdAt: string
+}
+
+// ── Service Applications ──
+
+export interface ServiceApplication {
+  id: string
+  userId: string
+  providerId: string
+  providerName: string
+  serviceType: "medical" | "insurance" | "telecom" | "utility" | "education"
+  status: "draft" | "submitted" | "under_review" | "approved" | "rejected"
+  currentStep: number
+  data: Record<string, any>
+  createdAt: string
+  updatedAt: string
+}
+
+// ── Regulated Prices & Taxes ──
+
+export interface RegulatedPrice {
+  id: string
+  category: string
+  item: string
+  regulatedPrice: number
+  unit: string
+  lastUpdated: string
+}
+
+export interface TaxLevy {
+  id: string
+  name: string
+  sector: string
+  rate: number
+  type: "percentage" | "fixed"
+  appliesTo: string
+}
+// ── News & Ads ──
+
+export interface NewsItem {
+  id: string
+  title: string
+  source: string // Maps to Category
+  time: string
+  link: string
+  category: string
+  description?: string
+  tag?: "New" | "Promo" | "Update"
+  image?: string
+  createdAt: string
 }

@@ -43,7 +43,7 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
 
       {/* Monthly Cost Calculator */}
       <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Typical Monthly Cost Calculator</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">Typical Monthly Cost Calculator</h3>
         <div className="grid gap-4 sm:grid-cols-2 mb-4">
           <div>
             <label className="text-xs text-muted-foreground block mb-1">Monthly Transfers</label>
@@ -88,7 +88,7 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
                 )}
                 <span className="text-sm text-foreground">{f.bank}</span>
               </div>
-              <span className="text-sm font-semibold text-foreground">${f.monthlyCost.toFixed(2)}/mo</span>
+              <span className="text-sm font-medium text-foreground">${f.monthlyCost.toFixed(2)}/mo</span>
             </div>
           ))}
         </div>
@@ -96,7 +96,7 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
 
       {/* Fee Comparison Table */}
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">Fee Comparison Table</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">Fee Comparison Table</h3>
         <div className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full text-xs">
             <thead>
@@ -129,13 +129,13 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
 
       {/* All Fees */}
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">Detailed Fee Breakdown</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">Detailed Fee Breakdown</h3>
         {filteredBankFees.length === 0 ? (
           <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center col-span-full">
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">No fees found for {location}</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">No fees found for {location}</h3>
             <p className="text-muted-foreground mb-6 max-w-xs mx-auto">None of the banks with published fees are currently active in this location.</p>
           </div>
         ) : (
@@ -149,14 +149,14 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
                 )}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-foreground">{f.name}</span>
-                    <span className="text-xs font-semibold text-primary">${f.amount.toFixed(2)}</span>
+                    <span className="text-xs font-medium text-primary">${f.amount.toFixed(2)}</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground">{f.bankName} &middot; {f.unit}</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">{f.description}</p>
                   
                   <div className="mt-3 pt-2 border-t border-border/50 flex items-center justify-between">
                     {f.category === "hidden" ? (
-                      <span className="text-[9px] bg-amber-500/15 text-amber-500 px-1.5 py-0.5 rounded font-black uppercase tracking-widest">
+                      <span className="text-[9px] bg-amber-500/15 text-amber-500 px-1.5 py-0.5 rounded font-medium uppercase tracking-widest">
                         Hidden Fee
                       </span>
                     ) : (
@@ -182,3 +182,4 @@ export function BankingFees({ location = "All Locations" }: BankingFeesProps) {
     </div>
   )
 }
+

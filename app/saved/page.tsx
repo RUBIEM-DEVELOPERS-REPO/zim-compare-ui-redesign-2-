@@ -2,6 +2,7 @@
 
 import { useAppStore } from "@/lib/store"
 import { useRouter } from "next/navigation"
+import { formatDate } from "@/lib/utils"
 
 export default function SavedPage() {
   const { savedComparisons, removeSavedComparison, role } = useAppStore()
@@ -10,7 +11,7 @@ export default function SavedPage() {
   if (role === "guest") {
     return (
       <div className="max-w-lg mx-auto mt-20 text-center space-y-4">
-        <h1 className="text-lg font-semibold text-foreground">Saved Comparisons</h1>
+        <h1 className="text-lg font-medium text-foreground">Saved Comparisons</h1>
         <p className="text-sm text-muted-foreground">Sign in to save and access your comparisons.</p>
         <button
           onClick={() => router.push("/auth")}
@@ -25,7 +26,7 @@ export default function SavedPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Saved Comparisons</h1>
+        <h1 className="text-xl font-medium text-foreground">Saved Comparisons</h1>
         <p className="text-sm text-muted-foreground">Your saved research and comparison sets</p>
       </div>
 
@@ -41,11 +42,11 @@ export default function SavedPage() {
           {savedComparisons.map((s) => (
             <div key={s.id} className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                <p className="text-sm font-medium text-foreground">{s.name}</p>
                 <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded capitalize">{s.category}</span>
               </div>
               <p className="text-xs text-muted-foreground mb-1">{s.itemIds.length} items compared</p>
-              <p className="text-xs text-muted-foreground mb-3">Saved {new Date(s.createdAt).toLocaleDateString()}</p>
+              <p className="text-xs text-muted-foreground mb-3">Saved {formatDate(s.createdAt)}</p>
               <div className="flex gap-2">
                 <button
                   onClick={() => router.push(`/${s.category}`)}
@@ -67,3 +68,4 @@ export default function SavedPage() {
     </div>
   )
 }
+

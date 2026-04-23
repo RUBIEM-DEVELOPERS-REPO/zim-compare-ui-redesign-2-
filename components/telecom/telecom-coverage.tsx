@@ -62,23 +62,29 @@ export function TelecomCoverage({ location = "All Locations", providers = [] }: 
     <div className="space-y-6">
       <TelecomCompareBar />
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.providerOverview", { location: displayLocation })}</h3>
+        <div className="flex items-center gap-3 mb-6">
+            <CheckCircle2 size={16} className="text-primary" />
+            <h3 className="text-[10px] font-medium text-white uppercase tracking-[0.3em] opacity-70">{t("telecom.providerOverview", { location: displayLocation })}</h3>
+        </div>
         {filteredProviders.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center col-span-full">
-            <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="glass-floating border-dashed border-white/10 p-12 text-center col-span-full bg-white/5 floating-hover">
+            <div className="bg-white/5 w-16 h-16 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border border-white/10 shadow-inner">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">{t("telecom.noCoverageData", { location: displayLocation })}</h3>
-            <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("telecom.noCoverageDetail")}</p>
+            <h3 className="text-2xl font-display font-medium text-white mb-2 uppercase tracking-tight">{t("telecom.noCoverageData", { location: displayLocation })}</h3>
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-6 max-w-xs mx-auto opacity-60">{t("telecom.noCoverageDetail")}</p>
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProviders.map((p) => (
-              <div key={p.id} className="rounded-xl border border-border bg-card p-4 flex flex-col transition-all hover:border-teal-200/50">
-                <div className="flex items-center justify-between mb-1">
+              <div key={p.id} className="glass-floating p-6 transition-all duration-500 flex flex-col relative group overflow-hidden floating-hover border-white/5 bg-white/5">
+                <div className="absolute top-0 right-0 p-4 text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                    <CheckCircle2 size={80} />
+                </div>
+                <div className="flex items-start justify-between mb-6 relative z-10">
                   <div>
-                    <p className="text-sm font-semibold text-foreground mb-1">{p.name}</p>
-                    <p className="text-xs text-muted-foreground mb-2">{p.networkType}</p>
+                    <p className="text-xl font-display font-medium text-white group-hover:text-primary transition-colors tracking-tight uppercase leading-tight">{p.name}</p>
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase mt-2 tracking-[0.2em] opacity-60 font-sans">{p.networkType}</p>
                   </div>
                   {(() => {
                     const inTray = compareTray.ids.includes(p.id)
@@ -86,17 +92,17 @@ export function TelecomCoverage({ location = "All Locations", providers = [] }: 
                       <button
                         onClick={() => addToCompareTray("telecom", p.id, "coverage")}
                         className={cn(
-                          "p-2 rounded-full transition-colors",
-                          inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
-                        )}
+                          "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xl teal-glow",
+                          inTray ? "bg-primary text-primary-foreground scale-110" : "bg-white/5 border border-white/10 text-muted-foreground hover:bg-primary/20 hover:text-primary"
+                        ) }
                         title={inTray ? t("common.addedToCompare") : t("common.addToCompare")}
                       >
-                        {inTray ? <CheckCircle2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                        {inTray ? <CheckCircle2 className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
                       </button>
                     )
                   })()}
                 </div>
-                <div className="flex gap-2 flex-wrap mt-auto">
+                <div className="flex gap-4 flex-wrap mt-auto relative z-10">
                   <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />
                   <ScoreBadge score={p.transparencyScore} label={t("telecom.transparency")} />
                 </div>
@@ -107,26 +113,29 @@ export function TelecomCoverage({ location = "All Locations", providers = [] }: 
       </section>
 
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.regionalCoverage")}</h3>
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div className="flex items-center gap-3 mb-6">
+            <CheckCircle2 size={16} className="text-primary" />
+            <h3 className="text-[10px] font-medium text-white uppercase tracking-[0.3em] opacity-70">{t("telecom.regionalCoverage")}</h3>
+        </div>
+        <div className="overflow-x-auto glass-floating border-white/10 bg-white/5">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-border bg-secondary/30">
-                <th className="text-left px-3 py-2 text-muted-foreground font-medium">{t("telecom.region")}</th>
-                <th className="text-center px-3 py-2 text-muted-foreground font-medium">Econet</th>
-                <th className="text-center px-3 py-2 text-muted-foreground font-medium">NetOne</th>
-                <th className="text-center px-3 py-2 text-muted-foreground font-medium">Telecel</th>
-                <th className="text-center px-3 py-2 text-muted-foreground font-medium">TelOne</th>
-                <th className="text-center px-3 py-2 text-muted-foreground font-medium">Liquid</th>
+              <tr className="border-b border-white/5 bg-white/5">
+                <th className="text-left px-6 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">{t("telecom.region")}</th>
+                <th className="text-center px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Econet</th>
+                <th className="text-center px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">NetOne</th>
+                <th className="text-center px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Telecel</th>
+                <th className="text-center px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">TelOne</th>
+                <th className="text-center px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Liquid</th>
               </tr>
             </thead>
             <tbody>
               {coverageByRegion.map((r) => (
-                <tr key={r.region} className="border-b border-border last:border-0">
-                  <td className="px-3 py-2 text-foreground font-medium">{r.region}</td>
+                <tr key={r.region} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                  <td className="px-6 py-4 text-white font-display font-medium uppercase tracking-tight text-sm">{r.region}</td>
                   {[r.econet, r.netone, r.telecel, r.telone, r.liquid].map((val, i) => (
-                    <td key={i} className="px-3 py-2 text-center">
-                      <span className={`inline-block rounded px-2 py-0.5 font-medium ${getCellColor(val)}`}>
+                    <td key={i} className="px-4 py-4 text-center">
+                      <span className={cn("inline-block rounded-lg px-3 py-1 text-[10px] font-medium uppercase tracking-widest border shadow-inner", getCellColor(val))}>
                         {val}%
                       </span>
                     </td>
@@ -139,32 +148,38 @@ export function TelecomCoverage({ location = "All Locations", providers = [] }: 
       </section>
 
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.avgSpeeds")}</h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex items-center gap-3 mb-6">
+            <CheckCircle2 size={16} className="text-primary" />
+            <h3 className="text-[10px] font-medium text-white uppercase tracking-[0.3em] opacity-70">{t("telecom.avgSpeeds")}</h3>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {speedData.map((s) => (
-            <div key={s.provider} className="rounded-xl border border-border bg-card p-4">
-              <p className="text-sm font-semibold text-foreground mb-2">{s.provider}</p>
-              <div className="space-y-1.5 text-xs">
+            <div key={s.provider} className="glass-floating p-6 border-white/5 bg-white/5 floating-hover">
+              <div className="flex items-center justify-between mb-6">
+                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-60">{s.provider}</p>
+                 <div className="w-1.5 h-1.5 rounded-full bg-primary teal-glow animate-pulse" />
+              </div>
+              <div className="space-y-4 text-[10px] font-medium uppercase tracking-[0.2em]">
                 {s.avg4G > 0 && (
                   <>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t("telecom.avg4G")}</span>
-                      <span className="text-foreground font-medium">{s.avg4G} Mbps</span>
+                    <div className="flex justify-between items-center group/metric">
+                      <span className="text-muted-foreground group-hover:text-white transition-colors">{t("telecom.avg4G")}</span>
+                      <span className="text-white tabular-nums">{s.avg4G} Mbps</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t("telecom.avg3G")}</span>
-                      <span className="text-foreground font-medium">{s.avg3G} Mbps</span>
+                    <div className="flex justify-between items-center group/metric">
+                      <span className="text-muted-foreground group-hover:text-white transition-colors">{t("telecom.avg3G")}</span>
+                      <span className="text-white tabular-nums">{s.avg3G} Mbps</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t("telecom.peak4G")}</span>
-                      <span className="text-primary font-medium">{s.peak4G} Mbps</span>
+                    <div className="flex justify-between items-center border-t border-white/10 pt-4 group/metric">
+                      <span className="text-primary">{t("telecom.peak4G")}</span>
+                      <span className="text-xl font-display text-white tabular-nums">{s.peak4G} Mb</span>
                     </div>
                   </>
                 )}
                 {"fibre" in s && s.fibre && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">{t("telecom.avgFibre")}</span>
-                    <span className="text-primary font-medium">{s.fibre} Mbps</span>
+                  <div className="flex justify-between items-center border-t border-white/10 pt-4 group/metric">
+                    <span className="text-primary">{t("telecom.avgFibre")}</span>
+                    <span className="text-xl font-display text-white tabular-nums">{s.fibre} Mb</span>
                   </div>
                 )}
               </div>
@@ -176,3 +191,4 @@ export function TelecomCoverage({ location = "All Locations", providers = [] }: 
     </div>
   )
 }
+

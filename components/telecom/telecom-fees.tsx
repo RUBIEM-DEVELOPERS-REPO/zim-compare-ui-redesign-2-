@@ -73,14 +73,16 @@ export function TelecomFees({ location = "All Locations", providers = [] }: Tele
   return (
     <div className="space-y-4">
       <TelecomCompareBar />
-      <div className="glass-tab-container grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5">
+      <div className="flex gap-2 flex-wrap bg-white/5 p-1.5 rounded-2xl border border-white/10 shadow-inner w-full sm:w-auto">
         {feeCategories.map((c) => (
           <button
             key={c.key}
             onClick={() => setCat(c.key)}
             className={cn(
-              "glass-tab-base text-[10px] font-bold uppercase tracking-wider h-10 w-full flex items-center justify-center",
-              cat === c.key ? "glass-tab-active" : "text-muted-foreground"
+              "px-5 py-2.5 rounded-xl text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-500",
+              cat === c.key 
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02] teal-glow" 
+                : "text-muted-foreground hover:text-white hover:bg-white/5"
             )}
           >
             {c.label}
@@ -89,24 +91,24 @@ export function TelecomFees({ location = "All Locations", providers = [] }: Tele
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center col-span-full">
-          <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="glass-floating border-dashed border-white/10 p-12 text-center col-span-full bg-white/5 floating-hover">
+          <div className="bg-white/5 w-16 h-16 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border border-white/10 shadow-inner">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">No fees found for {location}</h3>
-          <p className="text-muted-foreground mb-6 max-w-xs mx-auto">None of the providers with {cat} fees currently have reported coverage in this location.</p>
+          <h3 className="text-2xl font-display font-medium text-white mb-2 uppercase tracking-tight">Access Restricted: No protocols for {location}</h3>
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-6 max-w-xs mx-auto opacity-60">None of the providers with {cat} protocols currently have reported signal in this location.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div className="overflow-x-auto glass-floating border-white/10 bg-white/5 overflow-hidden">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-border bg-secondary/30">
-                <th className="text-left px-3 py-2 text-muted-foreground font-medium">Provider</th>
-                <th className="text-left px-3 py-2 text-muted-foreground font-medium">Fee</th>
-                <th className="text-right px-3 py-2 text-muted-foreground font-medium">Amount</th>
-                <th className="text-left px-3 py-2 text-muted-foreground font-medium">Unit</th>
-                <th className="text-left px-3 py-2 text-muted-foreground font-medium">Note</th>
-                <th className="w-[40px]"></th>
+              <tr className="border-b border-white/5 bg-white/5">
+                <th className="text-left px-6 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Provider</th>
+                <th className="text-left px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Fee</th>
+                <th className="text-right px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Amount</th>
+                <th className="text-left px-4 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Unit</th>
+                <th className="text-left px-6 py-4 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Note</th>
+                <th className="w-[60px]"></th>
               </tr>
             </thead>
             <tbody>
@@ -114,24 +116,24 @@ export function TelecomFees({ location = "All Locations", providers = [] }: Tele
                 const providerId = telecomProviders.find(p => p.name === f.provider)?.id || f.provider
                 const inTray = compareTray.ids.includes(providerId)
                 return (
-                  <tr key={`${f.provider}-${f.name}`} className="border-b border-border last:border-0 hover:bg-secondary/20">
-                    <td className="px-3 py-2 text-foreground">{f.provider}</td>
-                    <td className="px-3 py-2 text-foreground">{f.name}</td>
-                    <td className="px-3 py-2 text-right text-foreground font-medium">
+                  <tr key={`${f.provider}-${f.name}`} className="border-b border-white/5 hover:bg-white/5 transition-colors group/row">
+                    <td className="px-6 py-4 text-white font-display font-medium uppercase tracking-tight text-sm">{f.provider}</td>
+                    <td className="px-4 py-4 text-muted-foreground uppercase font-medium tracking-widest text-[10px] opacity-80">{f.name}</td>
+                    <td className="px-4 py-4 text-right text-primary font-display font-medium text-sm tabular-nums">
                       {f.amount > 0 ? `$${f.amount.toFixed(2)}` : "--"}
                     </td>
-                    <td className="px-3 py-2 text-muted-foreground">{f.unit}</td>
-                    <td className="px-3 py-2 text-muted-foreground max-w-[200px] truncate">{f.note}</td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-4 py-4 text-muted-foreground uppercase font-medium tracking-widest text-[9px] opacity-60">{f.unit}</td>
+                    <td className="px-6 py-4 text-muted-foreground font-sans text-[11px] leading-relaxed opacity-70 italic max-w-[200px] truncate">{f.note}</td>
+                    <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => addToCompareTray("telecom", providerId, "fees")}
                         className={cn(
-                          "p-1 rounded-full transition-colors",
-                          inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
+                          "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xl teal-glow",
+                          inTray ? "bg-primary text-primary-foreground scale-110" : "bg-white/5 border border-white/10 text-muted-foreground hover:bg-primary/20 hover:text-primary"
                         )}
                         title={inTray ? t("common.addedToCompare") : t("common.addToCompare")}
                       >
-                        {inTray ? <CheckCircle2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                        {inTray ? <CheckCircle2 className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
                       </button>
                     </td>
                   </tr>
@@ -143,9 +145,14 @@ export function TelecomFees({ location = "All Locations", providers = [] }: Tele
       )}
 
       {cat === "hidden" && (
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
-          <p className="text-xs font-medium text-amber-400 mb-1">Watch out for hidden costs</p>
-          <p className="text-xs text-muted-foreground">
+        <div className="glass-floating border-amber-500/20 bg-amber-500/5 p-6 teal-glow">
+          <div className="flex items-center gap-3 mb-3">
+              <div className="p-1.5 bg-amber-500/20 rounded-lg">
+                  <X className="w-4 h-4 text-amber-500" />
+              </div>
+              <p className="text-[10px] font-medium text-amber-500 uppercase tracking-[0.2em]">Neural Warning: Hidden Protocols</p>
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-relaxed uppercase tracking-widest opacity-80 font-sans">
             Out-of-bundle rates can be extremely expensive. Auto-renewal may charge your airtime without notice.
             Always check your balance and bundle status regularly.
           </p>
@@ -155,3 +162,4 @@ export function TelecomFees({ location = "All Locations", providers = [] }: Tele
     </div>
   )
 }
+

@@ -6,7 +6,12 @@ import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
+<<<<<<< Updated upstream
 import { Suspense, useEffect, useState } from "react"
+=======
+import { Suspense, useEffect, useMemo } from "react"
+import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
+>>>>>>> Stashed changes
 
 function CompareContent() {
   const searchParams = useSearchParams()
@@ -45,10 +50,26 @@ function CompareContent() {
   const isProducts = compareProducts.length > 0
   const items = isProducts ? compareProducts : compareBanks
 
+  // Determine winner for simulator
+  const winner = useMemo(() => {
+    if (!isProducts) return null;
+    const products = compareProducts;
+    let best = products[0];
+    products.forEach(p => {
+      let score = 0;
+      if (p.interestRate > best.interestRate) score += 2;
+      if (p.monthlyFee < best.monthlyFee) score += 1;
+      if (p.minBalance < best.minBalance) score += 1;
+      if (p.perks.length > best.perks.length) score += 1;
+      if (score >= 2) best = p;
+    });
+    return best;
+  }, [compareProducts, isProducts]);
+
   if (items.length < 2) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-lg font-semibold text-foreground mb-2">Banking Comparison</h1>
+        <h1 className="text-lg font-medium text-foreground mb-2">Banking Comparison</h1>
         <p className="text-sm text-muted-foreground">Select at least 2 items to compare. Go to the Banking page and add items to your compare tray.</p>
       </div>
     )
@@ -57,7 +78,7 @@ function CompareContent() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-foreground">Banking Comparison</h1>
+        <h1 className="text-lg font-medium text-foreground">Banking Comparison</h1>
         <button
           onClick={() => {
             addSavedComparison({
@@ -174,43 +195,24 @@ function CompareContent() {
       </div>
 
       {isProducts && (
-        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-              <span className="text-sm font-bold">★</span>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
+                <span className="text-sm font-medium">★</span>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-foreground">
+                  {t("banking.winner")}: <span className="text-primary italic">
+                    {winner?.bankName} {winner?.name}
+                  </span>
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("banking.recommended")}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-foreground">
-                {t("banking.winner")}: <span className="text-primary italic">
-                  {(() => {
-                    const products = compareProducts;
-                    let winner = products[0];
-                    products.forEach(p => {
-                      let score = 0;
-                      if (p.interestRate > winner.interestRate) score += 2;
-                      if (p.monthlyFee < winner.monthlyFee) score += 1;
-                      if (p.minBalance < winner.minBalance) score += 1;
-                      if (p.perks.length > winner.perks.length) score += 1;
 
-                      if (score >= 2) winner = p;
-                    });
-                    return winner.bankName + " " + winner.name;
-                  })()}
-                </span>
-              </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{t("banking.recommended")}</p>
-            </div>
-          </div>
-
-          <ul className="space-y-2 mb-4">
-            {(() => {
-              const products = compareProducts;
-              let winner = products[0];
-              products.forEach(p => {
-                if (p.interestRate > winner.interestRate) winner = p;
-              });
-              // Simple summary of winner's best traits
-              return [
+            <ul className="space-y-2 mb-4">
+              {winner && [
                 `${t("banking.reasoning.higherRate")} (${winner.interestRate}% APY)`,
                 `${t("banking.reasoning.lowerFee")} ($${winner.monthlyFee}/mo)`,
                 `${t("banking.reasoning.betterPerks")}: ${winner.perks.slice(0, 2).join(", ")}`
@@ -219,13 +221,19 @@ function CompareContent() {
                   <span className="text-primary mt-1">✓</span>
                   {reason}
                 </li>
-              ));
-            })()}
-          </ul>
+              ))}
+            </ul>
 
-          <p className="text-[10px] text-muted-foreground italic">
-            {t("banking.disclaimer")}
-          </p>
+            <p className="text-[10px] text-muted-foreground italic mt-auto">
+              {t("banking.disclaimer")}
+            </p>
+          </div>
+
+          <SwitchSaveSimulator
+            category="banking"
+            current={items[0]}
+            recommended={winner}
+          />
         </div>
       )}
 
@@ -249,3 +257,4 @@ export default function BankingComparePage() {
     </Suspense>
   )
 }
+

@@ -38,8 +38,8 @@ export default function AuthPage() {
   return (
     <div className="max-w-md mx-auto mt-16">
       <div className="rounded-xl border border-border bg-card p-6">
-        <h1 className="text-lg font-semibold text-foreground text-center mb-1">
-          {mode === "login" ? "Sign in to ZimCompare" : "Create an Account"}
+        <h1 className="text-lg font-medium text-foreground text-center mb-1">
+          {mode === "login" ? "Sign in to Fintech" : "Create an Account"}
         </h1>
         <p className="text-xs text-muted-foreground text-center mb-6">
           {mode === "login" ? "Access saved comparisons and personalized insights" : "Start comparing and saving your research"}
@@ -114,3 +114,4 @@ export default function AuthPage() {
     </div>
   )
 }
+

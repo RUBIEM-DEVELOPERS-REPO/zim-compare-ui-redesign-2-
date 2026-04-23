@@ -74,7 +74,7 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="rounded-full border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-wider text-gray-500 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all appearance-none cursor-pointer hover:border-gray-300 shadow-sm"
+              className="rounded-full border border-gray-200 bg-white text-[11px] font-medium uppercase tracking-wider text-gray-500 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all appearance-none cursor-pointer hover:border-gray-300 shadow-sm"
               title="Sort by"
 =======
       <div className="flex flex-col gap-2">
@@ -115,8 +115,17 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
+<<<<<<< Updated upstream
           <h3 className="text-lg font-bold text-foreground mb-2">No bundles found</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">Upload telecom data via the Admin panel to see bundles here.</p>
+=======
+          <h3 className="text-lg font-medium text-foreground mb-2">
+            {t("telecom.noBundlesFound", { sub: t(`telecom.subTabs.${sub}`), location: location === "All Locations" ? t("common.allLocations") : location })}
+          </h3>
+          <p className="text-muted-foreground mb-6 max-w-xs mx-auto">
+            {t("telecom.noBundlesDetail", { sub: t(`telecom.subTabs.${sub}`) })}
+          </p>
+>>>>>>> Stashed changes
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -130,6 +139,7 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
                   "border-border hover:border-teal-200/50 hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-1"
                 )}
               >
+<<<<<<< Updated upstream
                 <div className="flex items-start justify-between mb-1">
                   <p className="text-sm font-bold text-foreground leading-tight">{b.bundle_name}</p>
                   {b.bundle_group && (
@@ -137,10 +147,14 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
                       {b.bundle_group}
                     </span>
                   )}
+=======
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm font-medium text-foreground">{b.name}</p>
+>>>>>>> Stashed changes
                 </div>
                 <p className="text-xs font-medium text-muted-foreground mb-4 capitalize">{b.operator.replace(/^tel-/, "").replace(/-/g, " ")}</p>
 
-                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
+                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-medium">
                   <div className="rounded-xl bg-secondary/30 p-3">
                     <p className="text-muted-foreground uppercase tracking-tight mb-0.5">{t("telecom.price")}</p>
                     <p className="text-foreground">{b.currency} {b.price.toFixed(2)}</p>
@@ -173,6 +187,7 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
                   )}
                 </div>
 
+<<<<<<< Updated upstream
                 {/* Social media extras */}
                 {(b.facebook_mb != null || b.instagram_mb != null || b.x_mb != null) && (
                   <div className="flex flex-wrap gap-1.5 mb-3">
@@ -193,6 +208,13 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
                     )}
                   </div>
                 )}
+=======
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 text-[10px] font-medium px-2 py-0.5 rounded-full border border-teal-100 dark:border-teal-800">
+                    {b.speedClass}
+                  </span>
+                </div>
+>>>>>>> Stashed changes
 
                 {b.extras && (
                   <p className="text-[10px] font-medium text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-900/30 rounded-lg px-3 py-2 mb-4 italic">
@@ -224,3 +246,4 @@ export function TelecomData({ location = "All Locations", bundles = [], provider
     </div>
   )
 }
+

@@ -56,7 +56,7 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
             {filtered.length === 0 ? (
                 <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
                     <Droplets className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                    <h3 className="text-lg font-bold text-foreground mb-2">No providers found</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No providers found</h3>
                     <p className="text-muted-foreground">Try adjusting your filters or location.</p>
                 </div>
             ) : (
@@ -73,11 +73,11 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
                             >
                                 <div className="flex items-start justify-between mb-1">
                                     <div>
-                                        <p className="text-sm font-bold text-foreground">{p.name}</p>
+                                        <p className="text-sm font-medium text-foreground">{p.name}</p>
                                         <p className="text-xs text-muted-foreground">{p.city}</p>
                                     </div>
                                     {p.badge && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 shrink-0 ml-2">
+                                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 shrink-0 ml-2">
                                             {p.badge}
                                         </span>
                                     )}
@@ -85,7 +85,7 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
 
                                 <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary text-muted-foreground w-fit mb-3">{p.type}</span>
 
-                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
+                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-medium">
                                     <div className="rounded-xl bg-secondary/30 p-3">
                                         <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Per m³</p>
                                         <p className="text-foreground">${p.costPerCubicMeter.toFixed(2)}</p>
@@ -133,3 +133,4 @@ export function UtilitiesWater({ location = "All Locations" }: UtilitiesWaterPro
         </div>
     )
 }
+

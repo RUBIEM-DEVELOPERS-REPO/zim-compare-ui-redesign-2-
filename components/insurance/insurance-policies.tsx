@@ -5,7 +5,7 @@ import { policies } from "@/lib/mock/insurance"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { X } from "lucide-react"
+import { X, ShieldCheck, Clock, ChevronLeft } from "lucide-react"
 import { insuranceProviders } from "@/lib/mock/insurance"
 import { useI18n } from "@/lib/i18n"
 
@@ -53,17 +53,17 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-white/5 p-1 rounded-xl border border-white/10 shadow-inner">
             {categories.map((c) => (
               <button
                 key={c.key}
                 onClick={() => handleCatChange(c.key)}
                 className={cn(
-                  "glass-tab-base px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                  "px-3 py-1.5 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500",
                   cat === c.key
-                    ? "glass-tab-active"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]"
+                    : "text-muted-foreground hover:text-white hover:bg-white/5"
                 )}
               >
                 {c.label}
@@ -71,19 +71,22 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
             ))}
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end relative">
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="glass-input text-[11px] font-black uppercase tracking-widest text-muted-foreground px-4 py-2 focus:outline-none cursor-pointer hover:border-primary/40 transition-all appearance-none outline-none ring-0 shadow-lg"
-              title="Sort by"
+              className="glass-floating text-[9px] font-medium uppercase tracking-[0.2em] text-primary/80 px-4 py-1.5 focus:outline-none cursor-pointer bg-primary/5 border-primary/20 hover:bg-primary/10 transition-all appearance-none outline-none ring-0 shadow-lg teal-glow pr-8"
+              title="Sort Logic"
             >
               {CATEGORY_SORT_OPTIONS[cat].map((option) => (
-                <option key={option} value={option} className="bg-background text-foreground">
+                <option key={option} value={option} className="bg-[#0A0A0A] text-white">
                   {option}
                 </option>
               ))}
             </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-primary/60">
+                <ChevronLeft size={14} className="-rotate-90" />
+            </div>
           </div>
         </div>
       </div>
@@ -93,76 +96,77 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">{t("insurance.noPoliciesFound", { location: displayLocation })}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">{t("insurance.noPoliciesFound", { location: displayLocation })}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("insurance.noPoliciesDetail")}</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => {
             const inTray = compareTray.ids.includes(p.id)
             return (
               <div
                 key={p.id}
-                className="glass-card p-5 flex flex-col transition-all duration-300 relative group overflow-hidden"
+                className="glass-floating p-3.5 flex flex-col transition-all duration-500 relative group overflow-hidden floating-hover border-white/5 rounded-xl"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-sm font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{p.name}</p>
+                <div className="absolute top-0 right-0 p-2 text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                    <ShieldCheck size={60} />
                 </div>
-                <p className="text-xs font-medium text-muted-foreground mb-4">{p.providerName}</p>
 
-                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
-                  <div className="rounded-xl bg-secondary/30 p-3">
-                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">{t("insurance.monthly")}</p>
-                    <p className="text-foreground">${p.monthlyPremium}</p>
+                <div className="flex items-center justify-between mb-0.5 relative z-10">
+                  <p className="text-base font-display font-medium text-white group-hover:text-primary transition-colors uppercase tracking-tight leading-tight">{p.name}</p>
+                </div>
+                <p className="text-[9px] font-medium text-muted-foreground uppercase mt-1 tracking-[0.1em] opacity-60 font-sans mb-3.5 relative z-10">{p.providerName}</p>
+
+                <div className="grid grid-cols-2 gap-2 mb-3.5 relative z-10">
+                  <div className="glass-floating bg-white/5 p-2 border-white/10 shadow-inner group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500 rounded-lg">
+                    <p className="text-[8px] font-medium text-muted-foreground uppercase tracking-[0.15em] mb-0.5 opacity-60">{t("insurance.monthly")}</p>
+                    <p className="text-xs font-display font-medium text-white tabular-nums">${p.monthlyPremium}</p>
                   </div>
-                  <div className="rounded-xl bg-secondary/30 p-3">
-                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">{t("insurance.annual")}</p>
-                    <p className="text-foreground">${p.annualPremium}</p>
+                  <div className="glass-floating bg-white/5 p-2 border-white/10 shadow-inner group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500 rounded-lg">
+                    <p className="text-[8px] font-medium text-muted-foreground uppercase tracking-[0.15em] mb-0.5 opacity-60">{t("insurance.excess")}</p>
+                    <p className="text-xs font-display font-medium text-primary tabular-nums">${p.excess}</p>
                   </div>
-                  <div className="rounded-xl bg-secondary/30 p-3">
-                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">{t("insurance.coverLimit")}</p>
-                    <p className="text-teal-600 dark:text-teal-400">${p.coverLimit.toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl bg-secondary/30 p-3">
-                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5">{t("insurance.excess")}</p>
-                    <p className="text-foreground font-black">${p.excess}</p>
+                  <div className="glass-floating bg-white/5 p-2 border-white/10 shadow-inner group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500 col-span-2 rounded-lg">
+                    <p className="text-[8px] font-medium text-muted-foreground uppercase tracking-[0.15em] mb-0.5 opacity-60">{t("insurance.coverLimit")}</p>
+                    <p className="text-base font-display font-medium text-white tabular-nums">${p.coverLimit.toLocaleString()}</p>
                   </div>
                 </div>
 
                 {p.waitingPeriodDays > 0 && (
-                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-900/30 rounded-lg px-3 py-1.5 mb-3 italic">
+                  <div className="flex items-center gap-1.5 text-[9px] font-medium text-amber-500 uppercase tracking-widest bg-amber-500/5 border border-amber-500/20 px-2.5 py-1.5 rounded-lg mb-3.5 relative z-10 shadow-inner">
+                    <Clock size={11} strokeWidth={3} />
                     {t("insurance.waitingPeriod", { days: p.waitingPeriodDays })}
-                  </p>
+                  </div>
                 )}
 
-                <div className="mb-3">
-                  <p className="text-[10px] font-black text-muted-foreground mb-2 uppercase tracking-widest">{t("insurance.coreBenefits")}</p>
+                <div className="mb-3.5 relative z-10">
+                  <p className="text-[8px] font-medium text-muted-foreground mb-1.5 uppercase tracking-[0.2em] opacity-70">{t("insurance.coreBenefits")}</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {p.benefits.slice(0, 4).map((b) => (
-                      <span key={b} className="text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800">{b}</span>
-                    ))}
-                    {p.benefits.length > 4 && (
-                      <span className="text-[10px] font-bold text-muted-foreground self-center">+{p.benefits.length - 4}</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <p className="text-[10px] font-black text-muted-foreground mb-2 uppercase tracking-widest">{t("insurance.keyExclusions")}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.exclusions.slice(0, 3).map((e) => (
-                      <span key={e} className="text-[10px] font-bold bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300 px-2 py-0.5 rounded-full border border-red-100 dark:border-red-800">{e}</span>
+                    {p.benefits.slice(0, 3).map((b) => (
+                      <span key={b} className="text-[8px] font-medium uppercase tracking-widest bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20 shadow-inner">{b}</span>
                     ))}
                   </div>
                 </div>
 
-                <div className="mt-auto pt-2">
+                <div className="mb-4 relative z-10">
+                  <p className="text-[8px] font-medium text-muted-foreground mb-1.5 uppercase tracking-[0.2em] opacity-70">{t("insurance.keyExclusions")}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.exclusions.slice(0, 2).map((e) => (
+                      <span key={e} className="text-[8px] font-medium uppercase tracking-widest bg-red-500/10 text-red-400 px-2 py-0.5 rounded-md border border-red-500/20 shadow-inner">{e}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-auto pt-3 relative z-10 flex gap-2">
                   <button
                     onClick={() => addToCompareTray("insurance", p.id, "policies")}
                     className={cn(
-                      "btn-compare-standard w-full",
-                      inTray && "opacity-60"
+                      "flex-1 px-3 py-2 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500",
+                      inTray 
+                        ? "bg-white/5 text-muted-foreground border border-white/10 opacity-50 cursor-not-allowed" 
+                        : "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:scale-[1.05] active:scale-95 teal-glow"
                     )}
+                    disabled={inTray}
                   >
                     {inTray ? t("common.addedToCompare") : t("common.addToCompare")}
                   </button>
@@ -177,3 +181,4 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
     </div>
   )
 }
+

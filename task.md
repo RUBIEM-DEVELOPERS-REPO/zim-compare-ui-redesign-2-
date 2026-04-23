@@ -1,10 +1,18 @@
-```
-- [/] **UI Enhancements**
+- [x] **UI Enhancements**
   - [x] Navbar Scroller: Add horizontal scroll for overflow items <!-- id: 7 -->
   - [x] Apply Glassmorphism to Tabs: Update all navigation tabs with subtle glass effect <!-- id: 8 -->
     - [x] Define Glassmorphism CSS properties for tabs
     - [x] Apply properties to all tab components
-    - [ ] Test responsiveness and cross-browser compatibility
-  - [ ] **Sign In Page**: Simplify navbar (hide links/search) <!-- id: 10 -->
-  - [ ] Animations: Add smooth transitions to page loads <!-- id: 9 -->
-```
+    - [x] Test responsiveness and cross-browser compatibility
+    - [x] Refine `SourcesSection` component design for "dark premium" look
+  - [x] **Gen Z Hub Refinement**: Remove specific elements and sections
+    - [x] Remove "18–30 Years" pill and "All Platforms" tab
+    - [x] Remove "Switch & Save" simulator and "Data Verified" badge
+    - [x] Remove "Market Momentum" (trending items) section
+    - [x] Clean up unused code and reflow layout
+  - [x] Update `ClientShell` to show `SourcesSection` on all non-auth pages
+  - [x] Verify `DashboardShell` integration
+  - [x] Expand `routeSources` data in `sources-config.ts`
+  - [x] Final verification of UI across different routes
+  - [x] **Sign In Page**: Simplify navbar (hide links/search) <!-- id: 10 -->
+  - [x] Animations: Add smooth transitions to page loads <!-- id: 9 -->

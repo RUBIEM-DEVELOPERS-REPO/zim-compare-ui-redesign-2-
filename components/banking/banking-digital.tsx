@@ -46,7 +46,7 @@ export function BankingDigital({ location = "All Locations" }: BankingDigitalPro
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-medium text-muted-foreground">Select up to 3 banks to compare digital features</p>
           {error && (
-            <div className="flex items-center gap-1.5 text-xs text-destructive font-bold animate-in fade-in slide-in-from-right-2">
+            <div className="flex items-center gap-1.5 text-xs text-destructive font-medium animate-in fade-in slide-in-from-right-2">
               <AlertCircle size={14} />
               {error}
             </div>
@@ -58,7 +58,7 @@ export function BankingDigital({ location = "All Locations" }: BankingDigitalPro
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">No digital banking data for {location}</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">No digital banking data for {location}</h3>
             <p className="text-muted-foreground mb-6 max-w-xs mx-auto">None of the banks with digital scoring are currently active in this location.</p>
           </div>
         ) : (
@@ -77,7 +77,7 @@ export function BankingDigital({ location = "All Locations" }: BankingDigitalPro
                   )}
                 >
                   <div className="absolute top-4 right-4 flex items-center gap-1.5 z-10">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{isSelected ? "Added" : "Add to Compare"}</span>
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">{isSelected ? "Added" : "Add to Compare"}</span>
                     <div className={cn(
                       "w-5 h-5 rounded-md border flex items-center justify-center transition-colors shadow-sm",
                       isSelected ? "bg-primary border-primary" : "bg-background border-border"
@@ -89,11 +89,11 @@ export function BankingDigital({ location = "All Locations" }: BankingDigitalPro
                   <div className="flex items-center justify-between mb-4 mt-1">
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-muted-foreground/60 font-mono">#{i + 1}</span>
-                      <p className="text-sm font-bold text-foreground">{b.name}</p>
+                      <p className="text-sm font-medium text-foreground">{b.name}</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 mb-4 text-[10px] font-bold uppercase tracking-tight">
+                  <div className="grid grid-cols-3 gap-2 mb-4 text-[10px] font-medium uppercase tracking-tight">
                     <div className="rounded-xl bg-secondary/40 p-2.5 text-center flex flex-col items-center justify-center">
                       <span className="text-muted-foreground mb-0.5">Score</span>
                       <span className="text-primary">{b.digitalScore}%</span>
@@ -129,3 +129,4 @@ export function BankingDigital({ location = "All Locations" }: BankingDigitalPro
     </div>
   )
 }
+

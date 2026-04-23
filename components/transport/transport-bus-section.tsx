@@ -22,16 +22,16 @@ export function TransportBusSection({ location = "All Locations" }: TransportBus
     return (
         <div className="space-y-6">
             {/* Sub-navigation */}
-            <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none border-b border-border/40">
+            <div className="flex gap-1.5 overflow-x-auto pb-3 scrollbar-none border-b border-white/5">
                 {subTabs.map((t) => (
                     <button
                         key={t.key}
                         onClick={() => setActiveSubTab(t.key)}
                         className={cn(
-                            "shrink-0 glass-tab-base px-4 py-2 text-xs font-medium transition-all",
+                            "shrink-0 px-4 py-1.5 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500",
                             activeSubTab === t.key
-                                ? "glass-tab-active"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-primary text-primary-foreground teal-glow shadow-lg shadow-primary/20 scale-[1.02]"
+                                : "text-muted-foreground hover:text-white hover:bg-white/5"
                         )}
                     >
                         {t.label}
@@ -47,3 +47,4 @@ export function TransportBusSection({ location = "All Locations" }: TransportBus
         </div>
     )
 }
+

@@ -94,7 +94,7 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">No providers found for {location}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">No providers found for {location}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">There are no telecom providers with reported coverage in this location.</p>
         </div>
       ) : (
@@ -114,8 +114,8 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
               {/* ... header and details ... */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{p.name}</h3>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{p.type} &middot; {p.networkType}</p>
+                  <h3 className="text-lg font-medium text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">{p.name}</h3>
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{p.type} &middot; {p.networkType}</p>
                 </div>
                 <div className="flex gap-2 flex-wrap items-center">
                   <ScoreBadge score={p.coverageScore} label="Coverage" />
@@ -152,13 +152,13 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
                   <p className="text-sm font-medium text-foreground/70 mb-6 leading-relaxed bg-secondary/20 p-4 rounded-xl border border-border/50">{details.summary}</p>
                   <div className="grid gap-6 sm:grid-cols-2 mb-6">
                     <div className="space-y-3">
-                      <p className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                      <p className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-2">
                         <span className="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-[10px]">+</span>
                         Key Strengths
                       </p>
                       <ul className="space-y-2">
                         {details.strengths.map((s) => (
-                          <li key={s} className="text-xs font-bold text-muted-foreground flex items-center gap-2">
+                          <li key={s} className="text-xs font-medium text-muted-foreground flex items-center gap-2">
                             <div className="w-1 h-1 rounded-full bg-emerald-400" />
                             {s}
                           </li>
@@ -166,13 +166,13 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
                       </ul>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest flex items-center gap-2">
+                      <p className="text-[10px] font-medium text-red-600 dark:text-red-400 uppercase tracking-widest flex items-center gap-2">
                         <span className="w-4 h-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-[10px]">-</span>
                         Critical Weaknesses
                       </p>
                       <ul className="space-y-2">
                         {details.weaknesses.map((w) => (
-                          <li key={w} className="text-xs font-bold text-muted-foreground flex items-center gap-2">
+                          <li key={w} className="text-xs font-medium text-muted-foreground flex items-center gap-2">
                             <div className="w-1 h-1 rounded-full bg-red-400" />
                             {w}
                           </li>
@@ -181,8 +181,8 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
                     </div>
                   </div>
                   <div className="flex flex-col border-l border-border/50 pl-4">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">Flash Code</span>
-                    <span className="text-xs font-mono font-bold text-foreground bg-gray-100 px-2 py-0.5 rounded-lg">{details.ussd}</span>
+                    <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-tighter">Flash Code</span>
+                    <span className="text-xs font-mono font-medium text-foreground bg-gray-100 px-2 py-0.5 rounded-lg">{details.ussd}</span>
                   </div>
                 </>
               )}
@@ -194,3 +194,4 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
     </div>
   )
 }
+

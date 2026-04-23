@@ -87,7 +87,7 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                         <div className="flex gap-1.5 flex-wrap">
                             {starFilters.map(f => (
                                 <button key={f} onClick={() => setStarFilter(f)}
-                                    className={cn("glass-tab-base px-3 py-1 text-[8px] font-black uppercase tracking-widest transition-all",
+                                    className={cn("glass-tab-base px-3 py-1 text-[8px] font-medium uppercase tracking-widest transition-all",
                                         starFilter === f ? "glass-tab-active" : "text-muted-foreground hover:text-foreground"
                                     )}>{f}</button>
                             ))}
@@ -96,7 +96,7 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                             <select 
                                 value={sortBy} 
                                 onChange={e => setSortBy(e.target.value)}
-                                className="glass-input w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground px-5 py-2.5 focus:outline-none cursor-pointer hover:border-primary/40 transition-all appearance-none outline-none shadow-lg pr-10"
+                                className="glass-input w-full text-[10px] font-medium uppercase tracking-widest text-muted-foreground px-5 py-2.5 focus:outline-none cursor-pointer hover:border-primary/40 transition-all appearance-none outline-none shadow-lg pr-10"
                                 title="Sort by"
                             >
                                 {sortOptions.map(o => <option key={o.value} value={o.value} className="bg-background text-foreground">{o.label}</option>)}
@@ -107,10 +107,10 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                         </div>
                     </div>
                     <div className="flex gap-3 flex-wrap items-center pt-4 border-t border-border/10">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mr-3">{t("stays.filters")}:</span>
+                        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary mr-3">{t("stays.filters")}:</span>
                         {amenityFilters.map(a => (
                             <button key={a} onClick={() => toggleAmenity(a)}
-                                className={cn("flex items-center gap-2 rounded-xl px-3 py-1.5 text-[8px] font-black uppercase tracking-widest transition-all border",
+                                className={cn("flex items-center gap-2 rounded-xl px-3 py-1.5 text-[8px] font-medium uppercase tracking-widest transition-all border",
                                     amenityFilter.includes(a)
                                         ? "bg-primary/15 text-primary border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.1)]"
                                         : "bg-muted/30 text-muted-foreground border-white/5 hover:border-primary/30"
@@ -139,19 +139,19 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                             })}
                         </div>
                         <div>
-                            <p className="text-xs text-foreground font-black uppercase tracking-widest">
+                            <p className="text-xs text-foreground font-medium uppercase tracking-widest">
                                 {t("stays.propertiesSelected", { count: selected.length })}
                             </p>
                             <div className="flex items-center gap-1.5 mt-1">
                                 <Plus className="w-3 h-3 text-primary" />
-                                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tight">{t("stays.selectUpTo3")}</p>
+                                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">{t("stays.selectUpTo3")}</p>
                             </div>
                         </div>
                     </div>
                     <button
                         onClick={handleCompare}
                         disabled={selected.length < 2}
-                        className={cn("rounded-2xl px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-xl hover:scale-105 active:scale-95",
+                        className={cn("rounded-2xl px-8 py-3 text-[10px] font-medium uppercase tracking-[0.2em] transition-all shadow-xl hover:scale-105 active:scale-95",
                             selected.length >= 2
                                 ? "bg-primary text-primary-foreground shadow-primary/40 hover:shadow-primary/60"
                                 : "bg-muted/50 text-muted-foreground cursor-not-allowed opacity-50"
@@ -182,12 +182,12 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                             {/* Top Badges */}
                             <div className="absolute top-4 left-4 flex flex-col gap-2">
                                 {h.bestValue && (
-                                    <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-xl">
+                                    <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-medium uppercase tracking-widest rounded-full shadow-xl">
                                         {t("stays.bestValue")}
                                     </span>
                                 )}
                                 {h.recommended && (
-                                    <span className="px-3 py-1 bg-primary text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-xl border border-white/20">
+                                    <span className="px-3 py-1 bg-primary text-white text-[9px] font-medium uppercase tracking-widest rounded-full shadow-xl border border-white/20">
                                         {t("stays.aiRecommended")}
                                     </span>
                                 )}
@@ -195,22 +195,22 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
 
                             {/* Price Overlay */}
                             <div className="absolute bottom-3 right-3 text-right transform group-hover:translate-x-[-2px] transition-transform">
-                                <p className="text-xl font-black text-white leading-none">${h.pricePerNight}</p>
-                                <p className="text-[8px] text-white/70 font-black uppercase tracking-[0.2em] mt-1">{t("stays.perNight")}</p>
+                                <p className="text-xl font-medium text-white leading-none">${h.pricePerNight}</p>
+                                <p className="text-[8px] text-white/70 font-medium uppercase tracking-[0.2em] mt-1">{t("stays.perNight")}</p>
                             </div>
                         </div>
 
                         {/* Content */}
                         <div className="p-4 flex-1 flex flex-col relative text-balance">
                             <div className="flex-1">
-                                <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors tracking-tight line-clamp-1">{h.name}</h3>
+                                <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors tracking-tight line-clamp-1">{h.name}</h3>
 
                                 <div className="flex items-center justify-between mt-3">
                                     <div className="flex items-center gap-2">
                                         <div className="p-1 bg-primary/10 rounded-lg shadow-inner">
                                             <MapPin className="w-3.5 h-3.5 text-primary" />
                                         </div>
-                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{h.city}</p>
+                                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{h.city}</p>
                                     </div>
                                     <StarRating stars={h.stars} />
                                 </div>
@@ -224,11 +224,11 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                                     {h.amenities.slice(0, 4).map(a => (
                                         <div key={a} className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded-xl border border-white/5 shadow-inner group/amenity">
                                             <span className="text-primary scale-75 transition-transform group-hover/amenity:scale-90">{amenityIcons[a] ?? null}</span>
-                                            <span className="text-[8px] font-black text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
+                                            <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
                                         </div>
                                     ))}
                                     {h.amenities.length > 4 && (
-                                        <span className="text-[8px] font-black text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{h.amenities.length - 4}</span>
+                                        <span className="text-[8px] font-medium text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{h.amenities.length - 4}</span>
                                     )}
                                 </div>
                             </div>
@@ -236,12 +236,12 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                             {/* Footer / Stats */}
                             <div className="mt-5 pt-3 border-t border-border/10 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center font-black text-primary text-sm shadow-inner border border-primary/5">
+                                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center font-medium text-primary text-sm shadow-inner border border-primary/5">
                                         {h.rating}
                                     </div>
                                     <div>
-                                        <p className="text-[8px] font-black text-foreground uppercase tracking-widest leading-none">{t("stays.exceptional")}</p>
-                                        <p className="text-[7px] font-black text-muted-foreground mt-0.5 uppercase tracking-tighter">{t("stays.verifiedReviews", { count: h.reviewCount })}</p>
+                                        <p className="text-[8px] font-medium text-foreground uppercase tracking-widest leading-none">{t("stays.exceptional")}</p>
+                                        <p className="text-[7px] font-medium text-muted-foreground mt-0.5 uppercase tracking-tighter">{t("stays.verifiedReviews", { count: h.reviewCount })}</p>
                                     </div>
                                 </div>
 
@@ -272,3 +272,4 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
         </div>
     )
 }
+

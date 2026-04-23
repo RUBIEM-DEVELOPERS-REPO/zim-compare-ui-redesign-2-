@@ -10,6 +10,8 @@ import { TransportBusSection } from "@/components/transport/transport-bus-sectio
 import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { TransportCompareBar } from "@/components/transport/transport-compare-bar"
+import { PageHeader } from "@/components/page-header"
+
 
 const tabs = [
     { key: "overview", label: "Overview" },
@@ -32,10 +34,11 @@ export default function MobilityPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-xl font-semibold text-foreground">Mobility</h1>
-                <p className="text-sm text-muted-foreground">Compare vehicle dealerships, driving schools and bus routes in Zimbabwe</p>
-            </div>
+            <PageHeader
+                title="Mobility Intelligence"
+                subtitle="Compare vehicle dealerships, driving schools and bus routes in Zimbabwe with high-fidelity accuracy."
+            />
+
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <CategorySelector
@@ -64,3 +67,4 @@ export default function MobilityPage() {
         </div>
     )
 }
+

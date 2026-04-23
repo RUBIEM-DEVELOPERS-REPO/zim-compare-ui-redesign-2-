@@ -34,36 +34,36 @@ export function InsuranceClaims({ location = "All Locations" }: { location?: str
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {filteredProviders.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
-          <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <X className="w-8 h-8 text-muted-foreground" />
+        <div className="rounded-2xl border-2 border-dashed border-border p-8 text-center">
+          <div className="bg-muted w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+            <X className="w-6 h-6 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">{t("insurance.noClaimsFound", { location: displayLocation })}</h3>
-          <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("insurance.noClaimsDetail")}</p>
+          <h3 className="text-base font-medium text-foreground mb-1">{t("insurance.noClaimsFound", { location: displayLocation })}</h3>
+          <p className="text-xs text-muted-foreground mb-4 max-w-xs mx-auto">{t("insurance.noClaimsDetail")}</p>
         </div>
       ) : (
         <>
-          <div className="glass-panel p-6 bg-teal-50/5 border-teal-200/20 shadow-xl">
-            <h3 className="text-sm font-bold text-foreground mb-6 uppercase tracking-widest text-center">{t("insurance.claimsRanking")}</h3>
-            <div className="space-y-4">
+          <div className="glass-panel p-4 bg-teal-50/5 border-teal-200/20 shadow-xl rounded-xl">
+            <h3 className="text-[11px] font-medium text-foreground mb-3 uppercase tracking-widest text-center">{t("insurance.claimsRanking")}</h3>
+            <div className="space-y-2">
               {[...filteredProviders]
                 .sort((a, b) => b.claimsScore - a.claimsScore)
                 .map((p, i) => {
                   return (
-                    <div key={p.id} className="flex items-center gap-4 group">
-                      <span className="text-[10px] font-black text-teal-600/50 w-4 text-right tabular-nums">{i + 1}</span>
-                      <span className="text-xs font-bold text-foreground w-32 truncate">{p.name}</span>
-                      <div className="flex-1 h-2.5 bg-secondary/50 rounded-full overflow-hidden relative">
+                    <div key={p.id} className="flex items-center gap-3 group">
+                      <span className="text-[9px] font-medium text-teal-600/50 w-3 text-right tabular-nums">{i + 1}</span>
+                      <span className="text-[11px] font-medium text-foreground w-28 truncate">{p.name}</span>
+                      <div className="flex-1 h-2 bg-secondary/50 rounded-full overflow-hidden relative">
                         <DynamicBar
                           value={p.claimsScore}
                           variableName="--bar-width"
-                          className="h-full bg-teal-600 rounded-full transition-all duration-1000 group-hover:bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.3)] dynamic-bar-width"
+                          className="h-full bg-teal-600 rounded-full transition-all duration-1000 group-hover:bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.3)] dynamic-bar-width"
                         />
                       </div>
-                      <div className="flex items-center gap-3 min-w-[100px] justify-end">
-                        <span className="text-xs font-black text-foreground tabular-nums">{p.claimsScore}%</span>
+                      <div className="flex items-center gap-2 min-w-[80px] justify-end">
+                        <span className="text-[11px] font-medium text-foreground tabular-nums">{p.claimsScore}%</span>
                       </div>
                     </div>
                   )
@@ -72,17 +72,17 @@ export function InsuranceClaims({ location = "All Locations" }: { location?: str
           </div>
 
           <section>
-            <h3 className="text-sm font-semibold text-foreground mb-3">{t("insurance.claimsProcessDetails")}</h3>
-            <div className="overflow-x-auto rounded-xl border border-border">
-              <table className="w-full text-xs">
+            <h3 className="text-[11px] font-medium text-foreground mb-2 uppercase tracking-wider">{t("insurance.claimsProcessDetails")}</h3>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full text-[10px]">
                 <thead>
                   <tr className="border-b border-border bg-secondary/30">
-                    <th className="text-left px-3 py-2 text-muted-foreground font-medium">{t("insurance.provider")}</th>
-                    <th className="text-left px-3 py-2 text-muted-foreground font-medium">{t("insurance.process")}</th>
-                    <th className="text-center px-3 py-2 text-muted-foreground font-medium">{t("insurance.digital")}</th>
-                    <th className="text-center px-3 py-2 text-muted-foreground font-medium">{t("insurance.trackable")}</th>
-                    <th className="text-center px-3 py-2 text-muted-foreground font-medium">{t("insurance.avgClaim")}</th>
-                    <th className="text-left px-3 py-2 text-muted-foreground font-medium">{t("insurance.requiredDocs")}</th>
+                    <th className="text-left px-2 py-1.5 text-muted-foreground font-medium uppercase tracking-tighter">{t("insurance.provider")}</th>
+                    <th className="text-left px-2 py-1.5 text-muted-foreground font-medium uppercase tracking-tighter">{t("insurance.process")}</th>
+                    <th className="text-center px-2 py-1.5 text-muted-foreground font-medium uppercase tracking-tighter">{t("insurance.digital")}</th>
+                    <th className="text-center px-2 py-1.5 text-muted-foreground font-medium uppercase tracking-tighter">{t("insurance.trackable")}</th>
+                    <th className="text-center px-2 py-1.5 text-muted-foreground font-medium uppercase tracking-tighter">{t("insurance.avgClaim")}</th>
+                    <th className="text-left px-2 py-1.5 text-muted-foreground font-medium uppercase tracking-tighter">{t("insurance.requiredDocs")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -90,20 +90,20 @@ export function InsuranceClaims({ location = "All Locations" }: { location?: str
                     const provider = insuranceProviders.find((p) => p.id === c.id)
                     return (
                       <tr key={c.id} className="border-b border-border last:border-0 hover:bg-secondary/20">
-                        <td className="px-3 py-2 text-foreground font-medium">{provider?.name}</td>
-                        <td className="px-3 py-2 text-muted-foreground">{c.process}</td>
-                        <td className="px-3 py-2 text-center">
+                        <td className="px-2 py-1.5 text-foreground font-medium">{provider?.name}</td>
+                        <td className="px-2 py-1.5 text-muted-foreground">{c.process}</td>
+                        <td className="px-2 py-1.5 text-center">
                           <span className={c.digitalClaim ? "text-emerald-400" : "text-red-400"}>
                             {c.digitalClaim ? t("insurance.yes") : t("insurance.no")}
                           </span>
                         </td>
-                        <td className="px-3 py-2 text-center">
+                        <td className="px-2 py-1.5 text-center">
                           <span className={c.trackable ? "text-emerald-400" : "text-red-400"}>
                             {c.trackable ? t("insurance.yes") : t("insurance.no")}
                           </span>
                         </td>
-                        <td className="px-3 py-2 text-center text-foreground">{provider?.avgClaimDays}</td>
-                        <td className="px-3 py-2 text-muted-foreground max-w-[200px]">
+                        <td className="px-2 py-1.5 text-center text-foreground">{provider?.avgClaimDays}</td>
+                        <td className="px-2 py-1.5 text-muted-foreground max-w-[150px]">
                           {c.requiredDocs.join(", ")}
                         </td>
                       </tr>
@@ -119,3 +119,4 @@ export function InsuranceClaims({ location = "All Locations" }: { location?: str
     </div>
   )
 }
+

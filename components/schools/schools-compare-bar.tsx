@@ -32,19 +32,19 @@ export function SchoolsCompareBar() {
                         const initials = schoolName.substring(0, 2).toUpperCase()
                         
                         return (
-                            <div key={id} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-teal-600/10 flex items-center justify-center font-black text-teal-700 text-[10px] uppercase shadow-md backdrop-blur-sm">
+                            <div key={id} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-teal-600/10 flex items-center justify-center font-medium text-teal-700 text-[10px] uppercase shadow-md backdrop-blur-sm">
                                 {initials}
                             </div>
                         )
                     })}
                 </div>
                 <div>
-                    <p className="text-sm text-foreground font-black uppercase tracking-tight">
+                    <p className="text-sm text-foreground font-medium uppercase tracking-tight">
                         {compareTray.ids.length} {t("schools.schoolsSelected", { count: compareTray.ids.length }).toUpperCase()}
                     </p>
                     <button 
                         onClick={clearCompareTray}
-                        className="text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors uppercase font-bold tracking-wider"
+                        className="text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors uppercase font-medium tracking-wider"
                     >
                         <Trash2 className="w-3 h-3" />
                         {t("schools.clear")}
@@ -55,7 +55,7 @@ export function SchoolsCompareBar() {
             <button
                 onClick={handleCompare}
                 disabled={compareTray.ids.length < 2}
-                className={cn("rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest transition-all shadow-lg flex items-center gap-2",
+                className={cn("rounded-xl px-6 py-2.5 text-xs font-medium uppercase tracking-widest transition-all shadow-lg flex items-center gap-2",
                     compareTray.ids.length >= 2
                         ? "bg-teal-600 text-white hover:bg-teal-700 shadow-teal-900/20 hover:scale-105 active:scale-95"
                         : "bg-slate-200 dark:bg-slate-800 text-muted-foreground cursor-not-allowed"
@@ -66,3 +66,4 @@ export function SchoolsCompareBar() {
         </div>
     )
 }
+

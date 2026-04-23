@@ -33,14 +33,14 @@ export function SolarMaintenance() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                 <div className="flex items-center gap-2 mb-1">
                     <Wrench className="w-4 h-4 text-primary" />
-                    <p className="text-sm font-semibold text-foreground">Maintenance & Warranty Guide</p>
+                    <p className="text-sm font-medium text-foreground">Maintenance & Warranty Guide</p>
                 </div>
                 <p className="text-xs text-muted-foreground">Keep your solar or borehole system running at peak performance with this maintenance schedule.</p>
             </div>
 
             <div className="rounded-xl border border-border bg-card overflow-hidden">
                 <div className="px-5 py-4 border-b border-border">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
                         <Wrench className="w-4 h-4 text-primary" /> Recommended Maintenance Schedule
                     </h3>
                 </div>
@@ -48,13 +48,13 @@ export function SolarMaintenance() {
                     {maintenanceSchedule.map((item, i) => (
                         <div key={i} className="flex items-start gap-4 px-5 py-3 hover:bg-secondary/30 transition-colors">
                             <div className="w-20 shrink-0">
-                                <span className="text-xs font-bold text-foreground">{item.period}</span>
+                                <span className="text-xs font-medium text-foreground">{item.period}</span>
                             </div>
                             <div className="flex-1">
                                 <p className="text-xs text-foreground">{item.task}</p>
                                 <p className="text-xs text-muted-foreground mt-0.5">Est. cost: {item.cost}</p>
                             </div>
-                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold capitalize shrink-0 ${priorityColors[item.priority]}`}>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium capitalize shrink-0 ${priorityColors[item.priority]}`}>
                                 {item.priority}
                             </span>
                         </div>
@@ -64,7 +64,7 @@ export function SolarMaintenance() {
 
             <div className="rounded-xl border border-border bg-card overflow-hidden">
                 <div className="px-5 py-4 border-b border-border">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
                         <Shield className="w-4 h-4 text-primary" /> Warranty Comparison by Provider
                     </h3>
                 </div>
@@ -86,7 +86,7 @@ export function SolarMaintenance() {
                                     {[row.panels, row.inverter, row.battery, row.installation].map((years, i) => (
                                         <td key={i} className="px-4 py-3 text-center">
                                             {years > 0 ? (
-                                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold ${years >= 10 ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : years >= 5 ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
+                                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-medium ${years >= 10 ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : years >= 5 ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
                                                     <CheckCircle className="w-2.5 h-2.5" /> {years}yr
                                                 </span>
                                             ) : (
@@ -104,20 +104,21 @@ export function SolarMaintenance() {
             <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
                     <CheckCircle className="w-5 h-5 text-emerald-500 mb-2" />
-                    <p className="text-xs font-semibold text-foreground mb-1">Tip: Panel Cleaning</p>
+                    <p className="text-xs font-medium text-foreground mb-1">Tip: Panel Cleaning</p>
                     <p className="text-xs text-muted-foreground">Clean panels in the early morning before they heat up. Use soft cloth and clean water — avoid abrasive materials.</p>
                 </div>
                 <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
                     <Shield className="w-5 h-5 text-amber-500 mb-2" />
-                    <p className="text-xs font-semibold text-foreground mb-1">Warranty Tip</p>
+                    <p className="text-xs font-medium text-foreground mb-1">Warranty Tip</p>
                     <p className="text-xs text-muted-foreground">Always register your system with the manufacturer within 30 days of installation to activate full warranty coverage.</p>
                 </div>
                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                     <Wrench className="w-5 h-5 text-primary mb-2" />
-                    <p className="text-xs font-semibold text-foreground mb-1">Annual Inspection</p>
+                    <p className="text-xs font-medium text-foreground mb-1">Annual Inspection</p>
                     <p className="text-xs text-muted-foreground">Schedule annual inspections with your installer. Many providers offer service contracts at $100–$200/year.</p>
                 </div>
             </div>
         </div>
     )
 }
+

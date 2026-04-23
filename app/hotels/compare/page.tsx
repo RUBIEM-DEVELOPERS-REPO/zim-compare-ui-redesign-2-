@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star, Check, X, Shield, Award, Users, Heart, Briefcase, ShoppingCart } from "lucide-react"
 import { Suspense, useEffect, useState } from "react"
 import { useAppStore } from "@/lib/store"
+import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
 
 function CompareContent() {
     const searchParams = useSearchParams()
@@ -39,7 +40,7 @@ function CompareContent() {
     if (selectedHotels.length < 2) {
         return (
             <div className="text-center py-24">
-                <h1 className="text-xl font-bold mb-4">Stay Comparison</h1>
+                <h1 className="text-xl font-medium mb-4">Stay Comparison</h1>
                 <p className="text-muted-foreground">Select 2 or 3 hotels to see the AI analysis.</p>
             </div>
         )
@@ -108,7 +109,7 @@ function CompareContent() {
         <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 space-y-12">
             <div className="flex items-center justify-between border-b border-border pb-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">Stay Comparison</h1>
+                    <h1 className="text-3xl font-medium text-foreground">Stay Comparison</h1>
                     <p className="text-muted-foreground mt-1">AI-powered decision analysis for your Zimbabwe trip</p>
                 </div>
                 <div className="flex gap-2">
@@ -120,7 +121,7 @@ function CompareContent() {
 
             {/* 1. Comparison Summary Table */}
             <section className="space-y-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2">
+                <h2 className="text-xl font-medium flex items-center gap-2">
                     <Shield className="h-5 w-5 text-primary" />
                     Comparison Summary Table
                 </h2>
@@ -130,7 +131,7 @@ function CompareContent() {
                             <tr className="bg-secondary/30">
                                 <th className="text-left p-4 border-b border-border text-muted-foreground font-medium">Feature</th>
                                 {selectedHotels.map(h => (
-                                    <th key={h.id} className="p-4 border-b border-border text-center font-bold text-foreground">
+                                    <th key={h.id} className="p-4 border-b border-border text-center font-medium text-foreground">
                                         {h.name}
                                     </th>
                                 ))}
@@ -156,7 +157,7 @@ function CompareContent() {
                             <tr>
                                 <td className="p-4 border-b border-border bg-secondary/10 font-medium">Price / Night</td>
                                 {selectedHotels.map(h => (
-                                    <td key={h.id} className="p-4 border-b border-border text-center text-foreground font-bold">${h.pricePerNight}</td>
+                                    <td key={h.id} className="p-4 border-b border-border text-center text-foreground font-medium">${h.pricePerNight}</td>
                                 ))}
                             </tr>
                             <tr>
@@ -206,7 +207,7 @@ function CompareContent() {
 
             {/* 2. Strengths & Weaknesses */}
             <section className="space-y-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2">
+                <h2 className="text-xl font-medium flex items-center gap-2">
                     <Award className="h-5 w-5 text-primary" />
                     Strengths & Weaknesses
                 </h2>
@@ -228,11 +229,11 @@ function CompareContent() {
 
                         return (
                             <div key={h.id} className="rounded-2xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-shadow">
-                                <h3 className="font-bold text-lg mb-4 text-foreground">{h.name}</h3>
+                                <h3 className="font-medium text-lg mb-4 text-foreground">{h.name}</h3>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">Strengths</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">Strengths</p>
                                         <ul className="space-y-1.5">
                                             {strengths.map((s, i) => (
                                                 <li key={i} className="text-xs text-foreground flex items-start gap-2">
@@ -244,7 +245,7 @@ function CompareContent() {
                                         </ul>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">Weaknesses</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">Weaknesses</p>
                                         <ul className="space-y-1.5">
                                             {weaknesses.map((w, i) => (
                                                 <li key={i} className="text-xs text-foreground flex items-start gap-2">
@@ -264,11 +265,11 @@ function CompareContent() {
 
             {/* 3. Best Picks by Category */}
             <section className="space-y-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2">
+                <h2 className="text-xl font-medium flex items-center gap-2">
                     <Award className="h-5 w-5 text-primary" />
                     Best Picks by Category
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     {[
                         { cat: "value", icon: <ShoppingCart className="h-4 w-4" />, label: "Value for Money" },
                         { cat: "luxury", icon: <Award className="h-4 w-4" />, label: "Luxury" },
@@ -282,12 +283,41 @@ function CompareContent() {
                                 <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-2">
                                     {item.icon}
                                 </div>
-                                <p className="text-[10px] text-muted-foreground uppercase font-bold mb-1">{item.label}</p>
-                                <p className="text-xs font-bold text-foreground leading-tight">{pick.name}</p>
+                                <p className="text-[10px] text-muted-foreground uppercase font-medium mb-1">{item.label}</p>
+                                <p className="text-xs font-medium text-foreground leading-tight">{pick.name}</p>
                             </div>
                         )
                     })}
+                    {/* Instant Booking */}
+                    <div className="flex flex-col items-center text-center p-4 bg-primary text-primary-foreground rounded-2xl border border-primary/20 shadow-lg shadow-primary/20 relative overflow-hidden group">
+                        <div className="absolute -bottom-2 -right-2 opacity-10 group-hover:scale-110 transition-transform">
+                            <Star className="h-12 w-12 fill-white" />
+                        </div>
+                        <div className="h-8 w-8 rounded-full bg-white/20 text-white flex items-center justify-center mb-2 relative z-10">
+                            <Check className="h-4 w-4" />
+                        </div>
+                        <p className="text-[10px] text-white/70 uppercase font-medium mb-1 relative z-10">Instant Booking</p>
+                        <p className="text-xs font-bold leading-tight relative z-10">{winner.name}</p>
+                    </div>
                 </div>
+            </section>
+
+            {/* 3.5 Switch & Save Simulator */}
+            <section className="grid md:grid-cols-2 gap-8 items-stretch">
+                <div className="glass-floating p-8 bg-secondary/10 border-border/50 rounded-3xl flex flex-col justify-center">
+                    <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+                        <Award className="h-5 w-5 text-primary" />
+                        Value Optimization Analysis
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        Our engine has identified potential savings by comparing your primary choice with the highest value property in this set.
+                    </p>
+                </div>
+                <SwitchSaveSimulator
+                    category="hotels"
+                    current={selectedHotels[0]}
+                    recommended={getCategoryWinner("value")}
+                />
             </section>
 
             {/* 4. Final AI Recommendation */}
@@ -299,13 +329,13 @@ function CompareContent() {
                 <div className="flex flex-col md:flex-row gap-8 items-center">
                     <div className="flex-1 space-y-6">
                         <div>
-                            <Badge className="mb-4 bg-primary text-primary-foreground font-bold px-4 py-1 hover:bg-primary">AI TOP PICK</Badge>
-                            <h2 className="text-3xl font-black text-foreground mb-2">{winner.name}</h2>
+                            <Badge className="mb-4 bg-primary text-primary-foreground font-medium px-4 py-1 hover:bg-primary">AI TOP PICK</Badge>
+                            <h2 className="text-3xl font-medium text-foreground mb-2">{winner.name}</h2>
                             <p className="text-lg text-muted-foreground italic">"Based on our 40/30/20/10 weighted analysis, this is the most optimal choice for your stay."</p>
                         </div>
 
                         <div className="space-y-4">
-                            <p className="font-bold text-sm text-foreground">Why this hotel won:</p>
+                            <p className="font-medium text-sm text-foreground">Why this hotel won:</p>
                             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <li className="flex items-start gap-3 text-sm text-foreground/80">
                                     <div className="h-5 w-5 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center shrink-0">✓</div>
@@ -364,11 +394,11 @@ function CompareContent() {
                                 />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-5xl font-black text-foreground">{winner.totalScore}%</span>
-                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Confidence</span>
+                                <span className="text-5xl font-medium text-foreground">{winner.totalScore}%</span>
+                                <span className="text-[10px] text-muted-foreground uppercase font-medium tracking-widest">Confidence</span>
                             </div>
                         </div>
-                        <button className="w-full bg-primary text-primary-foreground font-black py-4 rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        <button className="w-full bg-primary text-primary-foreground font-medium py-4 rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
                             BOOK NOW
                         </button>
                     </div>
@@ -394,3 +424,4 @@ export default function HotelComparePage() {
         </Suspense>
     )
 }
+

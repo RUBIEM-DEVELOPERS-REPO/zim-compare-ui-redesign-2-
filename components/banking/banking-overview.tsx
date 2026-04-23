@@ -3,7 +3,6 @@
 import { X } from "lucide-react"
 import { banks } from "@/lib/mock/banks"
 import { useAppStore } from "@/lib/store"
-import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
 import { useI18n } from "@/lib/i18n"
 
@@ -26,15 +25,18 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
   const filteredBanks = banks // All licensed banks have national scope
 
   return (
-    <div className="space-y-6">
-      {/* Best for you - only show if bank is in location or if All Locations */}
-      <div className="glass-panel p-5 bg-primary/5 border-primary/20">
-        <p className="text-xs text-muted-foreground mb-1">{t("banking.bestBankForYou")}</p>
-        <p className="text-lg font-semibold text-foreground">{bestBank}</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t("banking.basedOnProfile", { profile: t(`dashboard.${preferences.scenario}`) })}
+    <div className="space-y-4">
+      {/* Best for you — only shown when bank is available in the selected location */}
+      <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow">
+        <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-1000" />
+        <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1.5">{t("banking.bestBankForYou")}</p>
+        <h2 className="text-2xl font-display font-normal text-white tracking-tight leading-tight">{bestBank}</h2>
+        <p className="text-xs text-muted-foreground mt-2 max-w-xl font-sans opacity-80 leading-relaxed font-medium">
+          {t("banking.basedOnProfile", { profile: t(`dashboard.${preferences.scenario}`) })} Optimized for local efficiency and institutional stability.
         </p>
-        <Disclaimer />
+        <div className="mt-3 pt-3 border-t border-white/10">
+          <Disclaimer />
+        </div>
       </div>
 
       {filteredBanks.length === 0 ? (
@@ -42,69 +44,47 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">{t("banking.noBanksFound", { location: location === "All Locations" ? t("common.allLocations") : location })}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">{t("banking.noBanksFound", { location: location === "All Locations" ? t("common.allLocations") : location })}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("banking.noBanksDetail")}</p>
         </div>
       ) : (
         <>
           {/* Summary Cards */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
             {summaryCards.map((c) => (
-              <div key={c.labelKey} className="glass-card p-4 h-full">
-                <p className="text-xs text-muted-foreground">{t(`banking.highlights.${c.labelKey}`)}</p>
-                <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
-                <p className="text-xs text-primary mt-1">{t(`banking.highlights.${c.detailKey}`, c.detailVars as any)}</p>
+              <div key={c.labelKey} className="glass-floating p-3 h-full floating-hover group rounded-xl">
+                <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70 group-hover:text-primary transition-colors">{t(`banking.highlights.${c.labelKey}`)}</p>
+                <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">{c.value}</p>
+                <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{t(`banking.highlights.${c.detailKey}`, c.detailVars as any)}</p>
               </div>
             ))}
           </div>
 
           {/* Market Highlights */}
           <section>
-            <h3 className="text-sm font-semibold text-foreground mb-3">{t("dashboard.marketHighlights")}</h3>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="glass-card p-4 h-full">
-                <p className="text-xs text-muted-foreground">{t("banking.bestSavingsRate")}</p>
-                <p className="text-sm font-semibold text-foreground">Stanbic PureSave</p>
-                <p className="text-xs text-primary">{t("banking.highlights.interestRate", { rate: "4.0" })}</p>
+            <h3 className="text-[10px] font-medium text-white uppercase tracking-widest mb-2.5 opacity-70">{t("dashboard.marketHighlights")}</h3>
+            <div className="grid gap-2.5 sm:grid-cols-3">
+              <div className="glass-floating p-3 h-full floating-hover rounded-xl">
+                <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70">{t("banking.bestSavingsRate")}</p>
+                <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">Stanbic PureSave</p>
+                <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{t("banking.highlights.interestRate", { rate: "4.0" })}</p>
               </div>
-              <div className="glass-card p-4 h-full">
-                <p className="text-xs text-muted-foreground">{t("banking.lowestZipitFee")}</p>
-                <p className="text-sm font-semibold text-foreground">POSB</p>
-                <p className="text-xs text-primary">{t("banking.highlights.zipitFee", { fee: "0.80" })}</p>
+              <div className="glass-floating p-3 h-full floating-hover rounded-xl">
+                <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70">{t("banking.lowestZipitFee")}</p>
+                <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">POSB</p>
+                <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{t("banking.highlights.zipitFee", { fee: "0.80" })}</p>
               </div>
-              <div className="rounded-xl border border-border bg-card p-4">
-                <p className="text-xs text-muted-foreground">{t("banking.bestMortgageRate")}</p>
-                <p className="text-sm font-semibold text-foreground">CBZ Home Loan</p>
-                <p className="text-xs text-primary">{t("banking.highlights.mortgageRate", { rate: "8.5" })}</p>
+              <div className="glass-floating p-3 h-full floating-hover rounded-xl border-primary/20 bg-primary/5">
+                <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70">{t("banking.bestMortgageRate")}</p>
+                <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">CBZ Home Loan</p>
+                <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{t("banking.highlights.mortgageRate", { rate: "8.5" })}</p>
               </div>
             </div>
           </section>
 
-          {/* Top Banks */}
-          <section>
-            <h3 className="text-sm font-semibold text-foreground mb-3">
-              {t("banking.banksAvailable", { location: location === "All Locations" ? t("common.allLocations") : location, count: filteredBanks.length })}
-            </h3>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredBanks.map((b) => (
-                <div key={b.id} className="glass-card p-4 h-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-semibold text-foreground">{b.name}</p>
-                    <span className="text-xs text-muted-foreground capitalize">{b.type.replace("_", " ")}</span>
-                  </div>
-                  <div className="flex gap-2 flex-wrap mb-2">
-                    <ScoreBadge score={b.transparencyScore} label={t("banking.transparency")} />
-                    {b.digitalScore && <ScoreBadge score={b.digitalScore} label={t("banking.digital")} />}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {t("banking.bankStats", { branches: b.branches, digitalFeatures: b.digitalFeatures.length })}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
         </>
       )}
     </div>
   )
 }
+

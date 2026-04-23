@@ -54,6 +54,7 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
     const bestUniversity = filtered[0] || universities.find(u => u.id === "uz") || universities[0]
 
     return (
+<<<<<<< Updated upstream
         <div className="space-y-6">
 <<<<<<< Updated upstream
             {/* Best for You Highlight - Premium Glass Panel */}
@@ -71,24 +72,34 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
                 <p className="text-sm text-muted-foreground mt-1">
                     Based on your affordability and location availability.
 >>>>>>> Stashed changes
+=======
+        <div className="space-y-4">
+            {/* Best for You Highlight - Premium Glass Panel */}
+            <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow">
+                <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-1000" />
+                <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1.5">Neural Best Fit {location !== "All Locations" ? `in ${location}` : ""}</p>
+                <h2 className="text-2xl font-display font-medium text-foreground tracking-tight uppercase leading-tight">{bestUniversity.name}</h2>
+                <p className="text-xs text-muted-foreground mt-2 max-w-xl leading-relaxed font-medium font-sans opacity-80">
+                    Optimized for your affordability profile, academic strength, and employability benchmarks within the Zimbabwean diaspora.
+>>>>>>> Stashed changes
                 </p>
-                <div className="mt-6 pt-4 border-t border-white/5">
+                <div className="mt-3 pt-3 border-t border-white/10">
                     <Disclaimer />
                 </div>
             </div>
 
 <<<<<<< Updated upstream
             {/* Quick Recommendation Cards - Premium Glass Cards */}
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryCards.map((c) => {
                     const uni = universities.find(u => u.name === c.value)
                     const isLocal = location === "All Locations" || (uni && uni.city === location)
                     if (!isLocal) return null
                     return (
-                        <div key={c.label} className="glass-card p-4 h-full">
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{c.label}</p>
-                            <p className="text-sm font-bold text-foreground mt-1">{c.value}</p>
-                            <p className="text-[10px] text-primary mt-1 font-bold">{c.detail}</p>
+                        <div key={c.label} className="glass-floating p-3 h-full floating-hover group rounded-xl">
+                            <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70 group-hover:text-primary transition-colors">{c.label}</p>
+                            <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">{c.value}</p>
+                            <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{c.detail}</p>
                         </div>
                     )
                 })}
@@ -116,30 +127,30 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
 >>>>>>> Stashed changes
 
             {/* Overview Highlight Cards - Navigation Tiles */}
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                 {tabCards.map((card) => (
                     <button
                         key={card.key}
                         onClick={() => onTabChange(card.key)}
-                        className="glass-card p-5 text-left group h-full hover:border-primary/40 transition-all duration-300 active:scale-[0.98]"
+                        className="glass-card p-3 text-left group h-full hover:border-primary/40 transition-all duration-300 active:scale-[0.98] rounded-xl"
                     >
-                        <p className="text-sm font-black text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-none mb-2">{card.label}</p>
-                        <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">{card.subtitle}</p>
+                        <p className="text-[10px] font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-none mb-1">{card.label}</p>
+                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">{card.subtitle}</p>
                     </button>
                 ))}
             </div>
 
             {/* Institution Type Filters */}
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 p-1 rounded-xl bg-white/5 border border-white/10 w-fit backdrop-blur-3xl">
                 {institutionTypes.map((t) => (
                     <button
                         key={t.key}
                         onClick={() => setTypeFilter(t.key)}
                         className={cn(
-                            "shrink-0 h-8 glass-tab-base",
+                            "shrink-0 h-6 px-3 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500",
                             typeFilter === t.key
-                                ? "glass-tab-active"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 teal-glow"
+                                : "text-muted-foreground hover:text-white hover:bg-white/5"
                         )}
                     >
                         {t.label}
@@ -149,17 +160,17 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
 
             {/* All Institutions or Empty State */}
             <section>
-                <h3 className="text-sm font-semibold text-foreground mb-3">
+                <h3 className="text-[10px] font-medium text-foreground mb-2">
                     {typeFilter === "all" ? "All Institutions" : institutionTypes.find(t => t.key === typeFilter)?.label} ({filtered.length})
                 </h3>
 
                 {filtered.length === 0 ? (
-                    <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
-                        <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <X className="w-8 h-8 text-muted-foreground" />
+                    <div className="rounded-2xl border-2 border-dashed border-border p-8 text-center">
+                        <div className="bg-muted w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <X className="w-6 h-6 text-muted-foreground" />
                         </div>
-                        <h3 className="text-lg font-bold text-foreground mb-2">No institutions found for {location}</h3>
-                        <p className="text-muted-foreground mb-6 max-w-xs mx-auto">There are no universities or colleges matching your filters in this location.</p>
+                        <h3 className="text-sm font-medium text-foreground mb-1.5">No institutions found for {location}</h3>
+                        <p className="text-xs text-muted-foreground mb-4 max-w-xs mx-auto">There are no universities or colleges matching your filters in this location.</p>
                     </div>
                 ) : (
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -167,31 +178,38 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
                             <div
                                 key={uni.id}
                                 className={cn(
-                                    "glass-card p-5 transition-all duration-500 relative group flex flex-col hover:-translate-y-1",
+                                    "glass-floating p-3 transition-all duration-500 relative group flex flex-col floating-hover rounded-xl",
                                     compareTray.ids.includes(uni.id)
-                                        ? "border-primary/60 bg-primary/10 ring-2 ring-primary/20 shadow-2xl shadow-primary/20"
-                                        : "hover:border-primary/40 shadow-xl"
+                                        ? "border-primary/60 bg-primary/10 ring-2 ring-primary/20 shadow-xl shadow-primary/20 teal-glow"
+                                        : "hover:border-primary/40"
                                 )}
                             >
                                 {error && compareTray.ids.length >= 3 && !compareTray.ids.includes(uni.id) && (
-                                    <div className="absolute top-2 left-2 right-2 glass-panel border-destructive/50 bg-destructive/20 text-foreground text-[9px] font-black px-3 py-1.5 rounded-xl flex items-center gap-2 z-20 animate-in fade-in slide-in-from-top-2">
+                                    <div className="absolute top-1.5 left-1.5 right-1.5 glass-floating border-destructive/50 bg-destructive/20 text-foreground text-[9px] font-medium px-3 py-1.5 rounded-lg flex items-center gap-2 z-20 animate-in fade-in slide-in-from-top-2">
                                         <AlertCircle size={12} className="text-destructive" />
                                         {error}
                                     </div>
                                 )}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                                 <div className="flex items-start justify-between gap-3 mb-4">
                                     <p className="text-sm font-black text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{uni.name}</p>
                                     <span className="shrink-0 text-[10px] font-black uppercase tracking-widest bg-muted/40 text-muted-foreground px-2.5 py-1 rounded-lg border border-white/5">
+=======
+                                <div className="flex items-start justify-between gap-3 mb-3">
+                                    <p className="text-sm font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{uni.name}</p>
+                                    <span className="shrink-0 text-[8px] font-medium uppercase tracking-[0.2em] bg-white/5 text-muted-foreground px-2 py-1 rounded-lg border border-white/10 shadow-inner">
+>>>>>>> Stashed changes
                                         {uni.type.replace("_", " ")}
                                     </span>
                                 </div>
-                                <div className="flex gap-2 flex-wrap mb-5">
+                                <div className="flex gap-1.5 flex-wrap mb-3">
                                     <ScoreBadge score={uni.academicScore} label="Academic" />
                                     <ScoreBadge score={uni.affordabilityScore} label="Affordability" />
                                 </div>
-                                <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                                <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
                                     <div>
+<<<<<<< Updated upstream
                                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{uni.city}, {uni.province}</p>
                                         <p className="text-sm font-black text-primary mt-1 tabular-nums tracking-tighter">${uni.annualFees.toLocaleString()}/year</p>
 =======
@@ -205,6 +223,10 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
                                     <div>
                                         <p className="text-[10px] text-muted-foreground">{uni.location}, {uni.provinceArea}</p>
                                         <p className="text-xs font-bold text-teal-600 mt-0.5">${(uni.feeMinUSD || 0).toLocaleString()}/year</p>
+>>>>>>> Stashed changes
+=======
+                                        <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em]">{uni.city}</p>
+                                        <p className="text-sm font-display font-medium text-primary mt-0.5 tabular-nums tracking-tighter">${uni.annualFees.toLocaleString()}/yr</p>
 >>>>>>> Stashed changes
                                     </div>
                                     <button
@@ -222,10 +244,10 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
                                             }
                                         }}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-lg active:scale-95",
+                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500 shadow-lg",
                                             compareTray.ids.includes(uni.id)
-                                                ? "bg-primary text-primary-foreground shadow-primary/20"
-                                                : "bg-muted/40 text-foreground border border-white/5 hover:bg-muted/60"
+                                                ? "bg-primary text-primary-foreground shadow-primary/30 teal-glow"
+                                                : "bg-white/5 text-foreground border border-white/10 hover:bg-white/10"
                                         )}
                                     >
                                         {compareTray.ids.includes(uni.id) ? (
@@ -249,3 +271,4 @@ export function UniversitiesOverview({ universities, onTabChange, location = "Al
         </div>
     )
 }
+

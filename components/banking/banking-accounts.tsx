@@ -49,7 +49,7 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
             key={t_item.key}
             onClick={() => setSub(t_item.key)}
             className={cn(
-              "glass-tab-base text-[10px] sm:text-[11px] font-bold uppercase tracking-wider h-10 w-full flex items-center justify-center",
+              "glass-tab-base text-[10px] sm:text-[11px] font-medium uppercase tracking-wider h-10 w-full flex items-center justify-center",
               sub === t_item.key ? "glass-tab-active" : "text-muted-foreground"
             )}
           >
@@ -64,7 +64,7 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">
+          <h3 className="text-lg font-medium text-foreground mb-2">
             {t("banking.noAccountsFound", { sub: t(`banking.subTabs.${sub}`), location: location === "All Locations" ? t("common.allLocations") : location })}
           </h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">
@@ -81,7 +81,7 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
                 className="glass-card p-4 flex flex-col hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-semibold text-foreground">{p.name}</p>
+                  <p className="text-sm font-medium text-foreground">{p.name}</p>
                 </div>
                 <p className="text-xs text-muted-foreground mb-3">{p.bankName}</p>
 
@@ -128,3 +128,4 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
     </div>
   )
 }
+

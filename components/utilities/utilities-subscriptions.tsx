@@ -112,7 +112,7 @@ export function UtilitiesSubscriptions() {
             {filtered.length === 0 ? (
                 <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
                     <CreditCard className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                    <h3 className="text-lg font-bold text-foreground mb-2">No subscriptions found</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No subscriptions found</h3>
                     <p className="text-muted-foreground">Try adjusting your filters.</p>
                 </div>
             ) : (
@@ -131,11 +131,11 @@ export function UtilitiesSubscriptions() {
                             >
                                 <div className="flex items-start justify-between mb-1">
                                     <div>
-                                        <p className="text-sm font-bold text-foreground">{s.name}</p>
+                                        <p className="text-sm font-medium text-foreground">{s.name}</p>
                                         <p className="text-xs text-muted-foreground">{s.category}</p>
                                     </div>
                                     {s.badge && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800 shrink-0 ml-2 flex items-center gap-1">
+                                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800 shrink-0 ml-2 flex items-center gap-1">
                                             <Star className="h-2.5 w-2.5" />
                                             {s.badge}
                                         </span>
@@ -154,7 +154,7 @@ export function UtilitiesSubscriptions() {
                                     )}
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
+                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-medium">
                                     <div className="rounded-xl bg-secondary/30 p-3 col-span-2">
                                         <p className="text-muted-foreground uppercase tracking-tight mb-0.5">
                                             {pricingMode === "monthly" ? "Monthly Price" : "Annual Price"}
@@ -203,3 +203,4 @@ export function UtilitiesSubscriptions() {
         </div>
     )
 }
+

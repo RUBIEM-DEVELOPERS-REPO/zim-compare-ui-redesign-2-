@@ -78,7 +78,7 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
             {filtered.length === 0 ? (
                 <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
                     <Zap className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                    <h3 className="text-lg font-bold text-foreground mb-2">No providers found</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No providers found</h3>
                     <p className="text-muted-foreground">Try adjusting your filters or location.</p>
                 </div>
             ) : (
@@ -95,11 +95,11 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
                             >
                                 <div className="flex items-start justify-between mb-1">
                                     <div>
-                                        <p className="text-sm font-bold text-foreground">{p.name}</p>
+                                        <p className="text-sm font-medium text-foreground">{p.name}</p>
                                         <p className="text-xs text-muted-foreground">{p.type}</p>
                                     </div>
                                     {p.badge && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 border border-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800 shrink-0 ml-2">
+                                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 border border-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800 shrink-0 ml-2">
                                             {p.badge}
                                         </span>
                                     )}
@@ -110,7 +110,7 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
                                     <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">{p.customerType}</span>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
+                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-medium">
                                     <div className="rounded-xl bg-secondary/30 p-3">
                                         <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Per kWh</p>
                                         <p className="text-foreground">${p.tariffPerKwh.toFixed(3)}</p>
@@ -151,3 +151,4 @@ export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesEl
         </div>
     )
 }
+

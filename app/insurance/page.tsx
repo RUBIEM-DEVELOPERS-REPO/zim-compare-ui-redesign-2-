@@ -10,11 +10,15 @@ import { CategorySelector } from "@/components/category-selector"
 import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { InsuranceCompareBar } from "@/components/insurance/insurance-compare-bar"
+import { PropertyQuoteWizard } from "@/app/insurance/property-quote/wizard"
+import { PageHeader } from "@/components/page-header"
+
 
 const tabs = [
   { key: "overview", label: "Overview" },
   { key: "policies", label: "Policies" },
   { key: "claims", label: "Claims & Process" },
+  { key: "quote", label: "Property Quote" },
 ] as const
 
 export default function InsurancePage() {
@@ -31,10 +35,11 @@ export default function InsurancePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">Insurance</h1>
-        <p className="text-sm text-muted-foreground">Compare motor, medical, life, funeral and property insurance in Zimbabwe</p>
-      </div>
+      <PageHeader
+        title="Insurance Intelligence"
+        subtitle="Compare motor, medical, life, funeral and property insurance in Zimbabwe"
+      />
+
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <CategorySelector
@@ -54,6 +59,8 @@ export default function InsurancePage() {
       {tab === "overview" && <InsuranceOverview onTabChange={setTab} location={location} />}
       {tab === "policies" && <InsurancePolicies location={location} />}
       {tab === "claims" && <InsuranceClaims location={location} />}
+      {tab === "quote" && <PropertyQuoteWizard />}
     </div>
   )
 }
+

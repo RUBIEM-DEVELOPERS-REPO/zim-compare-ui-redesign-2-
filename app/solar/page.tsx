@@ -38,7 +38,7 @@ export default function SolarPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-xl font-semibold text-foreground">Solar & Borehole</h1>
+                <h1 className="text-xl font-medium text-foreground">Solar & Borehole</h1>
                 <p className="text-sm text-muted-foreground">Compare Zimbabwe solar energy and borehole drilling companies</p>
             </div>
 
@@ -72,3 +72,4 @@ export default function SolarPage() {
         </div>
     )
 }
+

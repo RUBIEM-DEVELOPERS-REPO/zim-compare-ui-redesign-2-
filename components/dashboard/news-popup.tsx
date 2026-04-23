@@ -6,16 +6,10 @@ import { useI18n } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { X, Minimize2, Maximize2, ExternalLink, Newspaper } from "lucide-react"
 
-const mockNews = [
-    { id: "n1", title: "RBZ introduces new gold-backed currency tokens", source: "Banking", time: "2h ago", link: "#" },
-    { id: "n2", title: "Econet increases 5G coverage in Bulawayo", source: "Telecom", time: "5h ago", link: "#" },
-    { id: "n3", title: "CBZ Bank announces zero-fee student accounts", source: "Banking", time: "1d ago", link: "#" },
-    { id: "n4", title: "New curriculum updates for 2026 academic year", source: "Schools", time: "2d ago", link: "#" },
-]
 
 export function NewsPopup() {
     const { t } = useI18n()
-    const { showNews, setShowNews, lastNewsSeenDate, setLastNewsSeen } = useAppStore()
+    const { showNews, setShowNews, lastNewsSeenDate, setLastNewsSeen, news: storeNews } = useAppStore()
     const [minimized, setMinimized] = useState(false)
     const [mounted, setMounted] = useState(false)
 
@@ -37,64 +31,81 @@ export function NewsPopup() {
     if (!showNews && !minimized) return (
         <button
             onClick={() => setShowNews(true)}
-            className="fixed bottom-24 right-6 z-40 flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full shadow-lg hover:scale-105 transition-transform animate-in fade-in slide-in-from-bottom-4"
+            className="fixed bottom-24 right-8 z-40 flex items-center gap-3 bg-primary text-primary-foreground px-6 py-3 rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all animate-in fade-in slide-in-from-bottom-4 teal-glow group"
         >
-            <Newspaper size={18} />
-            <span className="text-sm font-medium">{t("dashboard.news")}</span>
+            <Newspaper size={18} className="group-hover:rotate-12 transition-transform" />
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em]">{t("dashboard.news")}</span>
         </button>
     )
 
     if (minimized) return (
         <button
             onClick={() => setMinimized(false)}
-            title="Expand news"
+            title="Expand neural feed"
             aria-label="Expand news"
-            className="fixed bottom-24 right-6 z-40 bg-card border border-border p-3 rounded-full shadow-xl hover:bg-secondary transition-colors"
+            className="fixed bottom-24 right-8 z-40 surface-glass p-4 rounded-2xl shadow-2xl hover:bg-primary/10 transition-all duration-500 teal-glow group"
         >
-            <Newspaper className="text-primary" size={20} />
+            <Newspaper className="text-primary group-hover:scale-110 transition-transform" size={20} />
         </button>
     )
 
     if (!showNews) return null
 
     return (
-        <div className="fixed bottom-24 right-6 z-40 w-80 glass-panel shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500">
-            <div className="bg-primary/5 p-4 border-b border-border flex items-center justify-between">
+        <div className="fixed bottom-24 right-8 z-40 w-[230px] surface-glass border-white/10 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-12 duration-700 teal-glow">
+            <div className="bg-primary/10 p-3.5 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <Newspaper className="text-primary" size={18} />
-                    <h4 className="font-semibold text-sm">{t("dashboard.latestNews")}</h4>
+                    <div className="p-1 bg-primary/20 rounded-lg shadow-inner border border-primary/30">
+                        <Newspaper className="text-primary" size={12} />
+                    </div>
+                    <div>
+                        <h4 className="font-display font-medium text-white text-sm tracking-tight">{t("dashboard.latestNews")}</h4>
+                        <p className="text-[7.5px] font-medium text-primary/60 uppercase tracking-widest mt-0.5">Neural Signals Feed</p>
+                    </div>
                 </div>
                 <div className="flex items-center gap-1">
-                    <button onClick={() => setMinimized(true)} title="Minimize news" aria-label="Minimize news" className="p-1 hover:bg-secondary rounded">
-                        <Minimize2 size={14} className="text-muted-foreground" />
+                    <button onClick={() => setMinimized(true)} title="Minimize feed" aria-label="Minimize news" className="p-1 hover:bg-white/5 rounded-lg transition-colors">
+                        <Minimize2 size={10} className="text-muted-foreground" />
                     </button>
-                    <button onClick={() => setShowNews(false)} title="Close news" aria-label="Close news" className="p-1 hover:bg-secondary rounded text-destructive">
-                        <X size={14} />
+                    <button onClick={() => setShowNews(false)} title="Terminate feed" aria-label="Close news" className="p-1 hover:bg-red-500/10 rounded-lg text-red-400 transition-colors">
+                        <X size={10} />
                     </button>
                 </div>
             </div>
 
-            <div className="p-4 space-y-4 max-h-[350px] overflow-y-auto">
-                {mockNews.length === 0 ? (
-                    <p className="text-xs text-muted-foreground text-center py-8">{t("dashboard.noNews")}</p>
+            <div className="p-3.5 space-y-3.5 max-h-[240px] overflow-y-auto scrollbar-none scroll-smooth">
+
+                {storeNews.length === 0 ? (
+                    <p className="text-[10px] text-muted-foreground text-center py-12 uppercase tracking-widest opacity-60 font-medium">{t("dashboard.noNews")}</p>
                 ) : (
-                    mockNews.map((news) => (
-                        <div key={news.id} className="group relative">
+                    storeNews.map((news) => (
+                        <div key={news.id} className="group/news relative">
                             <a
                                 href={news.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block hover:bg-secondary/50 p-2 -m-2 rounded-lg transition-colors"
+                                className="block p-2.5 -m-2.5 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/10"
                             >
-                                <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors leading-relaxed">
-                                    {news.title}
-                                </p>
-                                <div className="flex items-center gap-2 mt-1.5">
-                                    <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                                <div className="flex items-center justify-between gap-2 mb-1.5">
+                                    <span className="text-[7.5px] font-medium uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-md border border-primary/20 shadow-inner">
                                         {news.source}
                                     </span>
-                                    <span className="text-[10px] text-muted-foreground">{news.time}</span>
-                                    <ExternalLink size={10} className="text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    {news.tag && (
+                                        <span className={cn(
+                                            "text-[7px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded",
+                                            news.tag === "New" ? "bg-emerald-500 text-black" :
+                                            news.tag === "Promo" ? "bg-amber-500 text-black" : "bg-blue-500 text-white"
+                                        )}>
+                                            {news.tag}
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-[11px] font-display font-medium text-white group-hover/news:text-primary transition-colors leading-relaxed">
+                                    {news.title}
+                                </p>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <span className="text-[7.5px] text-muted-foreground uppercase font-medium tracking-widest">{news.time}</span>
+                                    <ExternalLink size={8} className="text-primary ml-auto opacity-0 group-hover/news:opacity-100 group-hover/news:translate-x-1 transition-all" />
                                 </div>
                             </a>
                         </div>
@@ -102,11 +113,12 @@ export function NewsPopup() {
                 )}
             </div>
 
-            <div className="p-3 bg-secondary/30 border-t border-border text-center">
-                <button className="text-xs font-medium text-primary hover:underline">
+            <div className="p-2.5 bg-white/5 border-t border-white/5 text-center px-3.5">
+                <button className="w-full text-[8px] font-medium uppercase tracking-[0.2em] text-primary hover:text-white transition-all bg-primary/10 hover:bg-primary py-1.5 rounded-lg border border-primary/20 shadow-inner group/all">
                     {t("dashboard.viewAll")}
                 </button>
             </div>
         </div>
     )
 }
+

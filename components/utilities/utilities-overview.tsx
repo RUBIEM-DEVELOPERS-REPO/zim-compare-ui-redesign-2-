@@ -24,17 +24,19 @@ export function UtilitiesOverview() {
     return (
         <div className="space-y-8">
             {/* Summary cards */}
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {summaryCards.map((c) => {
                     const Icon = c.icon
                     return (
-                        <div key={c.label} className="glass-card p-4 h-full">
-                            <div className="flex items-center gap-2 mb-2">
-                                <Icon className={`h-4 w-4 ${c.color}`} />
-                                <p className="text-xs text-muted-foreground">{c.label}</p>
+                        <div key={c.label} className="glass-floating p-5 group h-full floating-hover transition-all duration-500">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className={`p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-500 shadow-inner`}>
+                                    <Icon className={`h-4 w-4 ${c.color} group-hover:scale-110 transition-transform`} />
+                                </div>
+                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-70 group-hover:text-primary transition-colors">{c.label}</p>
                             </div>
-                            <p className="text-sm font-semibold text-foreground">{c.value}</p>
-                            <p className="text-xs text-primary mt-1">{c.detail}</p>
+                            <p className="text-md font-display font-medium text-white mt-1 leading-tight">{c.value}</p>
+                            <p className="text-[11px] text-primary mt-2 font-medium tracking-widest uppercase">{c.detail}</p>
                         </div>
                     )
                 })}
@@ -42,15 +44,15 @@ export function UtilitiesOverview() {
 
             {/* Smart recommendation badges */}
             <section>
-                <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <Star className="h-4 w-4 text-yellow-500" />
-                    Smart Recommendations
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="flex items-center gap-3 mb-6">
+                    <Star size={16} className="text-yellow-500 fill-yellow-500/20" />
+                    <h3 className="text-[10px] font-medium text-white uppercase tracking-[0.3em] opacity-70">Neural Recommendations</h3>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-3">
                     {smartBadges.map((b) => (
-                        <div key={b.label} className={`glass-panel p-4 ${b.color}`}>
-                            <p className="text-xs font-bold mb-1">{b.label}</p>
-                            <p className="text-xs opacity-80">{b.description}</p>
+                        <div key={b.label} className={`glass-floating p-6 floating-hover border-white/5 teal-glow`}>
+                            <p className="text-sm font-display font-medium text-white uppercase tracking-tight mb-2 leading-tight">{b.label}</p>
+                            <p className="text-[11px] font-medium text-muted-foreground opacity-80 leading-relaxed font-sans">{b.description}</p>
                         </div>
                     ))}
                 </div>
@@ -58,34 +60,36 @@ export function UtilitiesOverview() {
 
             {/* Top electricity deals */}
             <section>
-                <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-yellow-500" />
-                    Top Electricity Deals
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="flex items-center gap-3 mb-6">
+                    <Zap size={16} className="text-yellow-500 fill-yellow-500/20" />
+                    <h3 className="text-[10px] font-medium text-white uppercase tracking-[0.3em] opacity-70">High-Fidelity Power Deals</h3>
+                </div>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {topElectricity.map((p) => (
-                        <div key={p.id} className="glass-card p-4 h-full">
-                            <div className="flex items-center justify-between mb-2">
-                                <p className="text-sm font-semibold text-foreground">{p.name}</p>
+                        <div key={p.id} className="glass-floating p-6 transition-all duration-500 relative group flex flex-col floating-hover border-white/5">
+                            <div className="flex items-start justify-between gap-4 mb-6">
+                                <div>
+                                    <p className="text-lg font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-tight">{p.name}</p>
+                                    <p className="text-[10px] font-medium text-muted-foreground uppercase mt-2 tracking-[0.1em] opacity-60 font-sans">{p.planType} · {p.customerType}</p>
+                                </div>
                                 {p.badge && (
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-100 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800">
+                                    <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.15em] bg-white/5 text-muted-foreground px-3 py-1.5 rounded-xl border border-white/10 shadow-inner">
                                         {p.badge}
                                     </span>
                                 )}
                             </div>
-                            <p className="text-xs text-muted-foreground mb-2">{p.planType} · {p.customerType}</p>
-                            <div className="flex gap-4 text-xs">
+                            <div className="grid grid-cols-3 gap-4 pt-6 mt-auto border-t border-white/10 text-center">
                                 <div>
-                                    <p className="text-muted-foreground">Per kWh</p>
-                                    <p className="font-bold text-foreground">${p.tariffPerKwh.toFixed(3)}</p>
+                                    <p className="text-[9px] font-medium text-muted-foreground uppercase mb-1 opacity-60">PER kWh</p>
+                                    <p className="text-sm font-display font-medium text-white tabular-nums">${p.tariffPerKwh.toFixed(3)}</p>
                                 </div>
                                 <div>
-                                    <p className="text-muted-foreground">Fixed/mo</p>
-                                    <p className="font-bold text-foreground">${p.fixedMonthlyCharge.toFixed(2)}</p>
+                                    <p className="text-[9px] font-medium text-muted-foreground uppercase mb-1 opacity-60">FIXED/mo</p>
+                                    <p className="text-sm font-display font-medium text-primary tabular-nums">${p.fixedMonthlyCharge.toFixed(2)}</p>
                                 </div>
                                 <div>
-                                    <p className="text-muted-foreground">Reliability</p>
-                                    <p className="font-bold text-foreground">{p.reliabilityScore}/100</p>
+                                    <p className="text-[9px] font-medium text-muted-foreground uppercase mb-1 opacity-60">SIGNAL</p>
+                                    <p className="text-sm font-display font-medium text-foreground tabular-nums">{p.reliabilityScore}%</p>
                                 </div>
                             </div>
                         </div>
@@ -98,3 +102,4 @@ export function UtilitiesOverview() {
         </div>
     )
 }
+

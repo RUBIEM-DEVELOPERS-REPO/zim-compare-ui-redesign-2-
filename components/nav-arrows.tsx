@@ -17,7 +17,7 @@ export function NavArrows() {
     }, [pathname])
 
     return (
-        <div className="flex items-center gap-1.5 px-4 mb-2 relative z-[60]">
+        <div className="flex items-center gap-1.5 relative z-[60]">
             <button
                 onClick={() => router.back()}
                 disabled={!canGoBack}

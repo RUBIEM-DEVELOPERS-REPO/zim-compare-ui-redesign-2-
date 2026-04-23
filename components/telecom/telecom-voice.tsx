@@ -57,19 +57,19 @@ export function TelecomVoice({ location = "All Locations", voiceRates = [], prov
       {/* Rate Table */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-foreground">Voice & SMS Rates</h3>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Standard MNO Pricing</p>
+          <h3 className="text-sm font-medium text-foreground">Voice & SMS Rates</h3>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Standard MNO Pricing</p>
         </div>
         <div className="overflow-x-auto rounded-2xl border border-border glass-card">
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border bg-secondary/30">
-                <th className="text-left px-4 py-3 text-muted-foreground font-bold uppercase tracking-tight">Provider</th>
-                <th className="text-right px-4 py-3 text-muted-foreground font-bold uppercase tracking-tight">On-Net/min</th>
-                <th className="text-right px-4 py-3 text-muted-foreground font-bold uppercase tracking-tight">Off-Net/min</th>
-                <th className="text-right px-4 py-3 text-muted-foreground font-bold uppercase tracking-tight">On-Net SMS</th>
-                <th className="text-right px-4 py-3 text-muted-foreground font-bold uppercase tracking-tight">Off-Net SMS</th>
-                <th className="text-center px-4 py-3 text-muted-foreground font-bold uppercase tracking-tight w-24">Compare</th>
+                <th className="text-left px-4 py-3 text-muted-foreground font-medium uppercase tracking-tight">Provider</th>
+                <th className="text-right px-4 py-3 text-muted-foreground font-medium uppercase tracking-tight">On-Net/min</th>
+                <th className="text-right px-4 py-3 text-muted-foreground font-medium uppercase tracking-tight">Off-Net/min</th>
+                <th className="text-right px-4 py-3 text-muted-foreground font-medium uppercase tracking-tight">On-Net SMS</th>
+                <th className="text-right px-4 py-3 text-muted-foreground font-medium uppercase tracking-tight">Off-Net SMS</th>
+                <th className="text-center px-4 py-3 text-muted-foreground font-medium uppercase tracking-tight w-24">Compare</th>
               </tr>
             </thead>
             <tbody>
@@ -84,7 +84,7 @@ export function TelecomVoice({ location = "All Locations", voiceRates = [], prov
                   const inTray = compareTray.ids.includes(d.id)
                   return (
                     <tr key={d.id} className="border-b border-border last:border-0 hover:bg-secondary/20 transition-colors">
-                      <td className="px-4 py-3 font-semibold text-foreground">{d.name}</td>
+                      <td className="px-4 py-3 font-medium text-foreground">{d.name}</td>
                       <td className="px-4 py-3 text-right text-foreground">${d.onNetRate.toFixed(2)}</td>
                       <td className="px-4 py-3 text-right text-foreground">${d.offNetRate.toFixed(2)}</td>
                       <td className="px-4 py-3 text-right text-foreground">${d.onNetSms.toFixed(2)}</td>
@@ -115,3 +115,4 @@ export function TelecomVoice({ location = "All Locations", voiceRates = [], prov
     </div>
   )
 }
+

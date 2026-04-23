@@ -10,6 +10,7 @@ import { Suspense, useEffect, useState } from "react"
 import { ArrowLeft, CheckCircle2, TrendingUp, Clock, ShieldCheck, ChevronLeft, X, Zap, Award, BarChart3, HeartHandshake } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
 
 function InsuranceCompareContent() {
     const searchParams = useSearchParams()
@@ -46,13 +47,13 @@ function InsuranceCompareContent() {
                 <div className="p-4 bg-secondary/50 rounded-full mb-6">
                     <HeartHandshake size={48} className="text-muted-foreground" />
                 </div>
-                <h2 className="text-xl font-bold text-foreground mb-2">No insurance policies selected for comparison.</h2>
+                <h2 className="text-xl font-medium text-foreground mb-2">No insurance policies selected for comparison.</h2>
                 <p className="text-muted-foreground mb-8 max-w-xs">
                     Please select at least 2 policies to see a side-by-side comparison and AI recommendations.
                 </p>
                 <Link
                     href="/insurance"
-                    className="bg-teal-600 text-white px-6 py-2.5 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-lg shadow-teal-500/20"
+                    className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-medium hover:scale-105 transition-transform flex items-center gap-2 shadow-lg"
                 >
                     <ArrowLeft size={16} />
                     Go back to Policies
@@ -102,53 +103,54 @@ function InsuranceCompareContent() {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-700 pb-20">
-            <div className="flex items-center justify-between">
-                <button
-                    onClick={() => router.push("/insurance")}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
-                >
-                    <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                    Back to Policies
-                </button>
-                <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+                <div>
                     <button
-                        onClick={handleSave}
-                        className="text-xs font-bold uppercase tracking-wider text-teal-600 hover:text-teal-700 transition-colors"
+                        onClick={() => router.push("/insurance")}
+                        className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground hover:text-primary uppercase tracking-[0.2em] transition-all mb-6 group"
                     >
-                        Save this comparison
+                        <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                        Back to Policy Index
                     </button>
+                    <h1 className="text-5xl font-display font-medium text-foreground tracking-tighter uppercase leading-tight">
+                        Risk Analysis
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-2 font-medium font-sans opacity-70">
+                        Synthesizing side-by-side performance metrics for {selectedPolicies.length} insurance contracts.
+                    </p>
                 </div>
-            </div>
-
-            <div className="text-center md:text-left">
-                <h1 className="text-3xl font-bold text-foreground">Insurance Policy Comparison</h1>
-                <p className="text-muted-foreground mt-2">Comparing {selectedPolicies.length} policies side-by-side</p>
+                <button
+                    onClick={handleSave}
+                    className="glass-floating px-8 py-3 rounded-2xl text-[10px] font-medium uppercase tracking-[0.2em] bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-all teal-glow active:scale-95"
+                >
+                    Archive This Logic
+                </button>
             </div>
 
             {/* Comparison Table */}
-            <div className="overflow-x-auto rounded-3xl border border-border bg-card shadow-xl shadow-teal-500/5">
+            <div className="overflow-x-auto glass-floating shadow-2xl teal-glow border-border/50">
                 <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>
-                        <tr className="border-b border-border bg-muted/30">
-                            <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted-foreground w-1/5 sticky left-0 bg-card z-10">Policy Details</th>
+                        <tr className="border-b border-border/30 bg-secondary/50">
+                            <th className="p-8 text-[10px] font-medium uppercase tracking-[0.3em] text-primary/70 w-1/5 sticky left-0 bg-background z-10 transition-colors backdrop-blur-3xl">Risk Vector</th>
                             {selectedPolicies.map((p) => {
                                 const provider = getProvider(p.providerId)
                                 return (
-                                    <th key={p.id} className="p-6 text-center border-l border-border/50">
-                                        <div className="relative flex flex-col items-center gap-2">
+                                    <th key={p.id} className="p-8 text-center border-l border-white/5">
+                                        <div className="relative flex flex-col items-center gap-4">
                                             <button
                                                 onClick={() => handleRemove(p.id)}
-                                                className="absolute -top-4 -right-2 p-1 rounded-full bg-secondary hover:bg-destructive/10 hover:text-destructive transition-all"
-                                                title="Remove item"
+                                                className="absolute -top-4 -right-4 p-1.5 rounded-full glass-floating border-white/10 hover:bg-destructive/10 hover:text-destructive transition-all group/close"
+                                                title="Remove Entity"
                                             >
-                                                <X size={14} />
+                                                <X size={12} strokeWidth={3} />
                                             </button>
-                                            <span className="text-[10px] font-black text-teal-600 uppercase tracking-tighter bg-teal-50 px-2 py-0.5 rounded-full border border-teal-100">
+                                            <span className="text-[10px] font-medium text-primary uppercase tracking-[0.2em] bg-primary/5 px-3 py-1.5 rounded-xl border border-primary/20 shadow-inner">
                                                 {p.category.replace("_", " & ")}
                                             </span>
                                             <div className="text-center">
-                                                <p className="text-xs font-medium text-muted-foreground leading-tight uppercase tracking-widest mb-1">{p.providerName}</p>
-                                                <p className="text-sm font-bold text-foreground">{p.name}</p>
+                                                <p className="text-[10px] font-medium text-muted-foreground uppercase mt-2 tracking-[0.1em] opacity-60 font-sans mb-1">{p.providerName}</p>
+                                                <p className="text-xl font-display font-black text-foreground uppercase tracking-tight leading-none">{p.name}</p>
                                             </div>
                                         </div>
                                     </th>
@@ -156,10 +158,11 @@ function InsuranceCompareContent() {
                             })}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/50">
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Monthly Premium</td>
+                    <tbody>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Neural Benefits</td>
                             {selectedPolicies.map((p) => (
+<<<<<<< Updated upstream
                                 <td key={p.id} className="p-6 text-center border-l border-border/50">
                                     <span className={cn(
                                         "text-lg font-black",
@@ -234,6 +237,12 @@ function InsuranceCompareContent() {
                                     <div className="flex flex-wrap justify-center gap-1">
                                         {p.benefits.map((b: string) => (
                                             <span key={b} className="text-[9px] font-black uppercase tracking-tight bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100">
+=======
+                                <td key={p.id} className="p-8 border-l border-white/5">
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        {p.benefits.map(b => (
+                                            <span key={b} className="text-[9px] font-medium uppercase tracking-widest bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-lg border border-emerald-500/20 shadow-inner">
+>>>>>>> Stashed changes
                                                 {b}
                                             </span>
                                         ))}
@@ -241,13 +250,20 @@ function InsuranceCompareContent() {
                                 </td>
                             ))}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Exclusions</td>
+                        <tr className="hover:bg-white/5 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-[#0A0A0A]/80 backdrop-blur-3xl z-10">Risk Exclusions</td>
                             {selectedPolicies.map((p) => (
+<<<<<<< Updated upstream
                                 <td key={p.id} className="p-6 border-l border-border/50">
                                     <div className="flex flex-wrap justify-center gap-1">
                                         {p.exclusions.map((e: string) => (
                                             <span key={e} className="text-[9px] font-black uppercase tracking-tight bg-red-50 text-red-700 px-2 py-0.5 rounded-full border border-red-100">
+=======
+                                <td key={p.id} className="p-8 border-l border-white/5">
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        {p.exclusions.map(e => (
+                                            <span key={e} className="text-[9px] font-medium uppercase tracking-widest bg-red-500/10 text-red-400 px-3 py-1 rounded-lg border border-red-500/20 shadow-inner">
+>>>>>>> Stashed changes
                                                 {e}
                                             </span>
                                         ))}
@@ -260,155 +276,160 @@ function InsuranceCompareContent() {
             </div>
 
             {/* AI Recommendations */}
-            <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                    <div className="p-1.5 rounded-lg bg-teal-600 text-white">
-                        <Zap size={20} />
+            <div className="space-y-10">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 glass-floating bg-primary/10 text-primary teal-glow">
+                        <Zap size={28} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-foreground">AI Intelligence Recommendations</h2>
-                        <p className="text-sm text-muted-foreground italic">Based on your selection comparison</p>
+                        <h2 className="text-2xl font-display font-medium text-foreground uppercase tracking-tight">Neural Optimization</h2>
+                        <p className="text-sm text-muted-foreground font-medium opacity-60">Cognitive risk/value mapping based on selection fingerprints</p>
                     </div>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-5">
                     {/* Best Value */}
-                    <div className="rounded-2xl border border-teal-200/50 bg-teal-50/20 p-5 relative overflow-hidden group">
-                        <div className="absolute -top-4 -right-4 bg-teal-600 text-white p-6 rounded-full opacity-5 group-hover:scale-110 transition-transform">
-                            <Zap size={32} />
+                    <div className="glass-floating bg-gradient-to-br from-primary/10 to-transparent border-primary/30 p-8 shadow-2xl teal-glow relative overflow-hidden group hover:scale-[1.03] transition-all duration-500">
+                        <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground p-10 rounded-full opacity-5 group-hover:scale-110 transition-transform duration-1000">
+                            <Zap size={64} />
                         </div>
-                        <div className="flex items-center gap-2 mb-3">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-teal-600">Best Value</span>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-primary text-primary-foreground text-[10px] font-medium uppercase tracking-[0.2em] mb-6 shadow-xl">
+                            Best Value
                         </div>
-                        <p className="text-sm font-bold text-foreground mb-1">{bestValue.name}</p>
-                        <p className="text-xs text-muted-foreground mb-4">{bestValue.providerName}</p>
-                        <ul className="space-y-2 mb-4">
-                            <li className="text-[11px] flex gap-2">
-                                <ShieldCheck size={14} className="text-teal-600 shrink-0" />
+                        <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight leading-none mb-1">{bestValue.name}</h3>
+                        <p className="text-[10px] font-medium text-primary uppercase tracking-[0.1em] mb-8 opacity-70">{bestValue.providerName}</p>
+                        <ul className="space-y-4 mb-8">
+                            <li className="text-[11px] font-medium text-foreground/90 flex gap-3">
+                                <ShieldCheck size={14} className="text-primary shrink-0" strokeWidth={3} />
                                 <span>Highest coverage per dollar spent</span>
                             </li>
-                            <li className="text-[11px] flex gap-2">
-                                <ShieldCheck size={14} className="text-teal-600 shrink-0" />
+                            <li className="text-[11px] font-medium text-foreground/90 flex gap-3">
+                                <ShieldCheck size={14} className="text-primary shrink-0" strokeWidth={3} />
                                 <span>Includes {bestValue.benefits.length} core benefits</span>
                             </li>
                         </ul>
-                        <p className="text-[11px] font-medium text-teal-700 bg-teal-100/50 px-2 py-1 rounded-lg">Good for: Maximum protection on a budget</p>
-                    </div>
-
-                    {/* Cheapest Premium */}
-                    <div className="rounded-2xl border border-border bg-card p-5 group">
-                        <div className="flex items-center gap-2 mb-3">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Cheapest Premium</span>
-                        </div>
-                        <p className="text-sm font-bold text-foreground mb-1">{cheapest.name}</p>
-                        <p className="text-xs text-muted-foreground mb-4">{cheapest.providerName}</p>
-                        <ul className="space-y-2 mb-4">
-                            <li className="text-[11px] flex gap-2">
-                                <Award size={14} className="text-emerald-600 shrink-0" />
-                                <span>Lowest monthly commitment: ${cheapest.monthlyPremium}</span>
-                            </li>
-                            <li className="text-[11px] flex gap-2">
-                                <Award size={14} className="text-emerald-600 shrink-0" />
-                                <span>Minimal upfront administration fees</span>
-                            </li>
-                        </ul>
-                        <p className="text-[11px] font-medium text-emerald-700 bg-emerald-100/50 px-2 py-1 rounded-lg">Good for: Budget-conscious individuals</p>
-                    </div>
-
-                    {/* Best Coverage */}
-                    <div className="rounded-2xl border border-border bg-card p-5 group">
-                        <div className="flex items-center gap-2 mb-3">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Best Coverage</span>
-                        </div>
-                        <p className="text-sm font-bold text-foreground mb-1">{bestCoverage.name}</p>
-                        <p className="text-xs text-muted-foreground mb-4">{bestCoverage.providerName}</p>
-                        <ul className="space-y-2 mb-4">
-                            <li className="text-[11px] flex gap-2">
-                                <BarChart3 size={14} className="text-blue-600 shrink-0" />
-                                <span>Highest cover limit: ${bestCoverage.coverLimit.toLocaleString()}</span>
-                            </li>
-                            <li className="text-[11px] flex gap-2">
-                                <BarChart3 size={14} className="text-blue-600 shrink-0" />
-                                <span>Extensive benefits package included</span>
-                            </li>
-                        </ul>
-                        <p className="text-[11px] font-medium text-blue-700 bg-blue-100/50 px-2 py-1 rounded-lg">Good for: High-net-worth protection</p>
+                        <p className="text-[10px] font-medium text-primary bg-primary/5 px-3 py-1.5 rounded-xl border border-primary/20 uppercase tracking-widest text-center">Neural Logic: High efficiency</p>
                     </div>
 
                     {/* Claims Reliability */}
-                    <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 group">
-                        <div className="flex items-center gap-2 mb-3">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Claims Expert</span>
+                    <div className="glass-floating p-8 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover lg:col-span-1">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 text-muted-foreground text-[10px] font-medium uppercase tracking-[0.2em] mb-6 border border-white/10">
+                            Claims Leader
                         </div>
-                        <p className="text-sm font-bold text-foreground mb-1">{bestClaims.name}</p>
-                        <p className="text-xs text-muted-foreground mb-4">{bestClaims.providerName}</p>
-                        <ul className="space-y-2 mb-4">
-                            <li className="text-[11px] flex gap-2">
-                                <HeartHandshake size={14} className="text-primary shrink-0" />
+                        <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{bestClaims.name}</h3>
+                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.1em] mb-8 opacity-60">{bestClaims.providerName}</p>
+                        <ul className="space-y-4 mb-8">
+                            <li className="text-[11px] font-medium text-foreground/80 flex gap-3">
+                                <HeartHandshake size={14} className="text-primary/60 shrink-0" strokeWidth={3} />
                                 <span>Top provider claims score of {getProvider(bestClaims.providerId)?.claimsScore}%</span>
                             </li>
-                            <li className="text-[11px] flex gap-2">
-                                <HeartHandshake size={14} className="text-primary shrink-0" />
-                                <span>Fastest turnaround: {getProvider(bestClaims.providerId)?.avgClaimDays} days</span>
+                            <li className="text-[11px] font-medium text-foreground/80 flex gap-3">
+                                <HeartHandshake size={14} className="text-primary/60 shrink-0" strokeWidth={3} />
+                                <span>Fastest turnaround: {getProvider(bestClaims.providerId)?.avgClaimDays} d</span>
                             </li>
                         </ul>
-                        <p className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-1 rounded-lg">Good for: Peace of mind & reliability</p>
+                        <p className="text-[10px] font-medium text-muted-foreground bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 uppercase tracking-widest text-center opacity-60">High reliability</p>
+                    </div>
+
+                    {/* Best Coverage */}
+                    <div className="glass-floating p-8 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover lg:col-span-1">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 text-muted-foreground text-[10px] font-medium uppercase tracking-[0.2em] mb-6 border border-white/10">
+                            Maximum Shield
+                        </div>
+                        <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{bestCoverage.name}</h3>
+                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.1em] mb-8 opacity-60">{bestCoverage.providerName}</p>
+                        <ul className="space-y-4 mb-8">
+                            <li className="text-[11px] font-medium text-foreground/80 flex gap-3">
+                                <BarChart3 size={14} className="text-primary/60 shrink-0" strokeWidth={3} />
+                                <span>Cover: ${(bestCoverage.coverLimit / 1000).toFixed(0)}k total</span>
+                            </li>
+                            <li className="text-[11px] font-medium text-foreground/80 flex gap-3">
+                                <BarChart3 size={14} className="text-primary/60 shrink-0" strokeWidth={3} />
+                                <span>Extensive benefits package</span>
+                            </li>
+                        </ul>
+                        <p className="text-[10px] font-medium text-muted-foreground bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 uppercase tracking-widest text-center opacity-60">High limits</p>
+                    </div>
+
+                    {/* Cheapest premium / Switch & Save Simulator */}
+                    <SwitchSaveSimulator
+                        category="insurance"
+                        current={selectedPolicies[0]}
+                        recommended={cheapest}
+                    />
+
+                    {/* Get Covered */}
+                    <div className="glass-floating p-8 shadow-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-500 group relative overflow-hidden flex flex-col teal-glow">
+                        <div className="absolute -bottom-4 -right-4 p-6 text-primary/10 group-hover:scale-110 transition-transform duration-700">
+                             <ShieldCheck size={140} />
+                        </div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-lg">
+                            Instant Shield
+                        </div>
+                        <h3 className="text-2xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">Get Covered</h3>
+                        <p className="text-[11px] font-black text-primary uppercase tracking-[0.1em] mb-8 opacity-80 leading-tight">
+                            {bestValue.providerName}: {bestValue.name}
+                        </p>
+                        
+                        <div className="flex-1 space-y-4 mb-10">
+                            <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+                                Our neural analysis indicates maximum risk absorption for this configuration. Start your coverage immediately with {bestValue.providerName}.
+                            </p>
+                        </div>
+
+                        <button className="w-full bg-primary py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3 relative z-10">
+                            Get Cover / Request Quote
+                        </button>
                     </div>
                 </div>
             </div>
 
             {/* Smart Summary */}
-            <div className="grid gap-6 md:grid-cols-2">
-                <div className="rounded-3xl border border-border bg-card p-8">
-                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-                        <TrendingUp size={20} className="text-teal-600" />
-                        Key Differences & Trade-offs
+            <div className="grid gap-10 md:grid-cols-2">
+                <div className="glass-floating p-8 shadow-2xl teal-glow border-white/5">
+                    <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight mb-8 flex items-center gap-4">
+                        <TrendingUp size={24} className="text-primary" />
+                        Vector Analysis
                     </h3>
-                    <ul className="space-y-3">
-                        <li className="text-sm text-muted-foreground flex gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
+                    <ul className="space-y-6">
+                        <li className="text-sm text-foreground/80 flex gap-4 font-medium font-sans">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0 shadow-lg shadow-primary/50" />
                             <span>
-                                <strong className="text-foreground">{cheapest.providerName}</strong> offers the lowest premium but has a higher excess of <strong>${cheapest.excess}</strong>.
+                                <strong className="text-foreground font-bold">{cheapest.providerName}</strong> offers terms at the lowest monthly premium but mandates a significant excess threshold of <strong>${cheapest.excess}</strong>.
                             </span>
                         </li>
-                        <li className="text-sm text-muted-foreground flex gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
+                        <li className="text-sm text-foreground/80 flex gap-4 font-medium font-sans">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0 shadow-lg shadow-primary/50" />
                             <span>
-                                <strong className="text-foreground">{bestCoverage.providerName}</strong> provides <strong>${(bestCoverage.coverLimit - cheapest.coverLimit).toLocaleString()}</strong> more coverage than the budget option.
+                                <strong className="text-foreground font-bold">{bestCoverage.providerName}</strong> provides <strong>${(bestCoverage.coverLimit - cheapest.coverLimit).toLocaleString()}</strong> in additional risk absorption vs budget variants.
                             </span>
                         </li>
-                        <li className="text-sm text-muted-foreground flex gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
+                        <li className="text-sm text-foreground/80 flex gap-4 font-medium font-sans">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0 shadow-lg shadow-primary/50" />
                             <span>
-                                Waiting periods vary from <strong>0</strong> to <strong>{Math.max(...selectedPolicies.map(p => p.waitingPeriodDays))}</strong> days across selected policies.
-                            </span>
-                        </li>
-                        <li className="text-sm text-muted-foreground flex gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
-                            <span>
-                                <strong>{bestClaims.providerName}</strong> stands out with a <strong>{getProvider(bestClaims.providerId)?.claimsScore}%</strong> claims reliability rating.
+                                Waiting periods vary from <strong>0</strong> to <strong>{Math.max(...selectedPolicies.map(p => p.waitingPeriodDays))}</strong> days across selected institutional contracts.
                             </span>
                         </li>
                     </ul>
                 </div>
 
-                <div className="rounded-3xl border border-teal-600/10 bg-teal-600/5 p-8">
-                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-                        <Award size={20} className="text-teal-600" />
-                        What to choose if...
+                <div className="glass-floating p-8 bg-primary/5 border-primary/20 shadow-2xl teal-glow">
+                    <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight mb-8 flex items-center gap-4">
+                        <Award size={24} className="text-primary" />
+                        Strategic Alignment
                     </h3>
-                    <div className="space-y-4">
+                    <div className="space-y-8">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-widest text-teal-700 mb-1">If you want the lowest monthly cost</p>
-                            <p className="text-sm text-muted-foreground">Go with <strong className="text-foreground">{cheapest.name}</strong>. It saves you <strong>${Math.max(...selectedPolicies.map(p => p.monthlyPremium)) - cheapest.monthlyPremium}</strong> per month compared to the highest option.</p>
+                            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary mb-2">Cost Optimization</p>
+                            <p className="text-sm text-foreground/80 font-medium font-sans leading-relaxed">Go with <strong className="text-white font-medium">{cheapest.name}</strong>. It optimizes monthly liquidity by <strong>${Math.max(...selectedPolicies.map(p => p.monthlyPremium)) - cheapest.monthlyPremium}</strong> vs max-tier options.</p>
                         </div>
                         <div>
-                            <p className="text-xs font-black uppercase tracking-widest text-teal-700 mb-1">If you want maximum cover</p>
-                            <p className="text-sm text-muted-foreground">Choose <strong className="text-foreground">{bestCoverage.name}</strong> for its <strong>${bestCoverage.coverLimit.toLocaleString()}</strong> limit.</p>
+                            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary mb-2">Maximum Resilience</p>
+                            <p className="text-sm text-foreground/80 font-medium font-sans leading-relaxed">Choose <strong className="text-white font-medium">{bestCoverage.name}</strong> for industry-leading <strong>${bestCoverage.coverLimit.toLocaleString()}</strong> coverage thresholds.</p>
                         </div>
                         <div>
-                            <p className="text-xs font-black uppercase tracking-widest text-teal-700 mb-1">If you want lower excess</p>
-                            <p className="text-sm text-muted-foreground">The <strong>${lowestExcess}</strong> excess on <strong className="text-foreground">{selectedPolicies.find(p => p.excess === lowestExcess)?.name}</strong> reduces your out-of-pocket costs during a claim.</p>
+                            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary mb-2">Risk Sensitivity</p>
+                            <p className="text-sm text-foreground/80 font-medium font-sans leading-relaxed">The <strong>${lowestExcess}</strong> excess on <strong className="text-white font-medium">{selectedPolicies.find(p => p.excess === lowestExcess)?.name}</strong> minimizes out-of-pocket friction during incidents.</p>
                         </div>
                     </div>
                 </div>
@@ -422,9 +443,10 @@ function InsuranceCompareContent() {
 export default function InsuranceComparePage() {
     return (
         <div className="max-w-6xl mx-auto py-8 px-4">
-            <Suspense fallback={<div className="flex items-center justify-center py-20 text-teal-600 font-bold animate-pulse">Analyzing Insurance Policies...</div>}>
+            <Suspense fallback={<div className="flex items-center justify-center py-20 text-teal-600 font-medium animate-pulse">Analyzing Insurance Policies...</div>}>
                 <InsuranceCompareContent />
             </Suspense>
         </div>
     )
 }
+

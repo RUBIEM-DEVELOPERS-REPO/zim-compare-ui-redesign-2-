@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
-import { X, MessageCircle, Send, Trash2, ChevronDown } from "lucide-react"
+import { X, MessageCircle, Send, Trash2, ChevronDown, Image, Music, Mic, Film, Paperclip, StopCircle } from "lucide-react"
 
 const sampleResponses: Record<string, string> = {
     bank: "Based on your profile, I recommend **Stanbic Bank** for the best balance of transparency, digital features, and competitive fees. Their PureSave account offers 4.0% interest with goal savings features. For the lowest fees, POSB has ZIPIT at just $0.80 per transaction.",
@@ -26,18 +26,23 @@ export function ChatWidget() {
     const { chatMessages, addChatMessage, clearChat } = useAppStore()
     const [isOpen, setIsOpen] = useState(false)
     const [input, setInput] = useState("")
-    const [textareaHeight, setTextareaHeight] = useState<string>("auto")
     const [isTyping, setIsTyping] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
+    const [isRecording, setIsRecording] = useState(false)
+    const [recordingTime, setRecordingTime] = useState(0)
+    const [attachments, setAttachments] = useState<any[]>([])
+    
     const isMountedRef = useRef(true)
     const endRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
     useEffect(() => {
         setIsMounted(true)
         isMountedRef.current = true
-        // Add welcome message if chat is empty
-        if (chatMessages.length === 0) {
+        // Add welcome message if chat is empty and not already present
+        if (chatMessages.length === 0 || !chatMessages.some(m => m.id === "welcome-msg")) {
             addChatMessage({
                 id: "welcome-msg",
                 role: "assistant",
@@ -60,22 +65,89 @@ export function ChatWidget() {
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto"
             const newHeight = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
-            setTextareaHeight(newHeight)
+            textareaRef.current.style.height = newHeight
         }
     }, [input])
 
+    useEffect(() => {
+        if (isRecording) {
+            recordingIntervalRef.current = setInterval(() => {
+                setRecordingTime(prev => prev + 1)
+            }, 1000)
+        } else {
+            if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current)
+            setRecordingTime(0)
+        }
+        return () => {
+            if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current)
+        }
+    }, [isRecording])
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60)
+        const secs = seconds % 60
+        return `${mins}:${secs.toString().padStart(2, "0")}`
+    }
+
+    const handleFileClick = (type: string) => {
+        if (fileInputRef.current) {
+            fileInputRef.current.accept = type === "image" ? "image/*" : type === "video" ? "video/*" : type === "audio" ? "audio/*" : "*"
+            fileInputRef.current.click()
+        }
+    }
+
+    const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+        
+        // Mock attachment
+        const newAttachment = {
+            id: Date.now().toString(),
+            name: file.name,
+            size: (file.size / 1024).toFixed(1) + " KB",
+            type: file.type.split("/")[0] as any,
+            url: URL.createObjectURL(file)
+        }
+        setAttachments(prev => [...prev, newAttachment])
+        if (e.target) e.target.value = ""
+    }
+
+    const toggleRecording = () => {
+        if (!isRecording) {
+            setIsRecording(true)
+        } else {
+            setIsRecording(false)
+            // Mock voice attachment
+            const newAttachment = {
+                id: Date.now().toString(),
+                name: `Voice Recording ${formatTime(recordingTime)}`,
+                size: "Variable",
+                type: "audio" as const,
+                url: "#",
+                isVoice: true
+            }
+            setAttachments(prev => [...prev, newAttachment])
+        }
+    }
+
+    const removeAttachment = (id: string) => {
+        setAttachments(prev => prev.filter(a => a.id !== id))
+    }
+
     const handleSend = (e?: React.FormEvent) => {
         if (e) e.preventDefault()
-        if (!input.trim() || isTyping) return
+        if ((!input.trim() && attachments.length === 0) || isTyping || isRecording) return
 
         const userMsg = {
             id: Date.now().toString(),
             role: "user" as const,
             content: input.trim(),
             timestamp: new Date().toISOString(),
+            attachments: attachments.length > 0 ? [...attachments] : undefined
         }
         addChatMessage(userMsg)
         setInput("")
+        setAttachments([])
         setIsTyping(true)
 
         setTimeout(() => {
@@ -101,22 +173,15 @@ export function ChatWidget() {
     if (!isMounted) return null
 
     return (
-        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+        <div className="chat-widget-wrapper">
             {/* Chat Window */}
             {isOpen && (
-                <div
-                    className={cn(
-                        "mb-4 overflow-hidden rounded-2xl border border-border/50 shadow-2xl transition-all duration-300",
-                        "bg-card/80 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60",
-                        "w-[calc(100vw-3rem)] sm:w-[360px] h-[500px] flex flex-col",
-                        "animate-in slide-in-from-bottom-4 fade-in"
-                    )}
-                >
+                <div className="chat-widget-window glass-floating shadow-2xl">
                     {/* Header */}
                     <div className="flex items-center justify-between border-b border-border/50 bg-primary/10 px-4 py-3">
                         <div className="flex items-center gap-2">
                             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                            <p className="text-sm font-semibold text-foreground">ZimCompare Assistant</p>
+                            <p className="text-sm font-medium text-foreground">Fintech Assistant</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
@@ -148,11 +213,26 @@ export function ChatWidget() {
                                 className={cn(
                                     "max-w-[85%] rounded-2xl p-3 text-sm transition-all",
                                     msg.role === "user"
-                                        ? "ml-auto bg-primary text-primary-foreground shadow-md shadow-primary/10"
-                                        : "bg-secondary/50 text-foreground border border-border/30"
+                                        ? "ml-auto bg-primary text-primary-foreground shadow-md"
+                                        : "bg-white/5 text-foreground border border-white/10 backdrop-blur-md"
                                 )}
                             >
-                                {msg.content}
+                                <div className="space-y-2">
+                                    {msg.content && <p>{msg.content}</p>}
+                                    {msg.attachments && (
+                                        <div className="grid gap-2 mt-2">
+                                            {msg.attachments.map((atch: any, idx) => (
+                                                <div key={idx} className="flex items-center gap-2 p-2 rounded-lg bg-black/20 border border-white/10">
+                                                    {atch.type === "image" && <Image size={14} className="text-primary-foreground" />}
+                                                    {atch.type === "video" && <Film size={14} className="text-primary-foreground" />}
+                                                    {atch.type === "audio" && <Music size={14} className="text-primary-foreground" />}
+                                                    {atch.type === "file" && <Paperclip size={14} className="text-primary-foreground" />}
+                                                    <span className="text-[10px] truncate max-w-[120px]">{atch.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ))}
                         {isTyping && (
@@ -167,30 +247,127 @@ export function ChatWidget() {
                         <div ref={endRef} />
                     </div>
 
-                    {/* Input */}
-                    <div className="border-t border-border/50 p-3 bg-secondary/20">
-                        <form onSubmit={handleSend} className="relative flex items-end gap-2">
-                            <textarea
-                                ref={textareaRef}
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                rows={1}
-                                placeholder="Type a message..."
-                                className="min-h-[44px] max-h-[120px] scrollbar-none w-full resize-none rounded-xl border border-border/50 bg-background/50 px-4 py-3 pr-12 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all backdrop-blur-sm"
-                                style={{ height: textareaHeight }}
-                            />
-                            <button
-                                type="submit"
-                                title="Send Message"
-                                aria-label="Send Message"
-                                disabled={!input.trim() || isTyping}
-                                className="absolute right-2 bottom-2 p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
-                            >
-                                <Send size={18} aria-hidden="true" />
-                                <span className="sr-only">Send Message</span>
-                            </button>
-                        </form>
+                    {/* Input Area */}
+                    <div className="border-t border-border/50 p-4 bg-secondary/10">
+                        {/* Hidden File Input */}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={onFileSelect}
+                            className="hidden"
+                            title="File upload input"
+                            aria-label="File upload input"
+                        />
+
+                        {/* Attachment Previews */}
+                        {attachments.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-3 attachment-preview-enter">
+                                {attachments.map((atch) => (
+                                    <div key={atch.id} className="relative group bg-primary/10 border border-primary/20 rounded-xl px-3 py-2 flex items-center gap-2">
+                                        {atch.type === "image" && <Image size={14} className="text-primary" />}
+                                        {atch.type === "video" && <Film size={14} className="text-primary" />}
+                                        {atch.type === "audio" && <Music size={14} className="text-primary" />}
+                                        <span className="text-[10px] font-medium text-foreground truncate max-w-[80px]">{atch.name}</span>
+                                        <button 
+                                            onClick={() => removeAttachment(atch.id)}
+                                            className="h-4 w-4 rounded-full bg-destructive/80 text-white flex items-center justify-center hover:bg-destructive"
+                                            title="Remove attachment"
+                                            aria-label="Remove attachment"
+                                        >
+                                            <X size={10} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="relative glass-floating !rounded-2xl border-white/10 bg-white/5 overflow-hidden">
+                            {isRecording ? (
+                                <div className="flex items-center justify-between px-4 py-3 h-[52px] bg-primary/5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                                        <span className="text-sm font-medium text-foreground">{formatTime(recordingTime)}</span>
+                                        <span className="text-xs text-muted-foreground ml-2">Recording voice...</span>
+                                    </div>
+                                    <button 
+                                        onClick={toggleRecording}
+                                        className="h-8 w-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center hover:bg-destructive hover:text-white transition-all shadow-sm"
+                                        title="Stop recording"
+                                        aria-label="Stop recording"
+                                    >
+                                        <StopCircle size={18} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex items-end gap-1 px-2 py-2">
+                                    {/* Small Left Icons Cluster */}
+                                    <div className="flex items-center pb-1">
+                                        <button 
+                                            onClick={() => handleFileClick("image")}
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                                            title="Attach Image"
+                                        >
+                                            <Image size={18} />
+                                        </button>
+                                        <button 
+                                            onClick={() => handleFileClick("video")}
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                                            title="Attach Video"
+                                        >
+                                            <Film size={18} />
+                                        </button>
+                                    </div>
+
+                                    {/* Main Textarea */}
+                                    <textarea
+                                        ref={textareaRef}
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                        rows={1}
+                                        placeholder="Message assistant..."
+                                        className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 px-2 max-h-[120px] resize-none overflow-y-auto scrollbar-none"
+                                    />
+
+                                    {/* Action Icons Right */}
+                                    <div className="flex items-center gap-1 pb-1">
+                                        <button 
+                                            onClick={() => handleFileClick("audio")}
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                                            title="Attach Audio"
+                                        >
+                                            <Music size={18} />
+                                        </button>
+                                        <button 
+                                            onClick={() => handleFileClick("file")}
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                                            title="Attach File"
+                                        >
+                                            <Paperclip size={18} />
+                                        </button>
+                                        <div className="w-px h-6 bg-white/10 mx-1" />
+                                        <button 
+                                            onClick={toggleRecording}
+                                            className={cn(
+                                                "p-2 rounded-lg transition-all",
+                                                isRecording ? "text-destructive bg-destructive/10 mic-pulse" : "text-primary hover:bg-primary/10"
+                                            )}
+                                            title="Record Voice"
+                                        >
+                                            <Mic size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleSend()}
+                                            disabled={(!input.trim() && attachments.length === 0) || isTyping}
+                                            className="p-2 ml-1 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-30 disabled:grayscale transition-all shadow-md"
+                                            title="Send Message"
+                                        >
+                                            <Send size={18} />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
@@ -201,10 +378,10 @@ export function ChatWidget() {
                 title={isOpen ? "Close Chat" : "Open Chat"}
                 aria-label={isOpen ? "Close Chat" : "Open Chat"}
                 className={cn(
-                    "flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-300 active:scale-95",
+                    "flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-500 active:scale-95 floating-hover",
                     isOpen
                         ? "bg-secondary text-foreground hover:bg-secondary/80"
-                        : "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30"
+                        : "bg-primary text-primary-foreground hover:scale-110 shadow-lg"
                 )}
             >
                 {isOpen ? <ChevronDown size={28} aria-hidden="true" /> : <MessageCircle size={28} aria-hidden="true" />}
@@ -213,3 +390,4 @@ export function ChatWidget() {
         </div>
     )
 }
+

@@ -46,11 +46,11 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-6 border-b border-black/5 dark:border-white/5">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center border border-white/20 shadow-lg shadow-teal-500/20">
-                <span className="text-white font-bold text-2xl">{selectedBank.name.substring(0, 2).toUpperCase()}</span>
+                <span className="text-white font-medium text-2xl">{selectedBank.name.substring(0, 2).toUpperCase()}</span>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground tracking-tight">{selectedBank.name}</h2>
-                <div className="flex items-center gap-2 text-sm text-teal-600 dark:text-teal-400 font-semibold uppercase tracking-wider">
+                <h2 className="text-2xl font-medium text-foreground tracking-tight">{selectedBank.name}</h2>
+                <div className="flex items-center gap-2 text-sm text-teal-600 dark:text-teal-400 font-medium uppercase tracking-wider">
                   {selectedBank.type.replace("_", " ")}
                   <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
                   {selectedBank.branches} Branches
@@ -66,19 +66,19 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             {/* Contact Info */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest px-1">Institutional Profile</h3>
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-widest px-1">Institutional Profile</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
                   <div className="mt-1 h-2 w-2 rounded-full bg-teal-500" />
                   <div>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter">Head Office</p>
+                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">Head Office</p>
                     <p className="text-sm text-foreground">{selectedBank.headOfficeAddress || "Not available"}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
                   <div className="mt-1 h-2 w-2 rounded-full bg-blue-500" />
                   <div>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter">Contact Details</p>
+                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">Contact Details</p>
                     <p className="text-sm text-foreground">{selectedBank.contactPhone || "No primary phone"}</p>
                     <p className="text-[11px] text-teal-600 dark:text-teal-400 font-medium">{selectedBank.contactEmail || ""}</p>
                   </div>
@@ -99,7 +99,7 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
 
             {/* Digital Features */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest px-1">Digital Ecosystem</h3>
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-widest px-1">Digital Ecosystem</h3>
               <div className="flex flex-wrap gap-2">
                 {selectedBank.digitalFeatures.map((f) => (
                   <span key={f} className="text-xs font-medium bg-white/50 dark:bg-white/10 text-foreground px-3 py-1.5 rounded-lg border border-black/5 dark:border-white/10 shadow-sm">{f}</span>
@@ -111,13 +111,13 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
           <div className="flex gap-4 pt-6 border-t border-black/5 dark:border-white/5">
             <button
               onClick={() => addToCompareTray("banking", selectedBank.id)}
-              className="flex-1 rounded-xl bg-teal-600 text-white px-6 py-3 font-bold hover:bg-teal-700 transition-all shadow-lg shadow-teal-500/20 active:scale-[0.98]"
+              className="flex-1 rounded-xl bg-teal-600 text-white px-6 py-3 font-medium hover:bg-teal-700 transition-all shadow-lg shadow-teal-500/20 active:scale-[0.98]"
             >
               Add to Competition Analysis
             </button>
             <button
               onClick={() => setSelected(null)}
-              className="px-6 py-3 rounded-xl bg-black/5 dark:bg-white/5 text-foreground font-bold hover:bg-black/10 dark:hover:bg-white/10 transition-all"
+              className="px-6 py-3 rounded-xl bg-black/5 dark:bg-white/5 text-foreground font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-all"
             >
               Close
             </button>
@@ -138,7 +138,7 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
             key={f}
             onClick={() => setFilter(f)}
             className={cn(
-              "rounded-xl px-2 py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-center",
+              "rounded-xl px-2 py-2 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider transition-all duration-300 text-center",
               filter === f
                 ? "bg-white/40 dark:bg-white/10 text-foreground shadow-[0_0_15px_rgba(45,212,191,0.5)]"
                 : "hover:bg-white/10 hover:backdrop-blur-2xl hover:brightness-125 hover:-translate-y-[1px] text-muted-foreground"
@@ -155,7 +155,7 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">No banks found for {location}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">No banks found for {location}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">There are no banks of this type active in this location.</p>
         </div>
       ) : (
@@ -179,11 +179,11 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/40 dark:to-teal-800/20 flex items-center justify-center border border-teal-100/50 dark:border-teal-500/20">
-                      <span className="text-teal-600 dark:text-teal-400 font-bold text-sm">{b.name.substring(0, 2).toUpperCase()}</span>
+                      <span className="text-teal-600 dark:text-teal-400 font-medium text-sm">{b.name.substring(0, 2).toUpperCase()}</span>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground tracking-tight">{b.name}</p>
-                      <span className="text-[10px] font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">
+                      <p className="text-sm font-medium text-foreground tracking-tight">{b.name}</p>
+                      <span className="text-[10px] font-medium text-teal-600 dark:text-teal-400 uppercase tracking-widest">
                         {b.type.replace("_", " ")}
                       </span>
                     </div>
@@ -195,21 +195,21 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
                     <p className="text-[10px] text-muted-foreground mb-0.5">Transparency</p>
                     <div className="flex items-center gap-1.5">
                       <div className="h-1.5 w-1.5 rounded-full bg-teal-500" />
-                      <span className="text-xs font-bold text-foreground">{b.transparencyScore}/100</span>
+                      <span className="text-xs font-medium text-foreground">{b.transparencyScore}/100</span>
                     </div>
                   </div>
                   <div className="rounded-xl bg-black/5 dark:bg-white/5 p-2 border border-black/5 dark:border-white/5">
                     <p className="text-[10px] text-muted-foreground mb-0.5">Digital Score</p>
                     <div className="flex items-center gap-1.5">
                       <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                      <span className="text-xs font-bold text-foreground">{b.digitalScore}/100</span>
+                      <span className="text-xs font-medium text-foreground">{b.digitalScore}/100</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between mb-4 mt-auto">
                   <p className="text-[11px] text-muted-foreground">
-                    <span className="font-bold text-foreground">{b.branches}</span> Branches nationwide
+                    <span className="font-medium text-foreground">{b.branches}</span> Branches nationwide
                   </p>
                   <div className="h-6 w-6 rounded-full bg-teal-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="text-teal-600 dark:text-teal-400 text-xs">&rarr;</span>
@@ -223,7 +223,7 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
                       inTray ? removeFromCompareTray(b.id) : addToCompareTray("banking", b.id, "profiles")
                     }}
                     className={cn(
-                      "w-full rounded-xl py-2.5 text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2",
+                      "w-full rounded-xl py-2.5 text-xs font-medium transition-all duration-300 flex items-center justify-center gap-2",
                       inTray
                         ? "bg-teal-500/20 text-teal-600 dark:text-teal-400 border border-teal-500/30"
                         : "bg-teal-600 text-white hover:bg-teal-700 shadow-md shadow-teal-500/10"
@@ -247,3 +247,4 @@ export function BankingProfiles({ location = "All Locations" }: BankingProfilesP
     </div>
   )
 }
+

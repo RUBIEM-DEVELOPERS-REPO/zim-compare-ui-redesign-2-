@@ -43,16 +43,16 @@ export function TelecomInternet({ location = "All Locations" }: TelecomInternetP
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
         <div>
-          <h3 className="text-sm font-bold text-slate-100 uppercase tracking-tight">Home & Office Internet</h3>
+          <h3 className="text-sm font-medium text-slate-100 uppercase tracking-tight">Home & Office Internet</h3>
           <p className="text-[10px] text-slate-400 font-medium">Fibre, WiMAX, and Satellite ISP plans</p>
         </div>
         
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t("common.sortBy")}</span>
+          <span className="text-[10px] font-medium text-slate-500 uppercase tracking-widest">{t("common.sortBy")}</span>
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-xl border border-white/10 bg-slate-800 text-[11px] font-bold text-slate-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/50 appearance-none cursor-pointer hover:bg-slate-700 transition-all shadow-xl"
+            className="rounded-xl border border-white/10 bg-slate-800 text-[11px] font-medium text-slate-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/50 appearance-none cursor-pointer hover:bg-slate-700 transition-all shadow-xl"
             title="Sort by"
           >
             <option value="price">{t("telecom.sort.price")}</option>
@@ -68,7 +68,7 @@ export function TelecomInternet({ location = "All Locations" }: TelecomInternetP
           <div className="bg-slate-800/50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
             <Wifi className="w-10 h-10 text-slate-600" />
           </div>
-          <h3 className="text-xl font-bold text-slate-200 mb-2">
+          <h3 className="text-xl font-medium text-slate-200 mb-2">
             No ISP plans found for {location}
           </h3>
           <p className="text-slate-400 mb-8 max-w-sm mx-auto text-sm leading-relaxed">
@@ -94,42 +94,42 @@ export function TelecomInternet({ location = "All Locations" }: TelecomInternetP
                 {/* Status Badges */}
                 <div className="flex items-center gap-2 mb-4">
                   {isFibre && (
-                    <span className="flex items-center gap-1 bg-teal-500/20 text-teal-400 text-[9px] font-black px-2 py-0.5 rounded-full border border-teal-500/30 uppercase tracking-widest">
+                    <span className="flex items-center gap-1 bg-teal-500/20 text-teal-400 text-[9px] font-medium px-2 py-0.5 rounded-full border border-teal-500/30 uppercase tracking-widest">
                       <Zap size={10} className="fill-current" /> High Speed Fibre
                     </span>
                   )}
                   {isUnlimited && (
-                    <span className="flex items-center gap-1 bg-purple-500/20 text-purple-400 text-[9px] font-black px-2 py-0.5 rounded-full border border-purple-500/30 uppercase tracking-widest">
+                    <span className="flex items-center gap-1 bg-purple-500/20 text-purple-400 text-[9px] font-medium px-2 py-0.5 rounded-full border border-purple-500/30 uppercase tracking-widest">
                       <ShieldCheck size={10} /> Unlimited
                     </span>
                   )}
                 </div>
 
                 <div className="mb-2">
-                  <h4 className="text-lg font-black text-white group-hover:text-teal-400 transition-colors leading-tight">{b.name}</h4>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter mt-1">{b.providerName}</p>
+                  <h4 className="text-lg font-medium text-white group-hover:text-teal-400 transition-colors leading-tight">{b.name}</h4>
+                  <p className="text-xs font-medium text-slate-400 uppercase tracking-tighter mt-1">{b.providerName}</p>
                 </div>
 
                 <div className="my-6 space-y-4">
                   <div className="flex items-end justify-between border-b border-white/5 pb-4">
                     <div className="flex flex-col">
-                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none mb-1">Monthly Price</span>
-                      <span className="text-2xl font-black text-white leading-none">${b.price.toFixed(2)}</span>
+                      <span className="text-[10px] text-slate-500 font-medium uppercase tracking-widest leading-none mb-1">Monthly Price</span>
+                      <span className="text-2xl font-medium text-white leading-none">${b.price.toFixed(2)}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mb-1">Speed Class</span>
-                      <span className="text-sm font-bold text-teal-400">{b.speedClass}</span>
+                      <span className="text-[10px] text-slate-500 font-medium uppercase tracking-widest block mb-1">Speed Class</span>
+                      <span className="text-sm font-medium text-teal-400">{b.speedClass}</span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-white/5 rounded-2xl p-3 border border-white/5">
-                      <span className="text-[9px] text-slate-500 font-black uppercase tracking-tight block mb-1">Data Allowance</span>
-                      <span className="text-sm font-bold text-slate-200">{b.dataGB >= 1000 ? "Unlimited" : `${b.dataGB} GB`}</span>
+                      <span className="text-[9px] text-slate-500 font-medium uppercase tracking-tight block mb-1">Data Allowance</span>
+                      <span className="text-sm font-medium text-slate-200">{b.dataGB >= 1000 ? "Unlimited" : `${b.dataGB} GB`}</span>
                     </div>
                     <div className="bg-white/5 rounded-2xl p-3 border border-white/5">
-                      <span className="text-[9px] text-slate-500 font-black uppercase tracking-tight block mb-1">Cost / GB</span>
-                      <span className="text-sm font-bold text-slate-200">${b.costPerGB.toFixed(2)}</span>
+                      <span className="text-[9px] text-slate-500 font-medium uppercase tracking-tight block mb-1">Cost / GB</span>
+                      <span className="text-sm font-medium text-slate-200">${b.costPerGB.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export function TelecomInternet({ location = "All Locations" }: TelecomInternetP
                   <button
                     onClick={() => addToCompareTray("telecom", b.id, "internet")}
                     className={cn(
-                      "col-span-4 h-11 rounded-xl font-black text-[11px] uppercase tracking-widest transition-all duration-300",
+                      "col-span-4 h-11 rounded-xl font-medium text-[11px] uppercase tracking-widest transition-all duration-300",
                       inTray 
                         ? "bg-teal-600/20 text-teal-400 border border-teal-500/30" 
                         : "bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:bg-teal-500 hover:shadow-teal-500/40"
@@ -170,3 +170,4 @@ export function TelecomInternet({ location = "All Locations" }: TelecomInternetP
     </div>
   )
 }
+

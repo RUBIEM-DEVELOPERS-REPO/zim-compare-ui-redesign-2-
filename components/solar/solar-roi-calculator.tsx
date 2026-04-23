@@ -29,14 +29,14 @@ export function SolarRoiCalculator() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                 <div className="flex items-center gap-2 mb-1">
                     <Calculator className="w-4 h-4 text-primary" />
-                    <p className="text-sm font-semibold text-foreground">Solar ROI Calculator</p>
+                    <p className="text-sm font-medium text-foreground">Solar ROI Calculator</p>
                 </div>
                 <p className="text-xs text-muted-foreground">Estimate your solar system payback period and savings based on your usage.</p>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
                 <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-                    <h3 className="text-sm font-semibold text-foreground">System Parameters</h3>
+                    <h3 className="text-sm font-medium text-foreground">System Parameters</h3>
 
                     <div>
                         <label className="text-xs text-muted-foreground mb-1.5 block">System Size (kW)</label>
@@ -50,7 +50,7 @@ export function SolarRoiCalculator() {
                                 onChange={e => setSystemKW(parseFloat(e.target.value))}
                                 className="flex-1 accent-primary"
                             />
-                            <span className="text-sm font-bold text-foreground w-12 text-right">{systemKW}kW</span>
+                            <span className="text-sm font-medium text-foreground w-12 text-right">{systemKW}kW</span>
                         </div>
                     </div>
 
@@ -76,7 +76,7 @@ export function SolarRoiCalculator() {
                                 onChange={e => setElectricityCost(parseFloat(e.target.value))}
                                 className="flex-1 accent-primary"
                             />
-                            <span className="text-sm font-bold text-foreground w-16 text-right">${electricityCost}/kWh</span>
+                            <span className="text-sm font-medium text-foreground w-16 text-right">${electricityCost}/kWh</span>
                         </div>
                     </div>
 
@@ -92,20 +92,20 @@ export function SolarRoiCalculator() {
                                 onChange={e => setSunHours(parseFloat(e.target.value))}
                                 className="flex-1 accent-primary"
                             />
-                            <span className="text-sm font-bold text-foreground w-12 text-right">{sunHours}h</span>
+                            <span className="text-sm font-medium text-foreground w-12 text-right">{sunHours}h</span>
                         </div>
                     </div>
 
                     <button
                         onClick={calculate}
-                        className="w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors"
+                        className="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                     >
                         Calculate ROI
                     </button>
                 </div>
 
                 <div className="rounded-xl border border-border bg-card p-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-4">Results</h3>
+                    <h3 className="text-sm font-medium text-foreground mb-4">Results</h3>
                     {monthlySavings === null ? (
                         <div className="flex flex-col items-center justify-center h-48 text-center">
                             <Calculator className="w-12 h-12 text-muted-foreground mb-3" />
@@ -118,7 +118,7 @@ export function SolarRoiCalculator() {
                                     <DollarSign className="w-4 h-4 text-emerald-500" />
                                     <p className="text-xs text-muted-foreground">Monthly Savings</p>
                                 </div>
-                                <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">${monthlySavings}</p>
+                                <p className="text-3xl font-medium text-emerald-600 dark:text-emerald-400">${monthlySavings}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
@@ -127,7 +127,7 @@ export function SolarRoiCalculator() {
                                         <TrendingUp className="w-4 h-4 text-primary" />
                                         <p className="text-xs text-muted-foreground">Payback Period</p>
                                     </div>
-                                    <p className="text-xl font-bold text-foreground">{paybackMonths} months</p>
+                                    <p className="text-xl font-medium text-foreground">{paybackMonths} months</p>
                                     <p className="text-xs text-muted-foreground">{(paybackMonths! / 12).toFixed(1)} years</p>
                                 </div>
                                 <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4">
@@ -135,7 +135,7 @@ export function SolarRoiCalculator() {
                                         <Zap className="w-4 h-4 text-amber-500" />
                                         <p className="text-xs text-muted-foreground">10-Year Net Savings</p>
                                     </div>
-                                    <p className="text-xl font-bold text-foreground">${tenYearSavings?.toLocaleString()}</p>
+                                    <p className="text-xl font-medium text-foreground">${tenYearSavings?.toLocaleString()}</p>
                                 </div>
                             </div>
 
@@ -154,3 +154,4 @@ export function SolarRoiCalculator() {
         </div>
     )
 }
+

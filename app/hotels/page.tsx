@@ -27,7 +27,7 @@ export default function HotelsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-xl font-semibold text-foreground">Hotels & Lodges</h1>
+                <h1 className="text-xl font-medium text-foreground">Hotels & Lodges</h1>
                 <p className="text-sm text-muted-foreground">Compare Zimbabwe hotels, lodges, and accommodation deals</p>
             </div>
 
@@ -49,3 +49,4 @@ export default function HotelsPage() {
         </div>
     )
 }
+

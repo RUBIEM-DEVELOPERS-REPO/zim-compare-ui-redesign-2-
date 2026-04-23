@@ -20,10 +20,12 @@ import {
     Clock,
     Smartphone,
     Phone,
-    MessageSquare
+    MessageSquare,
+    X
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
 
 function TelecomCompareContent() {
     const searchParams = useSearchParams()
@@ -60,7 +62,7 @@ function TelecomCompareContent() {
                 </p>
                 <Link
                     href="/telecom"
-                    className="bg-teal-600 text-white px-6 py-2.5 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2"
+                    className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2"
                 >
                     <ArrowLeft size={16} />
                     Go back to Telecoms
@@ -183,44 +185,44 @@ function TelecomCompareContent() {
                         <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                         Back to list
                     </button>
-                    <h1 className="text-3xl font-bold text-foreground capitalize">
-                        {subcategory} Comparison
+                    <h1 className="text-5xl font-display font-black text-foreground capitalize tracking-tight mb-2">
+                        {subcategory} Intelligence
                     </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Comparing {compareItems.length} items side-by-side
+                    <p className="text-muted-foreground mt-2 font-sans opacity-70">
+                        Comparing {compareItems.length} neural nodes side-by-side
                     </p>
                 </div>
                 <button
                     onClick={handleSave}
-                    className="bg-teal-600/10 text-teal-700 hover:bg-teal-600/20 px-5 py-2.5 rounded-xl text-sm font-bold transition-all border border-teal-600/20"
+                    className="bg-primary text-primary-foreground hover:scale-110 px-8 py-3 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-2xl teal-glow floating-hover"
                 >
-                    Save this comparison
+                    Save Comparison Cache
                 </button>
             </div>
 
             {/* Comparison Table */}
-            <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-xl shadow-teal-500/5">
+            <div className="overflow-x-auto glass-floating border-border/50 shadow-2xl teal-glow">
                 <table className="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                         <tr className="border-b border-border bg-muted/20">
                             <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted-foreground w-1/4">Metric</th>
                             {compareItems.map((item: any) => (
-                                <th key={item.id} className="p-6">
+                                <th key={item.id} className="p-8">
                                     <div className="flex flex-col">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-[10px] font-bold text-teal-600 uppercase tracking-tighter">{item.providerName || item.name}</span>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{item.providerName || item.name}</span>
                                             <button
                                                 onClick={() => {
                                                     const newIds = ids.filter(i => i !== item.id)
                                                     router.push(`?ids=${newIds.join(",")}`)
                                                 }}
-                                                className="text-muted-foreground hover:text-destructive transition-colors"
+                                                className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all"
                                                 title="Remove"
                                             >
-                                                <Info size={14} className="rotate-45" />
+                                                <X size={14} />
                                             </button>
                                         </div>
-                                        <span className="text-base font-bold text-foreground">{item.name}</span>
+                                        <span className="text-xl font-display font-black text-foreground">{item.name}</span>
                                     </div>
                                 </th>
                             ))}
@@ -303,39 +305,39 @@ function TelecomCompareContent() {
 
             {/* AI Recommendations Panel */}
             <div className="space-y-6">
-                <div className="flex items-center gap-2">
-                    <div className="p-2 bg-teal-600/10 rounded-lg text-teal-600">
-                        <TrendingUp size={24} />
+                <div className="flex items-center gap-4 container-breathable mb-10">
+                    <div className="p-3 bg-primary/10 rounded-2xl text-primary teal-glow">
+                        <TrendingUp size={32} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold">AI Recommendations</h2>
-                        <p className="text-sm text-muted-foreground">Smart choice based on usage patterns</p>
+                        <h2 className="text-3xl font-display font-black uppercase tracking-tight">AI Recommendations</h2>
+                        <p className="text-sm text-muted-foreground font-sans mt-1">Smart choice based on usage patterns</p>
                     </div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Primary */}
-                    <div className="bg-gradient-to-br from-teal-500/10 to-background border border-teal-500/20 rounded-2xl p-6 shadow-xl shadow-teal-500/5 relative overflow-hidden group hover:scale-[1.02] transition-transform">
-                        <div className="absolute top-0 right-0 p-4 text-teal-500/10 rotate-12 group-hover:rotate-0 transition-transform">
-                            <Star size={64} />
+                    <div className="glass-floating p-8 relative overflow-hidden group hover:scale-[1.05] transition-all duration-500 teal-glow border-primary/20 bg-primary/5">
+                        <div className="absolute top-0 right-0 p-6 text-primary/10 rotate-12 group-hover:rotate-0 transition-all duration-700">
+                            <Star size={80} />
                         </div>
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-700 text-[10px] font-bold uppercase tracking-wider mb-4">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-6">
                             {recommendations.primary.label}
                         </div>
-                        <h3 className="text-lg font-bold mb-1">{recommendations.primary.item.providerName || recommendations.primary.item.name}</h3>
-                        <p className="text-xs text-muted-foreground mb-4">{recommendations.primary.item.name}</p>
-                        <ul className="space-y-2 mb-6">
+                        <h3 className="text-2xl font-display font-black text-foreground mb-1">{recommendations.primary.item.providerName || recommendations.primary.item.name}</h3>
+                        <p className="text-xs text-muted-foreground mb-6 font-bold uppercase tracking-widest">{recommendations.primary.item.name}</p>
+                        <ul className="space-y-4 mb-8">
                             {recommendations.primary.reasoning.map((r, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/80">
-                                    <CheckCircle2 size={12} className="text-teal-600 mt-0.5" />
+                                <li key={i} className="flex items-start gap-3 text-sm text-foreground/80 font-medium">
+                                    <CheckCircle2 size={16} className="text-primary mt-0.5 shrink-0" />
                                     {r}
                                 </li>
                             ))}
                         </ul>
-                        <p className="text-[10px] text-teal-700 font-bold flex items-center gap-1 border-t border-teal-500/10 pt-4">
-                            <Zap size={12} />
-                            Good for: {recommendations.primary.goodFor}
-                        </p>
+                        <div className="text-[10px] text-primary font-black uppercase tracking-widest flex items-center gap-2 border-t border-border/50 pt-6">
+                            <Zap size={14} className="teal-glow" />
+                            Efficiency: {recommendations.primary.goodFor}
+                        </div>
                     </div>
 
                     {/* Secondary */}
@@ -343,7 +345,7 @@ function TelecomCompareContent() {
                         <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-4">
                             {recommendations.secondary.label}
                         </div>
-                        <h3 className="text-lg font-bold mb-1">{recommendations.secondary.item.providerName || recommendations.secondary.item.name}</h3>
+                        <h3 className="text-lg font-bold text-foreground mb-1">{recommendations.secondary.item.providerName || recommendations.secondary.item.name}</h3>
                         <p className="text-xs text-muted-foreground mb-4">{recommendations.secondary.item.name}</p>
                         <ul className="space-y-2 mb-6">
                             {recommendations.secondary.reasoning.map((r, i) => (
@@ -355,21 +357,35 @@ function TelecomCompareContent() {
                         </ul>
                     </div>
 
-                    {/* Tertiary */}
-                    <div className="bg-background border border-border rounded-2xl p-6 shadow-lg shadow-black/5 hover:border-orange-500/30 transition-all group">
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 text-[10px] font-bold uppercase tracking-wider mb-4">
-                            {recommendations.tertiary.label}
+                    {/* Tertiary / Switch & Save Simulator */}
+                    <SwitchSaveSimulator
+                        category="telecom"
+                        current={compareItems[0]}
+                        recommended={recommendations.primary.item}
+                    />
+
+                    {/* Get Plan */}
+                    <div className="glass-floating p-8 shadow-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-500 group relative overflow-hidden flex flex-col teal-glow">
+                        <div className="absolute -bottom-4 -right-4 p-6 text-primary/10 group-hover:scale-110 transition-transform duration-700">
+                             <Zap size={100} />
                         </div>
-                        <h3 className="text-lg font-bold mb-1">{recommendations.tertiary.item.providerName || recommendations.tertiary.item.name}</h3>
-                        <p className="text-xs text-muted-foreground mb-4">{recommendations.tertiary.item.name}</p>
-                        <ul className="space-y-2 mb-6">
-                            {recommendations.tertiary.reasoning.map((r, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/80">
-                                    <CheckCircle2 size={12} className="text-orange-500 mt-0.5" />
-                                    {r}
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-lg">
+                            Instant Action
+                        </div>
+                        <h3 className="text-2xl font-display font-black text-foreground uppercase tracking-tight leading-none mb-1">Get Plan</h3>
+                        <p className="text-[11px] font-black text-primary uppercase tracking-[0.1em] mb-8 opacity-80 leading-tight">
+                            {recommendations.primary.item.providerName || recommendations.primary.item.name}: {recommendations.primary.item.name}
+                        </p>
+                        
+                        <div className="flex-1 space-y-4 mb-10">
+                            <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+                                Deploy this neural configuration immediately. Optimized for {recommendations.primary.goodFor.toLowerCase()} based on selection parameters.
+                            </p>
+                        </div>
+
+                        <button className="w-full bg-primary py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3 relative z-10">
+                            Buy Bundle / Get Plan
+                        </button>
                     </div>
                 </div>
             </div>

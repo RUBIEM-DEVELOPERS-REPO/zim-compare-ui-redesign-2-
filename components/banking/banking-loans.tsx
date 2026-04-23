@@ -46,7 +46,7 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
             key={t.key}
             onClick={() => setSub(t.key)}
             className={cn(
-              "glass-tab-base text-[10px] font-bold uppercase tracking-wider h-10 w-full flex items-center justify-center",
+              "glass-tab-base text-[10px] font-medium uppercase tracking-wider h-10 w-full flex items-center justify-center",
               sub === t.key ? "glass-tab-active" : "text-muted-foreground"
             )}
           >
@@ -77,7 +77,7 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
               )}
 
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-semibold text-foreground">{l.name}</p>
+                <p className="text-sm font-medium text-foreground">{l.name}</p>
               </div>
               <p className="text-xs text-muted-foreground mb-3">{l.bankName}</p>
 
@@ -155,7 +155,7 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">No {sub} loans found for {location}</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">No {sub} loans found for {location}</h3>
             <p className="text-muted-foreground mb-6 max-w-xs mx-auto">None of the banks offering {sub} loans are currently active in this location.</p>
           </div>
         )}
@@ -164,3 +164,4 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
     </div>
   )
 }
+

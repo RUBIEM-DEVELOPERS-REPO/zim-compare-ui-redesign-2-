@@ -5,7 +5,7 @@ import React from "react"
 import { useState } from "react"
 import { useAppStore } from "@/lib/store"
 import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { cn, formatDate, formatDateTime } from "@/lib/utils"
 import { banks } from "@/lib/mock/banks"
 import { telecomProviders } from "@/lib/mock/telecoms"
 import { insuranceProviders } from "@/lib/mock/insurance"
@@ -31,7 +31,7 @@ export default function AdminPage() {
   if (role !== "admin") {
     return (
       <div className="max-w-lg mx-auto mt-20 text-center space-y-4">
-        <h1 className="text-lg font-semibold text-foreground">Admin Access Required</h1>
+        <h1 className="text-lg font-medium text-foreground">Admin Access Required</h1>
         <p className="text-sm text-muted-foreground">Switch to admin role using the role switcher in the top navigation to access this page.</p>
         <button
           onClick={() => router.push("/")}
@@ -43,6 +43,7 @@ export default function AdminPage() {
     )
   }
 
+<<<<<<< Updated upstream
   async function handleUpload() {
     try {
       const res = await apiPost('/admin/upload', { category: uploadCategory })
@@ -59,6 +60,16 @@ export default function AdminPage() {
     } catch (e: any) {
       alert(e.message || "Upload failed")
     }
+=======
+  function handleUpload() {
+    addUploadLog({
+      id: Date.now().toString(),
+      category: uploadCategory,
+      uploadedBy: "admin@fintech.co.zw",
+      uploadedAt: new Date().toISOString(),
+      recordCount: Math.floor(Math.random() * 50) + 10,
+    })
+>>>>>>> Stashed changes
   }
 
   function handleCreateAlert(e: React.FormEvent) {
@@ -143,42 +154,43 @@ export default function AdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Admin Dashboard</h1>
+        <h1 className="text-xl font-medium text-foreground">Admin Dashboard</h1>
         <p className="text-sm text-muted-foreground">Manage pricing data, alerts, and platform content</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Banks</p>
-          <p className="text-2xl font-semibold text-foreground">{banks.length}</p>
+          <p className="text-2xl font-medium text-foreground">{banks.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Telecoms</p>
-          <p className="text-2xl font-semibold text-foreground">{telecomProviders.length}</p>
+          <p className="text-2xl font-medium text-foreground">{telecomProviders.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Schools</p>
-          <p className="text-2xl font-semibold text-foreground">{schools.length}</p>
+          <p className="text-2xl font-medium text-foreground">{schools.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Universities</p>
-          <p className="text-2xl font-semibold text-foreground">{universities.length}</p>
+          <p className="text-2xl font-medium text-foreground">{universities.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Insurance</p>
-          <p className="text-2xl font-semibold text-foreground">{insuranceProviders.length}</p>
+          <p className="text-2xl font-medium text-foreground">{insuranceProviders.length}</p>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Upload Pricing Data */}
         <div className="rounded-xl border border-border bg-card p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-3">Upload Pricing Snapshot</h3>
+          <h3 className="text-sm font-medium text-foreground mb-3">Upload Pricing Snapshot</h3>
           <p className="text-xs text-muted-foreground mb-4">Simulate uploading a new pricing data batch for a category.</p>
           <div className="flex gap-2 mb-3">
             <select
               value={uploadCategory}
               onChange={(e) => setUploadCategory(e.target.value)}
+              aria-label="Select category to upload pricing snapshot"
               className="flex-1 rounded-lg border border-border bg-secondary text-xs text-foreground px-2 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="banking">Banking</option>
@@ -201,7 +213,7 @@ export default function AdminPage() {
                 <div key={log.id} className="flex items-center justify-between text-xs rounded-lg border border-border bg-secondary/30 px-3 py-2">
                   <span className="text-foreground capitalize">{log.category}</span>
                   <span className="text-muted-foreground">{log.recordCount} records</span>
-                  <span className="text-muted-foreground">{new Date(log.uploadedAt).toLocaleString()}</span>
+                  <span className="text-muted-foreground">{formatDateTime(log.uploadedAt)}</span>
                 </div>
               ))}
             </div>
@@ -210,13 +222,14 @@ export default function AdminPage() {
 
         {/* Create Alert */}
         <div className="rounded-xl border border-border bg-card p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-3">Create Alert</h3>
+          <h3 className="text-sm font-medium text-foreground mb-3">Create Alert</h3>
           <p className="text-xs text-muted-foreground mb-4">Send a notification to all users about pricing changes.</p>
           <form onSubmit={handleCreateAlert} className="space-y-3">
             <div className="flex gap-2">
               <select
                 value={alertCategory}
                 onChange={(e) => setAlertCategory(e.target.value)}
+                aria-label="Select category for alert"
                 className="rounded-lg border border-border bg-secondary text-xs text-foreground px-2 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="banking">Banking</option>
@@ -228,6 +241,7 @@ export default function AdminPage() {
               <select
                 value={alertType}
                 onChange={(e) => setAlertType(e.target.value)}
+                aria-label="Select alert type"
                 className="rounded-lg border border-border bg-secondary text-xs text-foreground px-2 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="price_drop">Price Drop</option>
@@ -256,7 +270,7 @@ export default function AdminPage() {
 
       {/* Active Alerts */}
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">Active Alerts ({alerts.length})</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">Active Alerts ({alerts.length})</h3>
         <div className="space-y-2">
           {alerts.map((a) => (
             <div key={a.id} className={cn(
@@ -275,7 +289,7 @@ export default function AdminPage() {
                 </span>
                 <span className="text-foreground">{a.message}</span>
               </div>
-              <span className="text-muted-foreground shrink-0 ml-2">{new Date(a.createdAt).toLocaleDateString()}</span>
+              <span className="text-muted-foreground shrink-0 ml-2">{formatDate(a.createdAt)}</span>
             </div>
           ))}
         </div>
@@ -364,3 +378,4 @@ export default function AdminPage() {
     </div>
   )
 }
+

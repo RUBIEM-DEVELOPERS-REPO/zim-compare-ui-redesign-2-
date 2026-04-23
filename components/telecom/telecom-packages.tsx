@@ -1,8 +1,12 @@
 "use client"
 
 import { Disclaimer } from "@/components/disclaimer"
+<<<<<<< Updated upstream
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
+=======
+import { cn, formatDate } from "@/lib/utils"
+>>>>>>> Stashed changes
 import { X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 <<<<<<< Updated upstream
@@ -58,7 +62,7 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
     <div className="space-y-6">
       <TelecomCompareBar />
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.activePromos", { location: displayLocation })}</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">{t("telecom.activePromos", { location: displayLocation })}</h3>
         {filteredPromos.length === 0 ? (
           <div className="glass-panel border-dashed p-8 text-center">
             <p className="text-sm text-muted-foreground">{t("telecom.noPromosFound", { location: displayLocation })}</p>
@@ -68,22 +72,19 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
             {filteredPromos.map((p) => (
               <div
                 key={p.name}
-                className={cn(
-                  "glass-card bg-teal-50/10 border-teal-200/20 p-5 transition-all duration-300 relative group h-full",
-                  "hover:border-primary/40"
-                )}
+                className="glass-floating p-6 transition-all duration-500 relative group overflow-hidden floating-hover border-white/5 bg-primary/5 teal-glow"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-bold text-foreground leading-tight">{p.name}</p>
-                  <div className="bg-teal-600 text-white px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
-                    Promo
+                <div className="flex items-center justify-between mb-4 relative z-10">
+                  <p className="text-lg font-display font-medium text-white leading-tight group-hover:text-primary transition-colors uppercase tracking-tight">{p.name}</p>
+                  <div className="bg-primary text-primary-foreground px-3 py-1 rounded-xl text-[9px] font-medium uppercase tracking-[0.2em] shadow-lg teal-glow">
+                    Signal Promo
                   </div>
                 </div>
-                <p className="text-[11px] font-bold text-teal-700/70 mb-3 uppercase tracking-wider">{p.provider}</p>
-                <p className="text-xs text-foreground/80 mb-4 font-medium leading-relaxed">{p.detail}</p>
-                <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-bold">
-                  <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                  {t("telecom.validUntil", { date: new Date(p.validUntil).toLocaleDateString() })}
+                <p className="text-[10px] font-medium text-primary/80 mb-4 uppercase tracking-[0.2em] opacity-80">{p.provider}</p>
+                <p className="text-[11px] text-muted-foreground mb-6 font-sans leading-relaxed uppercase tracking-widest opacity-80">{p.detail}</p>
+                <div className="flex items-center gap-2 text-[9px] text-muted-foreground font-medium uppercase tracking-widest border-t border-white/10 pt-4 mt-auto">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(20,184,166,0.5)]" />
+                  {t("telecom.validUntil", { date: formatDate(p.validUntil) })}
                 </div>
               </div>
             ))}
@@ -92,14 +93,19 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
       </section>
 
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3">{t("telecom.bestValueMonthly", { location: displayLocation })}</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3">{t("telecom.bestValueMonthly", { location: displayLocation })}</h3>
         {bestValue.length === 0 ? (
           <div className="glass-panel border-dashed p-12 text-center col-span-full">
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
+<<<<<<< Updated upstream
             <h3 className="text-lg font-bold text-foreground mb-2">No bundles found</h3>
             <p className="text-muted-foreground mb-6 max-w-xs mx-auto">Upload telecom data via the Admin panel to see best value bundles.</p>
+=======
+            <h3 className="text-lg font-medium text-foreground mb-2">{t("telecom.noBundlesFound", { sub: t("telecom.subTabs.monthly"), location: displayLocation })}</h3>
+            <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("telecom.noBundlesDetail", { sub: t("telecom.subTabs.monthly") })}</p>
+>>>>>>> Stashed changes
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -108,11 +114,9 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
               return (
                 <div
                   key={item.provider}
-                  className={cn(
-                    "glass-card p-5 transition-all duration-300 group h-full",
-                    "hover:border-primary/40"
-                  )}
+                  className="glass-floating p-6 transition-all duration-500 group relative overflow-hidden floating-hover border-white/5 bg-white/5"
                 >
+<<<<<<< Updated upstream
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{item.provider}</p>
                   <p className="text-sm font-bold text-foreground mt-1 group-hover:text-teal-600 transition-colors uppercase tracking-tight">{item.bundle.bundle_name}</p>
                   <div className="flex items-center gap-4 mt-4 mb-1">
@@ -123,27 +127,50 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
                     <div className="flex flex-col border-l border-border pl-4">
                       <span className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">{t("telecom.price")}</span>
                       <span className="text-sm font-black text-teal-600">{item.bundle.currency} {item.bundle.price.toFixed(2)}</span>
+=======
+                  <div className="absolute top-0 right-0 p-4 text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                    <CheckCircle2 size={80} />
+                  </div>
+                  <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-2 opacity-60">{item.provider}</p>
+                  <p className="text-lg font-display font-medium text-white mt-1 group-hover:text-primary transition-colors uppercase tracking-tight leading-tight relative z-10">{item.bundle.name}</p>
+                  
+                  <div className="grid grid-cols-2 gap-4 mt-8 mb-6 relative z-10">
+                    <div className="glass-floating bg-white/5 p-3 border-white/10 shadow-inner group-hover:bg-primary/5 transition-colors duration-500">
+                      <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.data")}</span>
+                      <span className="text-sm font-display font-medium text-white tabular-nums">{item.bundle.dataGB}GB</span>
                     </div>
+                    <div className="glass-floating bg-primary/5 p-3 border-primary/20 shadow-inner group-hover:bg-primary/10 transition-colors duration-500 teal-glow">
+                      <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.price")}</span>
+                      <span className="text-sm font-display font-medium text-primary tabular-nums">${item.bundle.price.toFixed(2)}</span>
+>>>>>>> Stashed changes
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-4 border-t border-white/10 relative z-10 mt-auto">
+                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60 italic tabular-nums">${item.bundle.costPerGB.toFixed(2)} / GB Signal</p>
                     {(() => {
                       const inTray = compareTray.ids.includes(item.bundle.id)
                       return (
                         <button
                           onClick={() => addToCompareTray("telecom", item.bundle.id, "packages")}
                           className={cn(
-                            "flex items-center justify-center ml-auto p-2 rounded-full transition-colors",
-                            inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
+                            "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xl teal-glow",
+                            inTray ? "bg-primary text-primary-foreground scale-110" : "bg-white/5 border border-white/10 text-muted-foreground hover:bg-primary/20 hover:text-primary"
                           )}
                         >
-                          {inTray ? <CheckCircle2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                          {inTray ? <CheckCircle2 className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
                         </button>
                       )
                     })()}
                   </div>
+<<<<<<< Updated upstream
                   <p className="text-[10px] font-bold text-muted-foreground mt-2 italic">
                     {item.bundle.total_data_mb > 0
                       ? `$${(item.bundle.price / (item.bundle.total_data_mb / 1024)).toFixed(2)} / GB`
                       : "Per bundle"}
                   </p>
+=======
+>>>>>>> Stashed changes
                 </div>
               )
             })}
@@ -154,3 +181,4 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
     </div>
   )
 }
+

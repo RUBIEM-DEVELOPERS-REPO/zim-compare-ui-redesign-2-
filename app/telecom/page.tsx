@@ -16,8 +16,13 @@ import { CategorySelector } from "@/components/category-selector"
 <<<<<<< Updated upstream
 import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
+<<<<<<< Updated upstream
 =======
 import type { TelecomProvider, DataBundle, VoiceRate } from "@prisma/client"
+>>>>>>> Stashed changes
+=======
+import { PageHeader } from "@/components/page-header"
+
 >>>>>>> Stashed changes
 
 const tabs = [
@@ -97,10 +102,11 @@ export default function TelecomPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">Telecom</h1>
-        <p className="text-sm text-muted-foreground">Compare Zimbabwe telecom providers, bundles, and coverage</p>
-      </div>
+      <PageHeader
+        title="Telecom Intelligence"
+        subtitle="Compare Zimbabwe telecom providers, bundles, and coverage with high-fidelity signal analysis."
+      />
+
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <CategorySelector
@@ -136,3 +142,4 @@ export default function TelecomPage() {
     </div>
   )
 }
+

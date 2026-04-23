@@ -13,8 +13,13 @@ import { CategorySelector } from "@/components/category-selector"
 import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { UniversitiesCompareBar } from "@/components/universities/universities-compare-bar"
+<<<<<<< Updated upstream
 =======
 import type { University } from "@/lib/types"
+>>>>>>> Stashed changes
+=======
+import { PageHeader } from "@/components/page-header"
+
 >>>>>>> Stashed changes
 
 const tabs = [
@@ -91,10 +96,11 @@ export default function UniversitiesPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-xl font-semibold text-foreground">Universities</h1>
-                <p className="text-sm text-muted-foreground">Compare Zimbabwe universities and colleges by fees, rankings, facilities and programs</p>
-            </div>
+            <PageHeader
+                title="University Intelligence"
+                subtitle="Compare Zimbabwe universities and colleges by fees, rankings, facilities and programs"
+            />
+
 
             {universities.length === 0 && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
@@ -129,6 +135,7 @@ export default function UniversitiesPage() {
                         {location !== "All Locations" ? (
                             <div
                                 role="button"
+                                aria-label="Clear location filter"
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     setLocation("All Locations")
@@ -188,3 +195,4 @@ export default function UniversitiesPage() {
         </div>
     )
 }
+

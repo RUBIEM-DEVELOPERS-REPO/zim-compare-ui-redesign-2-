@@ -212,7 +212,7 @@ export function CompareBar() {
     >
         <div className="relative">
             <SmartRecommendation />
-            <div className="glass-card !rounded-2xl border-2 border-primary/20 shadow-2xl overflow-hidden shadow-primary/10">
+            <div className="glass-floating border-2 border-primary/20 shadow-2xl overflow-hidden teal-glow">
                 <div
                     onMouseDown={onMouseDown}
                     className="px-4 py-2 flex items-center justify-between border-b border-white/10 bg-white/5 cursor-grab active:cursor-grabbing hover:bg-white/10 transition-colors"
@@ -220,10 +220,10 @@ export function CompareBar() {
                     <div className="flex items-center gap-3">
                         <GripHorizontal size={16} className="text-muted-foreground" />
                         <div className="flex items-center gap-2">
-                            <div className="bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest">
+                            <div className="bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded-lg text-[9px] font-medium uppercase tracking-widest teal-glow">
                                 {compareTray.category}
                             </div>
-                            <span className="text-xs font-bold text-foreground">
+                            <span className="text-xs font-medium text-foreground font-display">
                                 {compareTray.ids.length} items selected
                             </span>
                         </div>
@@ -240,7 +240,7 @@ export function CompareBar() {
                         )}
                         <button
                             onClick={clearCompareTray}
-                            className="text-[9px] uppercase tracking-wider font-black text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1"
+                            className="text-[9px] uppercase tracking-wider font-medium text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1"
                         >
                             <Trash2 size={12} />
                             Clear
@@ -253,22 +253,22 @@ export function CompareBar() {
                         {items.map((item) => (
                             <div
                                 key={item.id}
-                                className="shrink-0 flex items-center gap-2 bg-white/10 border border-white/10 backdrop-blur-sm rounded-xl pl-3 pr-2 py-1.5 group hover:border-primary/50 transition-colors"
+                                className="shrink-0 flex items-center gap-3 bg-white/10 border border-white/10 backdrop-blur-md rounded-[1.25rem] pl-4 pr-2 py-2 group hover:border-primary/50 transition-all duration-300 floating-hover shadow-lg shadow-black/20"
                             >
                                 <div className="flex flex-col">
-                                    <span className="text-[9px] font-black text-primary leading-tight uppercase tracking-tighter truncate max-w-[70px]">
+                                    <span className="text-[10px] font-medium text-primary leading-tight uppercase tracking-widest truncate max-w-[80px]">
                                         {item.provider}
                                     </span>
-                                    <span className="text-[11px] font-bold text-foreground leading-tight truncate max-w-[100px]">
+                                    <span className="text-[12px] font-medium text-foreground leading-tight truncate max-w-[120px] font-display">
                                         {item.name}
                                     </span>
                                 </div>
                                 <button
                                     onClick={() => removeFromCompareTray(item.id)}
-                                    className="p-1 rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all"
+                                    className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all"
                                     title="Remove item"
                                 >
-                                    <X size={12} />
+                                    <X size={14} />
                                 </button>
                             </div>
                         ))}
@@ -278,7 +278,7 @@ export function CompareBar() {
                                 key={i}
                                 className="shrink-0 w-32 border border-dashed border-white/20 rounded-xl flex items-center justify-center bg-white/5"
                             >
-                                <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-50">Slot {items.length + i + 1}</span>
+                                <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-50">Slot {items.length + i + 1}</span>
                             </div>
                         ))}
                     </div>
@@ -288,14 +288,17 @@ export function CompareBar() {
                             onClick={handleCompareClick}
                             disabled={compareTray.ids.length < 2}
                             className={cn(
-                                "rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg",
+                                "rounded-[1.25rem] px-8 py-3 text-sm font-medium uppercase tracking-widest flex items-center gap-2 transition-all duration-500 shadow-2xl overflow-hidden relative group",
                                 compareTray.ids.length >= 2
-                                    ? "bg-primary text-primary-foreground hover:scale-105 shadow-primary/20"
+                                    ? "bg-primary text-primary-foreground hover:scale-110 teal-glow"
                                     : "bg-secondary text-muted-foreground cursor-not-allowed opacity-50"
                             )}
                         >
-                            Compare
-                            <ArrowRight size={14} />
+                            <span className="relative z-10">Compare</span>
+                            <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                            {compareTray.ids.length >= 2 && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]" />
+                            )}
                         </button>
                     </div>
                 </div>
@@ -304,3 +307,4 @@ export function CompareBar() {
     </div>
 )
 }
+

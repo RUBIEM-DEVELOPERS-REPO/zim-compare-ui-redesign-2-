@@ -47,7 +47,7 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
               key={t_item}
               onClick={() => setTypeFilter(t_item)}
               className={cn(
-                "glass-tab-base text-[10px] font-black uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-300",
+                "glass-tab-base text-[10px] font-medium uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-300",
                 typeFilter === t_item
                   ? "glass-tab-active"
                   : "text-muted-foreground hover:text-foreground"
@@ -62,7 +62,7 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="glass-input text-[10px] font-black uppercase tracking-widest px-6 py-2.5 pr-10 appearance-none cursor-pointer focus:border-primary/50"
+            className="glass-input text-[10px] font-medium uppercase tracking-widest px-6 py-2.5 pr-10 appearance-none cursor-pointer focus:border-primary/50"
             title="Sort by"
           >
             <option value="totalAnnualCost">{t("schools.sort.costLowToHigh")}</option>
@@ -80,7 +80,7 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">
+          <h3 className="text-lg font-medium text-foreground mb-2">
             {location !== "All Locations"
               ? typeFilter === "boarding"
                 ? t("schools.noBoardingSchoolsFound")
@@ -94,14 +94,14 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
           <table className="w-full text-[11px]">
             <thead>
               <tr className="border-b border-white/10 bg-muted/40 uppercase tracking-[0.2em]">
-                <th className="text-left px-4 py-4 font-black text-muted-foreground leading-none">Chikoro</th>
-                <th className="text-left px-4 py-4 font-black text-muted-foreground leading-none">{t("common.category")}</th>
-                <th className="text-right px-4 py-4 font-black text-muted-foreground leading-none">{t("schools.tuitionPerTerm")}</th>
-                <th className="text-right px-4 py-4 font-black text-muted-foreground leading-none">{t("schools.boardingPerTerm")}</th>
-                <th className="text-right px-4 py-4 font-black text-muted-foreground leading-none">{t("schools.annualTotal")}</th>
-                <th className="text-right px-4 py-4 font-black text-muted-foreground leading-none">{t("schools.passRate")}</th>
-                <th className="text-center px-4 py-4 font-black text-muted-foreground leading-none">{t("schools.ratio")}</th>
-                <th className="text-center px-4 py-4 font-black text-muted-foreground leading-none">{t("schools.compare")}</th>
+                <th className="text-left px-4 py-4 font-medium text-muted-foreground leading-none">Chikoro</th>
+                <th className="text-left px-4 py-4 font-medium text-muted-foreground leading-none">{t("common.category")}</th>
+                <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.tuitionPerTerm")}</th>
+                <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.boardingPerTerm")}</th>
+                <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.annualTotal")}</th>
+                <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.passRate")}</th>
+                <th className="text-center px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.ratio")}</th>
+                <th className="text-center px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.compare")}</th>
               </tr>
             </thead>
             <tbody>
@@ -109,21 +109,21 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
                 const inTray = compareTray.ids.includes(s.id)
                 return (
                   <tr key={s.id} className="border-b border-white/5 last:border-0 hover:bg-primary/5 transition-colors group">
-                    <td className="px-4 py-4 text-foreground font-bold tracking-tight">{s.name}</td>
+                    <td className="px-4 py-4 text-foreground font-medium tracking-tight">{s.name}</td>
                     <td className="px-4 py-4">
-                      <span className="text-[9px] font-black uppercase tracking-widest bg-muted/30 px-2 py-1 rounded-lg border border-white/5">{t(`schools.subTabs.${s.type}`)}</span>
+                      <span className="text-[9px] font-medium uppercase tracking-widest bg-muted/30 px-2 py-1 rounded-lg border border-white/5">{t(`schools.subTabs.${s.type}`)}</span>
                     </td>
                     <td className="px-4 py-4 text-right tabular-nums text-foreground font-medium">${s.tuitionPerTerm.toLocaleString()}</td>
                     <td className="px-4 py-4 text-right tabular-nums text-foreground">{s.boardingFeePerTerm ? `$${s.boardingFeePerTerm.toLocaleString()}` : <span className="opacity-20">--</span>}</td>
-                    <td className="px-4 py-4 text-right tabular-nums text-primary font-black uppercase tracking-widest text-[12px]">${s.totalAnnualCost.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right tabular-nums font-bold text-foreground">{s.passRate}%</td>
-                    <td className="px-4 py-4 text-center tabular-nums font-bold text-muted-foreground">1:{s.studentTeacherRatio}</td>
+                    <td className="px-4 py-4 text-right tabular-nums text-primary font-medium uppercase tracking-widest text-[12px]">${s.totalAnnualCost.toLocaleString()}</td>
+                    <td className="px-4 py-4 text-right tabular-nums font-medium text-foreground">{s.passRate}%</td>
+                    <td className="px-4 py-4 text-center tabular-nums font-medium text-muted-foreground">1:{s.studentTeacherRatio}</td>
                     <td className="px-4 py-4 text-center">
                       <button
                         onClick={() => addToCompareTray("schools", s.id, "fees")}
                         disabled={inTray}
                         className={cn(
-                          "rounded-xl px-5 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-lg active:scale-95",
+                          "rounded-xl px-5 py-2 text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-300 shadow-lg active:scale-95",
                           inTray
                             ? "bg-muted/40 text-muted-foreground border border-white/5 cursor-default opacity-50"
                             : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5"
@@ -143,3 +143,4 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
     </div>
   )
 }
+

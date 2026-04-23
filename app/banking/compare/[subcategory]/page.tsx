@@ -128,53 +128,53 @@ function BankingCompareContent() {
     return (
         <div className="space-y-10 animate-in fade-in duration-700">
             {/* Header section */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
                 <div>
                     <button
                         onClick={() => router.back()}
-                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 group"
+                        className="flex items-center gap-2 text-[10px] font-black text-muted-foreground hover:text-primary uppercase tracking-[0.2em] transition-all mb-6 group"
                     >
-                        <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        Back to list
+                        <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                        Back to Intelligence Index
                     </button>
-                    <h1 className="text-3xl font-bold text-foreground capitalize">
-                        {subcategory} Comparison
+                    <h1 className="text-5xl font-display font-black text-foreground tracking-tighter uppercase leading-tight">
+                        Neural {subcategory} Analysis
                     </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Comparing {compareItems.length} items side-by-side
+                    <p className="text-sm text-muted-foreground mt-2 font-medium font-sans opacity-70">
+                        Synthesizing side-by-side performance metrics for {compareItems.length} institutional entities.
                     </p>
                 </div>
                 <button
                     onClick={handleSave}
-                    className="bg-primary/10 text-primary hover:bg-primary/20 px-5 py-2.5 rounded-xl text-sm font-bold transition-all border border-primary/20"
+                    className="glass-floating px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-all teal-glow active:scale-95"
                 >
-                    Save this comparison
+                    Archive This Logic
                 </button>
             </div>
 
             {/* Comparison Table */}
-            <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-xl shadow-primary/5">
+            <div className="overflow-x-auto glass-floating shadow-2xl teal-glow border-border/50">
                 <table className="w-full text-left border-collapse min-w-[600px]">
                     <thead>
-                        <tr className="border-b border-border bg-muted/20">
-                            <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted-foreground w-1/4">Metric</th>
+                        <tr className="border-b border-border/30 bg-secondary/50">
+                            <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-primary/70 w-1/4">Performance Vector</th>
                             {compareItems.map((item: any) => (
-                                <th key={item.id} className="p-6">
+                                <th key={item.id} className="p-8">
                                     <div className="flex flex-col">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">{item.bankName || item.name}</span>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{item.bankName || item.name}</span>
                                             <button
                                                 onClick={() => {
                                                     const newIds = ids.filter(i => i !== item.id)
                                                     router.push(`?ids=${newIds.join(",")}`)
                                                 }}
-                                                className="text-muted-foreground hover:text-destructive transition-colors"
-                                                title="Remove"
+                                                className="text-muted-foreground hover:text-destructive transition-colors p-1.5 rounded-lg hover:bg-destructive/10"
+                                                title="Remove Entity"
                                             >
                                                 <Info size={14} className="rotate-45" />
                                             </button>
                                         </div>
-                                        <span className="text-base font-bold text-foreground">{item.name}</span>
+                                        <span className="text-xl font-display font-black text-foreground uppercase tracking-tight leading-none">{item.name}</span>
                                     </div>
                                 </th>
                             ))}
@@ -265,32 +265,32 @@ function BankingCompareContent() {
             </div>
 
             {/* AI Recommendations Panel */}
-            <div className="space-y-6">
-                <div className="flex items-center gap-2">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                        <TrendingUp size={24} />
+            <div className="space-y-10">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 glass-floating bg-primary/10 text-primary teal-glow">
+                        <TrendingUp size={28} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold">AI Recommendations</h2>
-                        <p className="text-sm text-muted-foreground">Smart choice based on usage patterns</p>
+                        <h2 className="text-2xl font-display font-black text-foreground uppercase tracking-tight">Neural Recommendations</h2>
+                        <p className="text-sm text-muted-foreground font-medium opacity-60">Probabilistic optimization based on historical usage fingerprints</p>
                     </div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Primary */}
-                    <div className="bg-gradient-to-br from-primary/10 to-background border border-primary/20 rounded-2xl p-6 shadow-xl shadow-primary/5 relative overflow-hidden group hover:scale-[1.02] transition-transform">
-                        <div className="absolute top-0 right-0 p-4 text-primary/10 rotate-12 group-hover:rotate-0 transition-transform">
-                            <Star size={64} />
+                    <div className="glass-floating bg-gradient-to-br from-primary/10 to-transparent border-primary/30 p-8 shadow-2xl teal-glow relative overflow-hidden group hover:scale-[1.03] transition-all duration-500">
+                        <div className="absolute top-0 right-0 p-6 text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                            <Star size={120} />
                         </div>
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider mb-4">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-secondary text-primary-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl">
                             {recommendations.primary.label}
                         </div>
-                        <h3 className="text-lg font-bold mb-1">{recommendations.primary.item.bankName || recommendations.primary.item.name}</h3>
-                        <p className="text-xs text-muted-foreground mb-4">{recommendations.primary.item.name}</p>
-                        <ul className="space-y-2 mb-6">
+                        <h3 className="text-2xl font-display font-black text-foreground uppercase tracking-tight leading-none mb-1">{recommendations.primary.item.bankName || recommendations.primary.item.name}</h3>
+                        <p className="text-[11px] font-black text-primary uppercase tracking-[0.1em] mb-8 opacity-70">{recommendations.primary.item.name}</p>
+                        <ul className="space-y-4 mb-8">
                             {recommendations.primary.reasoning.map((r, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/80">
-                                    <CheckCircle2 size={12} className="text-primary mt-0.5" />
+                                <li key={i} className="flex items-start gap-3 text-xs text-foreground/90 font-medium">
+                                    <CheckCircle2 size={14} className="text-primary mt-0.5 shrink-0" strokeWidth={3} />
                                     {r}
                                 </li>
                             ))}
@@ -298,16 +298,16 @@ function BankingCompareContent() {
                     </div>
 
                     {/* Secondary */}
-                    <div className="bg-background border border-border rounded-2xl p-6 shadow-lg shadow-black/5 hover:border-primary/30 transition-all group">
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-4">
+                    <div className="glass-floating p-8 shadow-xl border-border/50 hover:border-primary/40 transition-all duration-500 group floating-hover">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-secondary text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-6 border border-border/50">
                             {recommendations.secondary.label}
                         </div>
-                        <h3 className="text-lg font-bold mb-1">{recommendations.secondary.item.bankName || recommendations.secondary.item.name}</h3>
-                        <p className="text-xs text-muted-foreground mb-4">{recommendations.secondary.item.name}</p>
-                        <ul className="space-y-2 mb-6">
+                        <h3 className="text-2xl font-display font-black text-foreground uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{recommendations.secondary.item.bankName || recommendations.secondary.item.name}</h3>
+                        <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.1em] mb-8 opacity-60">{recommendations.secondary.item.name}</p>
+                        <ul className="space-y-4 mb-8">
                             {recommendations.secondary.reasoning.map((r, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/80">
-                                    <CheckCircle2 size={12} className="text-blue-500 mt-0.5" />
+                                <li key={i} className="flex items-start gap-3 text-xs text-foreground/80 font-medium">
+                                    <CheckCircle2 size={14} className="text-primary/60 mt-0.5 shrink-0" strokeWidth={3} />
                                     {r}
                                 </li>
                             ))}
@@ -315,20 +315,45 @@ function BankingCompareContent() {
                     </div>
 
                     {/* Tertiary */}
-                    <div className="bg-background border border-border rounded-2xl p-6 shadow-lg shadow-black/5 hover:border-orange-500/30 transition-all group">
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 text-[10px] font-bold uppercase tracking-wider mb-4">
+                    <div className="glass-floating p-8 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-6 border border-white/10">
                             {recommendations.tertiary.label}
                         </div>
-                        <h3 className="text-lg font-bold mb-1">{recommendations.tertiary.item.bankName || recommendations.tertiary.item.name}</h3>
-                        <p className="text-xs text-muted-foreground mb-4">{recommendations.tertiary.item.name}</p>
-                        <ul className="space-y-2 mb-6">
+                        <h3 className="text-2xl font-display font-black text-white uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{recommendations.tertiary.item.bankName || recommendations.tertiary.item.name}</h3>
+                        <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.1em] mb-8 opacity-60">{recommendations.tertiary.item.name}</p>
+                        <ul className="space-y-4 mb-8">
                             {recommendations.tertiary.reasoning.map((r, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/80">
-                                    <CheckCircle2 size={12} className="text-orange-500 mt-0.5" />
+                                <li key={i} className="flex items-start gap-3 text-xs text-foreground/80 font-medium">
+                                    <CheckCircle2 size={14} className="text-primary/60 mt-0.5 shrink-0" strokeWidth={3} />
                                     {r}
                                 </li>
                             ))}
                         </ul>
+                    </div>
+
+                    {/* Apply Now */}
+                    <div className="glass-floating p-8 shadow-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-500 group relative overflow-hidden flex flex-col teal-glow">
+                        <div className="absolute -bottom-4 -right-4 p-6 text-primary/10 group-hover:scale-110 transition-transform duration-700">
+                             <Zap size={140} />
+                        </div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-lg">
+                            Instant Action
+                        </div>
+                        <h3 className="text-2xl font-display font-black text-foreground uppercase tracking-tight leading-none mb-1">Apply Now</h3>
+                        <p className="text-[11px] font-black text-primary uppercase tracking-[0.1em] mb-8 opacity-80">
+                            {recommendations.primary.item.bankName || recommendations.primary.item.name}: {recommendations.primary.item.name}
+                        </p>
+                        
+                        <div className="flex-1 space-y-4 mb-10">
+                            <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+                                Our neural analysis indicates high compatibility. Start your application with {recommendations.primary.item.bankName || recommendations.primary.item.name} immediately to secure current rates.
+                            </p>
+                        </div>
+
+                        <button className="w-full bg-primary py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3 relative z-10">
+                            Start Application
+                            <ArrowLeft size={16} className="rotate-180" strokeWidth={3} />
+                        </button>
                     </div>
                 </div>
             </div>

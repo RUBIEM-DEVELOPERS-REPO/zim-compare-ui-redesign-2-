@@ -62,6 +62,15 @@ const config: Config = {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+      fontFamily: {
+        display: ['var(--font-playfair)', 'serif'],
+        sans: ['var(--font-inter)', 'sans-serif'],
+      },
+      boxShadow: {
+        'anti-gravity': '0 20px 50px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(20, 184, 166, 0.1)',
+        'anti-gravity-hover': '0 30px 60px rgba(0, 0, 0, 0.08), 0 20px 40px rgba(20, 184, 166, 0.15)',
+        'teal-glow': '0 0 20px rgba(20, 184, 166, 0.3)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -88,7 +97,14 @@ const config: Config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'float': 'float 6s ease-in-out infinite',
       },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],

@@ -45,7 +45,11 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
     return (
         <div className="space-y-6">
             <section>
+<<<<<<< Updated upstream
                 <h3 className="text-sm font-semibold text-foreground mb-3">Programmes by Institution</h3>
+=======
+                <h3 className="text-sm font-medium text-foreground mb-3">Programs & Faculties by Institution</h3>
+>>>>>>> Stashed changes
                 <div className="grid gap-4">
                     {filteredUniversities.map((uni) => (
                         <div
@@ -57,6 +61,7 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div>
+<<<<<<< Updated upstream
                                     <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">{uni.university}</h4>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1">
                                         {uni.location}, {uni.provinceArea}
@@ -64,18 +69,26 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
                                 </div>
 <<<<<<< Updated upstream
                                 <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
+=======
+                                    <h4 className="text-sm font-medium text-foreground uppercase tracking-tight">{uni.name}</h4>
+                                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-1">
+                                        {uni.city}, {uni.province}
+                                    </p>
+                                </div>
+                                <span className="text-[9px] font-medium uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
+>>>>>>> Stashed changes
                                     {uni.type.replace("_", " ")}
                                 </span>
                             </div>
 
                             <div className="space-y-3">
                                 <div>
-                                    <p className="text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wide">Faculties ({uni.faculties.length})</p>
+                                    <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Faculties ({uni.faculties.length})</p>
                                     <div className="flex flex-wrap gap-1.5">
                                         {uni.faculties.map((faculty) => (
                                             <span
                                                 key={faculty}
-                                                className="text-[10px] font-bold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-100"
+                                                className="text-[10px] font-medium bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-100"
                                             >
                                                 {faculty}
                                             </span>
@@ -92,7 +105,7 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
                                                     key={program}
                                                     onClick={() => handleCompare(uni.id)}
                                                     className={cn(
-                                                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border",
+                                                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium uppercase tracking-widest transition-all border",
                                                         isSelected
                                                             ? "bg-teal-600 text-white border-teal-600 shadow-lg shadow-teal-600/20"
                                                             : "bg-teal-50 text-teal-700 border-teal-100 hover:bg-teal-100"
@@ -160,7 +173,7 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
                             )}
 
                             {error && compareTray.ids.length >= 3 && (
-                                <div className="mt-3 flex items-center gap-1.5 text-[10px] text-destructive font-bold animate-in fade-in slide-in-from-left-1">
+                                <div className="mt-3 flex items-center gap-1.5 text-[10px] text-destructive font-medium animate-in fade-in slide-in-from-left-1">
                                     <AlertCircle size={12} />
                                     {error}
                                 </div>
@@ -173,3 +186,4 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
         </div>
     )
 }
+

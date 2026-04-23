@@ -79,7 +79,7 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
             key={t.key}
             onClick={() => setSub(t.key)}
             className={cn(
-              "rounded-xl px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition-all duration-300 text-center",
+              "rounded-xl px-4 py-2 text-[10px] font-medium uppercase tracking-wider transition-all duration-300 text-center",
               sub === t.key
                 ? "bg-white/40 dark:bg-white/10 text-foreground shadow-[0_0_15px_rgba(45,212,191,0.5)]"
                 : "hover:bg-white/10 hover:backdrop-blur-2xl hover:brightness-125 hover:-translate-y-[1px] text-muted-foreground"
@@ -113,13 +113,13 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
                   )}>
                     <td className="px-3 py-2 text-foreground font-medium">{f.name}</td>
                     <td className="px-3 py-2 text-foreground">{f.bankName}</td>
-                    <td className="px-3 py-2 text-right font-bold text-foreground">${f.amount.toFixed(2)}</td>
+                    <td className="px-3 py-2 text-right font-medium text-foreground">${f.amount.toFixed(2)}</td>
                     <td className="px-3 py-2 text-muted-foreground">{f.unit}</td>
                     <td className="px-3 py-2 text-right">
                       <button
                         onClick={() => inTray ? removeFromCompareTray(f.id) : addToCompareTray("banking", f.id, "non-interest")}
                         className={cn(
-                          "inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest transition-all",
+                          "inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-medium uppercase tracking-widest transition-all",
                           inTray ? "text-primary/60" : "text-primary hover:bg-primary/10"
                         )}
                       >
@@ -138,14 +138,14 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">No {sub} found for {location}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">No {sub} found for {location}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">There are no {sub} records for banks active in this location.</p>
         </div>
       )}
 
       {/* Visual stacked breakdown */}
       <section>
-        <h3 className="text-sm font-semibold text-foreground mb-3 font-black uppercase tracking-tight">Total Fee Breakdown by Bank</h3>
+        <h3 className="text-sm font-medium text-foreground mb-3 font-medium uppercase tracking-tight">Total Fee Breakdown by Bank</h3>
         <div className="space-y-4" ref={chartRef}>
           {bankBreakdown.map((b) => (
             <div key={b.bank} className="flex items-center gap-3 group chart-row">
@@ -166,7 +166,7 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
                   />
                 ))}
               </div>
-              <span className="text-xs text-foreground font-black w-16 text-right">${b.total.toFixed(2)}</span>
+              <span className="text-xs text-foreground font-medium w-16 text-right">${b.total.toFixed(2)}</span>
             </div>
           ))}
         </div>
@@ -179,7 +179,7 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
           ].map((l) => (
             <div key={l.label} className="flex items-center gap-2">
               <div className={cn("h-3 w-3 rounded-md shadow-sm", l.color)} />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{l.label}</span>
+              <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">{l.label}</span>
             </div>
           ))}
         </div>
@@ -187,7 +187,7 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
 
       {/* Red Flag Warnings */}
       <section className="rounded-2xl border-2 border-amber-500/20 bg-amber-500/5 p-5 shadow-lg shadow-amber-500/5">
-        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-amber-500 mb-4 flex items-center gap-2">
+        <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-amber-500 mb-4 flex items-center gap-2">
           <AlertTriangle className="w-4 h-4" />
           Red Flag Warnings
         </h3>
@@ -210,3 +210,4 @@ export function BankingNonInterest({ location = "All Locations" }: BankingNonInt
     </div>
   )
 }
+

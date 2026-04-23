@@ -32,24 +32,24 @@ export function CategorySelector({
         <div className={cn("flex flex-col sm:flex-row sm:items-center gap-2", className)}>
             <div className="flex items-center gap-1.5 px-1 text-muted-foreground shrink-0">
                 <Filter className="h-3.5 w-3.5 text-primary" />
-                <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider">{label}</span>
             </div>
             <Select value={value} onValueChange={onValueChange}>
-                <SelectTrigger className="h-10 w-full sm:w-[220px] glass-tab-base border-primary/40 text-foreground rounded-xl shadow-lg hover:border-primary transition-all font-semibold text-xs border-2">
+                <SelectTrigger className="h-11 w-full sm:w-[240px] glass-floating border-primary/50 text-foreground rounded-[1.25rem] shadow-2xl hover:border-primary transition-all duration-500 font-medium text-[10px] uppercase tracking-[0.2em] teal-glow floating-hover">
                     <SelectValue placeholder="Select Category">
                         {selectedCategory?.label}
                     </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="rounded-2xl border-white/20 bg-background/60 backdrop-blur-2xl shadow-2xl animate-in fade-in zoom-in-95">
+                <SelectContent className="rounded-[1.5rem] border-white/20 bg-background/40 backdrop-blur-3xl shadow-2xl animate-in fade-in zoom-in-95 duration-500 glass-floating teal-glow">
                     {categories.map((category) => (
                         <SelectItem
                             key={category.key}
                             value={category.key}
                             className={cn(
-                                "rounded-lg text-xs transition-colors m-1",
+                                "rounded-xl text-[10px] font-medium uppercase tracking-widest transition-all duration-300 m-1.5",
                                 value === category.key
-                                    ? "bg-primary text-white focus:bg-primary focus:text-white shadow-lg"
-                                    : "hover:bg-primary/20 text-foreground"
+                                    ? "bg-primary text-primary-foreground focus:bg-primary focus:text-primary-foreground shadow-2xl teal-glow"
+                                    : "hover:bg-primary/10 text-foreground focus:bg-primary/10"
                             )}
                         >
                             {category.label}
@@ -60,3 +60,4 @@ export function CategorySelector({
         </div>
     )
 }
+

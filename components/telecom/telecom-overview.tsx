@@ -39,15 +39,18 @@ export function TelecomOverview({ location = "All Locations", providers = [] }: 
     : providers.filter(p => (p.coverageCities || "[]").includes(location))
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <TelecomCompareBar />
-      <div className="glass-panel p-5 bg-primary/5 border-primary/20">
-        <p className="text-xs text-muted-foreground mb-1">{t("telecom.bestNetworkForYou")}</p>
-        <p className="text-lg font-semibold text-foreground">{bestProvider}</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t("telecom.basedOnProfile", { profile: t(`dashboard.${preferences.scenario}`) })}
+      <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow">
+        <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-1000" />
+        <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1.5">{t("telecom.bestNetworkForYou")}</p>
+        <h2 className="text-2xl font-display font-medium text-white tracking-tight leading-tight">{bestProvider}</h2>
+        <p className="text-xs text-muted-foreground mt-2 max-w-xl font-sans opacity-80 leading-relaxed font-medium">
+          {t("telecom.basedOnProfile", { profile: t(`dashboard.${preferences.scenario}`) })} Optimized for rural penetration and institutional bandwidth.
         </p>
-        <Disclaimer />
+        <div className="mt-3 pt-3 border-t border-white/10">
+          <Disclaimer />
+        </div>
       </div>
 
       {filteredProviders.length === 0 ? (
@@ -55,51 +58,50 @@ export function TelecomOverview({ location = "All Locations", providers = [] }: 
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">{t("telecom.noProvidersFound", { location: location === "All Locations" ? t("common.allLocations") : location })}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">{t("telecom.noProvidersFound", { location: location === "All Locations" ? t("common.allLocations") : location })}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("telecom.noProvidersDetail")}</p>
         </div>
       ) : (
         <>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
             {summaryCards.map((c) => (
-              <div key={c.labelKey} className="glass-card p-4 h-full">
-                <p className="text-xs text-muted-foreground">{t(`telecom.highlights.${c.labelKey}`)}</p>
-                <p className="text-sm font-semibold text-foreground mt-1">{c.value}</p>
-                <p className="text-xs text-primary mt-1">{t(`telecom.highlights.${c.detailKey}`, c.detailVars as any)}</p>
+              <div key={c.labelKey} className="glass-floating p-3 h-full floating-hover group rounded-xl">
+                <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70 group-hover:text-primary transition-colors">{t(`telecom.highlights.${c.labelKey}`)}</p>
+                <p className="text-sm font-display font-medium text-white mt-0.5 leading-tight">{c.value}</p>
+                <p className="text-[10px] text-primary mt-1.5 font-medium tracking-widest uppercase">{t(`telecom.highlights.${c.detailKey}`, c.detailVars as any)}</p>
               </div>
             ))}
           </div>
 
           <section>
-            <h3 className="text-sm font-semibold text-foreground mb-3">
+            <h3 className="text-[10px] font-medium text-foreground mb-2.5">
               {t("telecom.providersAvailable", { location: location === "All Locations" ? t("common.allLocations") : location, count: filteredProviders.length })}
             </h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {filteredProviders.map((p) => {
                 const inTray = compareTray.ids.includes(p.id)
                 return (
-                  <div key={p.id} className="glass-card p-4 flex flex-col h-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-semibold text-foreground">{p.name}</p>
-                      {(() => {
-                        return (
-                          <button
-                            onClick={() => addToCompareTray("telecom", p.id, "overview")}
-                            className={cn(
-                              "p-1.5 rounded-full transition-colors",
-                              inTray ? "text-teal-600 bg-teal-50" : "text-muted-foreground hover:text-teal-600 hover:bg-teal-50"
-                            )}
-                          >
-                            {inTray ? <CheckCircle2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                          </button>
-                        )
-                      })()}
+                  <div key={p.id} className={cn(
+                    "glass-floating p-3 transition-all duration-500 relative group flex flex-col floating-hover rounded-xl",
+                    inTray ? "border-primary/60 bg-primary/10 ring-2 ring-primary/20 shadow-xl shadow-primary/20 teal-glow" : "hover:border-primary/40"
+                  )}>
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <p className="text-sm font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{p.name}</p>
+                      <button
+                        onClick={() => addToCompareTray("telecom", p.id, "overview")}
+                        className={cn(
+                          "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500 shadow-lg",
+                          inTray ? "bg-primary text-primary-foreground shadow-primary/30 teal-glow" : "bg-white/5 text-foreground border border-white/10 hover:bg-white/10"
+                        )}
+                      >
+                        {inTray ? <CheckCircle2 size={12} strokeWidth={4} /> : <Plus size={12} strokeWidth={4} />}
+                      </button>
                     </div>
-                    <div className="flex gap-2 flex-wrap mb-2">
+                    <div className="flex gap-1.5 flex-wrap mb-3">
                       <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />
                       <ScoreBadge score={p.transparencyScore} label={t("telecom.transparency")} />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-auto">{p.type} &middot; {p.networkType}</p>
+                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-60 mt-auto">{p.type} &middot; {p.networkType}</p>
                   </div>
                 )
               })}
@@ -110,3 +112,4 @@ export function TelecomOverview({ location = "All Locations", providers = [] }: 
     </div>
   )
 }
+

@@ -13,6 +13,8 @@ import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
 import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
+import { PageHeader } from "@/components/page-header"
+
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -39,8 +41,11 @@ export default function BankingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Banking</h1>
-        <p className="text-sm text-muted-foreground">Compare Zimbabwe banks, accounts, loans, and fees</p>
+      <PageHeader
+        title="Banking Intelligence"
+        subtitle="Compare fees, interest rates, and loan products across all Zimbabwean commercial banks."
+      />
+
       </div>
 
       {/* Secondary tab bar */}
@@ -68,3 +73,4 @@ export default function BankingPage() {
     </div>
   )
 }
+

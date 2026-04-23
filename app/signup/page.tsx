@@ -7,12 +7,14 @@ import { motion, AnimatePresence } from "framer-motion"
 
 import { useAppStore } from "@/lib/store"
 import { Role } from "@/lib/types"
+import { Switch } from "@/components/ui/switch"
 import { 
+    Instagram, Twitter, Facebook, Linkedin, Music,
     User, Mail, Lock, Phone, MapPin, 
     Target, Wallet, Heart, Activity, 
     Airplay, ShieldCheck, CheckCircle2,
     ChevronRight, ChevronLeft, Info,
-    PieChart, Coins, Banknote, Shield
+    PieChart, Coins, Banknote, Shield, Share2
 } from "lucide-react"
 
 import {
@@ -23,7 +25,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 interface FormData {
     // Step 1: Basic Info
@@ -49,7 +51,14 @@ interface FormData {
     needs: string[]
     // Step 6: AI Settings
     aiPreference: "cheapest" | "value" | "ai" | ""
-    // Step 7: Consent
+    // Step 7: Social Media
+    instagram: string
+    twitter: string
+    facebook: string
+    tiktok: string
+    linkedin: string
+    enableSocialInsights: boolean
+    // Step 8: Consent
     consentTerms: boolean
     consentAI: boolean
 }
@@ -61,6 +70,7 @@ const STEPS = [
     { title: "Interests", icon: Heart },
     { title: "Usage", icon: Activity },
     { title: "AI Settings", icon: Airplay },
+    { title: "Social Media", icon: Share2 },
     { title: "Consent", icon: ShieldCheck },
 ]
 
@@ -84,12 +94,18 @@ export default function SignUpPage() {
         travelFrequency: "",
         needs: [],
         aiPreference: "",
+        instagram: "",
+        twitter: "",
+        facebook: "",
+        tiktok: "",
+        linkedin: "",
+        enableSocialInsights: false,
         consentTerms: false,
         consentAI: false
     })
 
     const router = useRouter()
-    const { login } = useAppStore()
+    const { login, setSocialData } = useAppStore()
 
 <<<<<<< Updated upstream
     const updateFormData = (data: Partial<FormData>) => {
@@ -97,7 +113,7 @@ export default function SignUpPage() {
     }
 
     const nextStep = () => {
-        if (step < 7) setStep(prev => (prev + 1) as Step)
+        if (step < 8) setStep(prev => (prev + 1) as Step)
     }
 
     const prevStep = () => {
@@ -106,13 +122,19 @@ export default function SignUpPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (step < 7) {
+        if (step < 8) {
             nextStep()
             return
         }
 
         // Final submission logic
-        console.log("Structured Signup Data:", JSON.stringify(formData, null, 2))
+        setSocialData({
+            instagram: formData.instagram,
+            twitter: formData.twitter,
+            facebook: formData.facebook,
+            tiktok: formData.tiktok,
+            linkedin: formData.linkedin,
+        }, formData.enableSocialInsights)
         
         // Simple mock auth
         const mockToken = "mock_token_" + Date.now()
@@ -155,13 +177,14 @@ export default function SignUpPage() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-12 bg-background/50">
-            {/* Header / Brand */}
-            <div className="flex flex-col items-center mb-8">
+        <div className="h-screen-dynamic overflow-y-auto scrollbar-premium bg-background/50">
+            <div className="flex flex-col items-center justify-center min-h-screen px-4 py-16">
+                {/* Header / Brand */}
+                <div className="flex flex-col items-center mb-8">
                 <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center mb-4 shadow-lg shadow-primary/20">
-                    <span className="text-2xl font-black text-primary-foreground tracking-tighter">ZC</span>
+                    <span className="text-2xl font-medium text-primary-foreground tracking-tighter">FT</span>
                 </div>
-                <h1 className="text-3xl font-black tracking-tight text-foreground">Join ZimCompare</h1>
+                <h1 className="text-3xl font-medium tracking-tight text-foreground">Join Fintech</h1>
                 <p className="text-muted-foreground mt-2 font-medium">Fintech AI Comparison Platform</p>
             </div>
 
@@ -169,14 +192,14 @@ export default function SignUpPage() {
                 {/* Progress Bar Container */}
                 <div className="mb-10 px-2">
                     <div className="flex justify-between items-center mb-4">
-                        <span className="text-sm font-bold text-primary uppercase tracking-widest">Step {step} of 7</span>
+                        <span className="text-sm font-medium text-primary uppercase tracking-widest">Step {step} of 8</span>
                         <span className="text-sm font-medium text-muted-foreground">{STEPS[step - 1].title}</span>
                     </div>
                     <div className="h-2 w-full bg-border/40 rounded-full overflow-hidden backdrop-blur-sm">
                         <motion.div 
                             className="h-full bg-primary"
                             initial={{ width: "0%" }}
-                            animate={{ width: `${(step / 7) * 100}%` }}
+                            animate={{ width: `${(step / 8) * 100}%` }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                     </div>
@@ -218,7 +241,8 @@ export default function SignUpPage() {
                                 {step === 4 && renderStep4(formData, toggleMultiSelect)}
                                 {step === 5 && renderStep5(formData, updateFormData, toggleMultiSelect)}
                                 {step === 6 && renderStep6(formData, updateFormData)}
-                                {step === 7 && renderStep7(formData, updateFormData)}
+                                {step === 7 && renderStepSocial(formData, updateFormData)}
+                                {step === 8 && renderStepConsent(formData, updateFormData)}
 
                                 {/* Navigation Buttons */}
                                 <div className="flex items-center gap-4 pt-6 border-t border-white/5 mt-8">
@@ -226,7 +250,7 @@ export default function SignUpPage() {
                                         <button
                                             type="button"
                                             onClick={prevStep}
-                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-muted-foreground bg-white/5 hover:bg-white/10 transition-all border border-white/10"
+                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-medium text-muted-foreground bg-white/5 hover:bg-white/10 transition-all border border-white/10"
                                         >
                                             <ChevronLeft size={18} />
                                             Back
@@ -234,16 +258,16 @@ export default function SignUpPage() {
                                     )}
                                     <button
                                         type="submit"
-                                        disabled={step === 7 && (!formData.consentTerms || !formData.consentAI)}
+                                        disabled={step === 8 && (!formData.consentTerms || !formData.consentAI)}
                                         className={`
-                                            flex-[2] flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-black text-primary-foreground transition-all shadow-xl
-                                            ${step === 7 && (!formData.consentTerms || !formData.consentAI) 
+                                            flex-[2] flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-medium text-primary-foreground transition-all shadow-md
+                                            ${step === 8 && (!formData.consentTerms || !formData.consentAI) 
                                                 ? "bg-muted opacity-50 cursor-not-allowed" 
-                                                : "bg-primary hover:scale-[1.02] active:scale-[0.98] shadow-primary/20"}
+                                                : "bg-primary hover:scale-[1.02] active:scale-[0.98]"}
                                         `}
                                     >
-                                        {step === 7 ? "Complete Signup" : "Continue"}
-                                        {step < 7 && <ChevronRight size={18} />}
+                                        {step === 8 ? "Complete Signup" : "Continue"}
+                                        {step < 8 && <ChevronRight size={18} />}
                                     </button>
                                 </div>
                             </form>
@@ -253,10 +277,11 @@ export default function SignUpPage() {
 
                 <p className="text-center text-sm text-muted-foreground mt-8">
                     Already have an account?{" "}
-                    <Link href="/signin" className="text-primary font-bold hover:underline transition-all">
+                    <Link href="/signin" className="text-primary font-medium hover:underline transition-all">
                         Sign in
                     </Link>
                 </p>
+            </div>
             </div>
         </div>
     )
@@ -266,10 +291,10 @@ export default function SignUpPage() {
 
 const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => (
     <div className="space-y-5">
-        <h2 className="text-xl font-bold text-foreground">Account Details</h2>
+        <h2 className="text-xl font-medium text-foreground">Account Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Full Name</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Full Name</label>
                 <div className="relative group">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                     <input
@@ -283,7 +308,7 @@ const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => 
                 </div>
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Email</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Email</label>
                 <div className="relative group">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                     <input
@@ -299,7 +324,7 @@ const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => 
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Phone Number</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Phone Number</label>
                 <div className="relative group">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                     <input
@@ -313,7 +338,7 @@ const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => 
                 </div>
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Location</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Location</label>
                 <div className="relative group">
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                     <input
@@ -328,7 +353,7 @@ const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => 
             </div>
         </div>
         <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Password</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Password</label>
             <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                 <input
@@ -346,9 +371,9 @@ const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => 
 
 const renderStep2 = (data: FormData, update: (d: Partial<FormData>) => void) => (
     <div className="space-y-6">
-        <h2 className="text-xl font-bold text-foreground">Your Financial Goals</h2>
+        <h2 className="text-xl font-medium text-foreground">Your Financial Goals</h2>
         <div className="space-y-4">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Primary Goal</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Primary Goal</label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[
                     { id: "save", label: "Save Money", icon: Wallet },
@@ -367,13 +392,13 @@ const renderStep2 = (data: FormData, update: (d: Partial<FormData>) => void) => 
                         `}
                     >
                         <option.icon size={24} />
-                        <span className="text-sm font-bold">{option.label}</span>
+                        <span className="text-sm font-medium">{option.label}</span>
                     </button>
                 ))}
             </div>
         </div>
         <div className="space-y-4">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Budget Range (Monthly)</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Budget Range (Monthly)</label>
             <Select
                 value={data.budget}
                 onValueChange={(val) => update({ budget: val })}
@@ -399,19 +424,19 @@ const renderStep3 = (data: FormData, update: (d: Partial<FormData>) => void) => 
             <div className="p-2 bg-primary/20 rounded-lg text-primary">
                 <PieChart size={24} />
             </div>
-            <h2 className="text-xl font-bold text-foreground">Global Budget Profile</h2>
+            <h2 className="text-xl font-medium text-foreground">Global Budget Profile</h2>
         </div>
         
         <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex gap-3 items-start">
             <Info className="text-primary shrink-0 mt-0.5" size={18} />
             <p className="text-xs text-muted-foreground leading-relaxed">
-                This budget profile powers personalized recommendations across <span className="text-primary font-bold">Banking, Telecom, Stayscape, and more</span>. It ensures we only suggest products you can actually afford.
+                This budget profile powers personalized recommendations across <span className="text-primary font-medium">Banking, Telecom, Stayscape, and more</span>. It ensures we only suggest products you can actually afford.
             </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Monthly Income</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Monthly Income</label>
                 <div className="relative group">
                     <Coins className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                     <input
@@ -425,7 +450,7 @@ const renderStep3 = (data: FormData, update: (d: Partial<FormData>) => void) => 
                 </div>
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Monthly Budget Limit</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Monthly Budget Limit</label>
                 <div className="relative group">
                     <Banknote className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
                     <input
@@ -442,7 +467,7 @@ const renderStep3 = (data: FormData, update: (d: Partial<FormData>) => void) => 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Currency</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Currency</label>
                 <Select
                     value={data.currency}
                     onValueChange={(val) => update({ currency: val })}
@@ -459,7 +484,7 @@ const renderStep3 = (data: FormData, update: (d: Partial<FormData>) => void) => 
                 </Select>
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Budgeting Style</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Budgeting Style</label>
                 <Select
                     value={data.budgetStyle}
                     onValueChange={(val) => update({ budgetStyle: val as any })}
@@ -480,7 +505,7 @@ const renderStep3 = (data: FormData, update: (d: Partial<FormData>) => void) => 
 
 const renderStep4 = (data: FormData, toggle: (f: "interests", v: string) => void) => (
     <div className="space-y-6">
-        <h2 className="text-xl font-bold text-foreground">What interests you?</h2>
+        <h2 className="text-xl font-medium text-foreground">What interests you?</h2>
         <p className="text-sm text-muted-foreground -mt-4">Select categories you'd like the AI to monitor for you.</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
@@ -492,7 +517,7 @@ const renderStep4 = (data: FormData, toggle: (f: "interests", v: string) => void
                     type="button"
                     onClick={() => toggle("interests", interest)}
                     className={`
-                        px-4 py-3 rounded-xl border text-sm font-bold transition-all
+                        px-4 py-3 rounded-xl border text-sm font-medium transition-all
                         ${data.interests.includes(interest)
                             ? "bg-primary border-primary text-white shadow-lg shadow-primary/25"
                             : "bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10"}
@@ -507,9 +532,9 @@ const renderStep4 = (data: FormData, toggle: (f: "interests", v: string) => void
 
 const renderStep5 = (data: FormData, update: (d: Partial<FormData>) => void, toggle: (f: "needs", v: string) => void) => (
     <div className="space-y-6">
-        <h2 className="text-xl font-bold text-foreground">Usage & Lifestyle</h2>
+        <h2 className="text-xl font-medium text-foreground">Usage & Lifestyle</h2>
         <div className="space-y-4">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Data Usage</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Data Usage</label>
             <div className="flex gap-4">
                 {["Low", "Medium", "High"].map((val) => (
                     <button
@@ -517,7 +542,7 @@ const renderStep5 = (data: FormData, update: (d: Partial<FormData>) => void, tog
                         type="button"
                         onClick={() => update({ dataUsage: val.toLowerCase() as any })}
                         className={`
-                            flex-1 py-3 rounded-xl border text-sm font-bold transition-all
+                            flex-1 py-3 rounded-xl border text-sm font-medium transition-all
                             ${data.dataUsage === val.toLowerCase()
                                 ? "bg-primary/20 border-primary text-primary"
                                 : "bg-white/5 border-white/10 text-muted-foreground"}
@@ -529,7 +554,7 @@ const renderStep5 = (data: FormData, update: (d: Partial<FormData>) => void, tog
             </div>
         </div>
         <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Travel Frequency</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Travel Frequency</label>
             <Select
                 value={data.travelFrequency}
                 onValueChange={(val) => update({ travelFrequency: val })}
@@ -546,7 +571,7 @@ const renderStep5 = (data: FormData, update: (d: Partial<FormData>) => void, tog
             </Select>
         </div>
         <div className="space-y-4">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Current Needs</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Current Needs</label>
             <div className="grid grid-cols-2 gap-3">
                 {["Car", "Education"].map((need) => (
                     <button
@@ -554,7 +579,7 @@ const renderStep5 = (data: FormData, update: (d: Partial<FormData>) => void, tog
                         type="button"
                         onClick={() => toggle("needs", need)}
                         className={`
-                            px-4 py-3 rounded-xl border text-sm font-bold transition-all
+                            px-4 py-3 rounded-xl border text-sm font-medium transition-all
                             ${data.needs.includes(need)
                                 ? "bg-primary border-primary text-white"
                                 : "bg-white/5 border-white/10 text-muted-foreground"}
@@ -574,7 +599,7 @@ const renderStep6 = (data: FormData, update: (d: Partial<FormData>) => void) => 
             <div className="p-2 bg-primary/20 rounded-lg text-primary">
                 <Airplay size={24} />
             </div>
-            <h2 className="text-xl font-bold text-foreground">AI Personalization</h2>
+            <h2 className="text-xl font-medium text-foreground">AI Personalization</h2>
         </div>
         <p className="text-sm text-muted-foreground">How should our AI engine prioritize recommendations for you?</p>
         <div className="space-y-3">
@@ -595,7 +620,7 @@ const renderStep6 = (data: FormData, update: (d: Partial<FormData>) => void) => 
                     `}
                 >
                     <div>
-                        <h4 className={`text-sm font-bold ${data.aiPreference === pref.id ? "text-primary" : "text-foreground"}`}>
+                        <h4 className={`text-sm font-medium ${data.aiPreference === pref.id ? "text-primary" : "text-foreground"}`}>
                             {pref.label}
                         </h4>
                         <p className="text-xs text-muted-foreground mt-1">{pref.desc}</p>
@@ -607,50 +632,122 @@ const renderStep6 = (data: FormData, update: (d: Partial<FormData>) => void) => 
     </div>
 )
 
-const renderStep7 = (data: FormData, update: (d: Partial<FormData>) => void) => (
+const renderStepSocial = (data: FormData, update: (d: Partial<FormData>) => void) => (
     <div className="space-y-8">
-        <div className="flex flex-col items-center text-center space-y-3">
-            <div className="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center text-primary">
-                <ShieldCheck size={40} />
+        <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/20 rounded-lg text-primary">
+                <Share2 size={24} />
             </div>
-            <h2 className="text-2xl font-black text-foreground">Almost Done!</h2>
-            <p className="text-sm text-muted-foreground">We take your data privacy seriously. Please review and accept the following.</p>
+            <h2 className="text-xl font-medium text-foreground">Social Media Specialisation</h2>
+        </div>
+        <p className="text-sm text-muted-foreground">Link your profiles (optional) to allow our AI to generate high-fidelity lifestyle-based financial maneuvers.</p>
+        
+        <div className="grid gap-5">
+            {[
+                { id: "instagram", icon: Instagram, placeholder: "@username", label: "Instagram" },
+                { id: "twitter", icon: Twitter, placeholder: "@username or URL", label: "Twitter (X)" },
+                { id: "facebook", icon: Facebook, placeholder: "profile URL", label: "Facebook" },
+                { id: "tiktok", icon: Music, placeholder: "@username", label: "TikTok" },
+                { id: "linkedin", icon: Linkedin, placeholder: "profile URL", label: "LinkedIn" },
+            ].map((social) => (
+                <div key={social.id} className="space-y-2">
+                    <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">{social.label}</label>
+                    <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+                            <social.icon size={18} />
+                        </div>
+                        <input
+                            type="text"
+                            value={(data as any)[social.id]}
+                            onChange={(e) => update({ [social.id]: e.target.value })}
+                            placeholder={social.placeholder}
+                            className="w-full h-14 pl-12 pr-4 glass-input text-sm font-medium outline-none transition-all border-white/10 hover:border-white/20 focus:border-primary/50"
+                        />
+                    </div>
+                </div>
+            ))}
         </div>
 
-        <div className="space-y-4">
-            <label className="flex items-start gap-4 p-5 rounded-2xl border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group">
-                <input
-                    type="checkbox"
+        {/* Social Insights Toggle */}
+        <div className="glass-floating p-6 border-primary/20 bg-primary/5 teal-glow">
+            <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                    <h4 className="text-sm font-medium text-white">Enable Social Insights</h4>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        Allow our Neural Engine to infer lifestyle patterns and recommend financial optimizations based on your social presence. 
+                        We <span className="text-primary font-bold">never</span> scrape private data or share your handles.
+                    </p>
+                </div>
+                <Switch 
+                    checked={data.enableSocialInsights}
+                    onCheckedChange={(val) => update({ enableSocialInsights: val })}
+                />
+            </div>
+        </div>
+    </div>
+)
+
+const renderStepConsent = (data: FormData, update: (d: Partial<FormData>) => void) => (
+    <div className="space-y-6">
+        <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/20 rounded-lg text-primary">
+                <ShieldCheck size={24} />
+            </div>
+            <h2 className="text-xl font-medium text-foreground">Final Consent</h2>
+        </div>
+        <p className="text-sm text-muted-foreground font-sans">
+            To provide you with high-fidelity financial intelligence, we need your confirmation on the following protocols:
+        </p>
+
+        <div className="space-y-4 pt-4">
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                <Switch 
+                    id="consent-terms"
                     checked={data.consentTerms}
-                    onChange={(e) => update({ consentTerms: e.target.checked })}
-                    className="mt-1 w-5 h-5 rounded-md border-white/20 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer"
+                    onCheckedChange={(val) => update({ consentTerms: val })}
+                    className="mt-1"
                 />
-                <div className="flex-1">
-                    <h4 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Accept Terms & Conditions</h4>
-                    <p className="text-xs text-muted-foreground mt-1">I agree to the ZimCompare terms of service and privacy policy.</p>
+                <div className="grid gap-1.5 leading-none">
+                    <label
+                        htmlFor="consent-terms"
+                        className="text-sm font-medium leading-none text-foreground cursor-pointer"
+                    >
+                        Accept Terms of Service
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                        I agree to the platform's data processing protocols and usage agreements.
+                    </p>
                 </div>
-            </label>
+            </div>
 
-            <label className="flex items-start gap-4 p-5 rounded-2xl border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-all group">
-                <input
-                    type="checkbox"
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                <Switch 
+                    id="consent-ai"
                     checked={data.consentAI}
-                    onChange={(e) => update({ consentAI: e.target.checked })}
-                    className="mt-1 w-5 h-5 rounded-md border-white/20 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer"
+                    onCheckedChange={(val) => update({ consentAI: val })}
+                    className="mt-1"
                 />
-                <div className="flex-1">
-                    <h4 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">AI Data Processing</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Allow ZimCompare to use my data to provide personalized AI-driven financial recommendations.</p>
+                <div className="grid gap-1.5 leading-none">
+                    <label
+                        htmlFor="consent-ai"
+                        className="text-sm font-medium leading-none text-foreground cursor-pointer"
+                    >
+                        Enable Neural Processing
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                        I permit the AI engine to analyze my profile for optimized financial recommendations.
+                    </p>
                 </div>
-            </label>
+            </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 flex gap-3 items-start">
-            <Info className="text-orange-500 shrink-0 mt-0.5" size={16} />
-            <p className="text-xs text-orange-200/80 leading-relaxed">
-                Note: You can withdraw your consent and request data deletion at any time from your account settings.
+        <div className="mt-8 p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 flex gap-3 text-orange-200">
+            <Info size={18} className="shrink-0 mt-0.5" />
+            <p className="text-xs leading-relaxed">
+                Your data is encrypted end-to-end and stored locally within your secure node. We never sell your personal metrics.
             </p>
         </div>
     </div>
 )
+
 

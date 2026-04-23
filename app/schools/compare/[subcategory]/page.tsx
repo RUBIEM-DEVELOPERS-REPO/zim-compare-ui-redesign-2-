@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
 
 function SchoolsCompareContent() {
     const searchParams = useSearchParams()
@@ -78,54 +79,53 @@ function SchoolsCompareContent() {
     return (
         <div className="space-y-10 animate-in fade-in duration-700">
             {/* Header section */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
                 <div>
                     <button
                         onClick={() => router.back()}
-                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 group"
+                        className="flex items-center gap-2 text-[10px] font-black text-muted-foreground hover:text-primary uppercase tracking-[0.2em] transition-all mb-6 group"
                     >
-                        <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        Back to list
+                        <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                        Back to Intelligence Index
                     </button>
-                    <h1 className="text-3xl font-bold text-foreground uppercase tracking-tight">
-                        Schools Comparison
+                    <h1 className="text-5xl font-display font-black text-foreground tracking-tighter uppercase leading-tight">
+                        Academic Analysis
                     </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Side-by-side analysis of {compareItems.length} institutions
+                    <p className="text-sm text-muted-foreground mt-2 font-medium font-sans opacity-70">
+                        Synthesizing side-by-side performance metrics for {compareItems.length} educational institutions.
                     </p>
                 </div>
                 <button
                     onClick={handleSave}
-                    className="bg-teal-600/10 text-teal-700 hover:bg-teal-600/20 px-5 py-2.5 rounded-xl text-sm font-bold transition-all border border-teal-600/20"
+                    className="glass-floating px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-all teal-glow active:scale-95"
                 >
-                    Save this comparison
+                    Archive This Logic
                 </button>
             </div>
 
             {/* Comparison Table */}
-            <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-xl shadow-teal-900/5">
+            <div className="overflow-x-auto glass-floating shadow-2xl teal-glow border-border/50">
                 <table className="w-full text-left border-collapse min-w-[700px]">
                     <thead>
-                        <tr className="border-b border-border bg-muted/20">
-                            <th className="p-6 text-xs font-bold uppercase tracking-widest text-muted-foreground w-1/4">{t("schools.competitiveMetrics")}</th>
+                        <tr className="border-b border-border/30 bg-secondary/50">
+                            <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-primary/70 w-1/4">Academic Vector</th>
                             {orderedSelected.map((s) => (
-                                <th key={s.id} className="p-6">
+                                <th key={s.id} className="p-8">
                                     <div className="flex flex-col">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-[10px] font-bold text-teal-600 uppercase tracking-widest">{t(`schools.subTabs.${s.type}`)}</span>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{t(`schools.subTabs.${s.type}`)}</span>
                                             <button
                                                 onClick={() => {
                                                     const newIds = ids.filter(i => i !== s.id)
                                                     router.push(`?ids=${newIds.join(",")}`)
                                                 }}
-                                                className="text-muted-foreground hover:text-destructive transition-colors"
-                                                title="Remove"
+                                                className="text-muted-foreground hover:text-destructive transition-colors p-1.5 rounded-lg hover:bg-destructive/10"
+                                                title="Remove Entity"
                                             >
-                                                <Info size={14} className="rotate-45" />
                                             </button>
                                         </div>
-                                        <span className="text-base font-bold text-foreground uppercase tracking-tight">{s.name}</span>
-                                        <span className="text-xs text-muted-foreground mt-0.5">{s.city}</span>
+                                        <span className="text-xl font-display font-black text-foreground uppercase tracking-tight leading-none">{s.name}</span>
+                                        <span className="text-[10px] font-black text-muted-foreground mt-2 uppercase tracking-widest opacity-60">{s.city}</span>
                                     </div>
                                 </th>
                             ))}
@@ -162,7 +162,7 @@ function SchoolsCompareContent() {
                                 <td key={s.id} className="p-6 text-center">
                                     <div className="flex flex-wrap justify-center gap-1">
                                         {s.curriculum.map(c => (
-                                            <span key={c} className="text-[9px] font-bold bg-secondary px-2 py-0.5 rounded-full">{c}</span>
+                                            <span key={c} className="text-[9px] font-bold bg-secondary/80 px-2 py-0.5 rounded-full border border-border/50">{c}</span>
                                         ))}
                                     </div>
                                 </td>
@@ -186,9 +186,9 @@ function SchoolsCompareContent() {
                                 <td key={s.id} className="p-6">
                                     <div className="flex flex-wrap justify-center gap-1">
                                         {s.facilities.slice(0, 3).map(f => (
-                                            <span key={f} className="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">{f}</span>
+                                            <span key={f} className="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded-full border border-teal-500/20 whitespace-nowrap">{f}</span>
                                         ))}
-                                        {s.facilities.length > 3 && <span className="text-[9px] text-muted-foreground">+{s.facilities.length - 3} more</span>}
+                                        {s.facilities.length > 3 && <span className="text-[9px] text-muted-foreground">+{s.facilities.length - 3}</span>}
                                     </div>
                                 </td>
                             ))}
@@ -198,35 +198,35 @@ function SchoolsCompareContent() {
             </div>
 
             {/* AI Insights Panel */}
-            <div className="space-y-6">
-                <div className="flex items-center gap-2">
-                    <div className="p-2 bg-teal-600/10 rounded-lg text-teal-600">
-                        <Lightbulb size={24} />
+            <div className="space-y-10">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 glass-floating bg-primary/10 text-primary teal-glow">
+                        <Lightbulb size={28} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold">School Insights</h2>
-                        <p className="text-sm text-muted-foreground">Comparative advantages and recommendations</p>
+                        <h2 className="text-2xl font-display font-black text-foreground uppercase tracking-tight">Neural Insights</h2>
+                        <p className="text-sm text-muted-foreground font-medium opacity-60">Comparative advantages and cognitive recommendations</p>
                     </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Academic Leader */}
-                    <div className="bg-gradient-to-br from-teal-50 to-background border border-teal-200 rounded-2xl p-6 shadow-xl shadow-teal-900/5 group hover:scale-[1.02] transition-transform">
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-100 text-teal-700 text-[10px] font-bold uppercase tracking-wider mb-4">
+                    <div className="glass-floating bg-gradient-to-br from-primary/10 to-transparent border-primary/30 p-4 shadow-2xl teal-glow relative overflow-hidden group hover:scale-[1.03] transition-all duration-500">
+                        <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-lg bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-[0.2em] mb-3 shadow-xl">
                             Academic Leader
                         </div>
                         {(() => {
                             const leader = [...compareItems].sort((a,b) => b.passRate - a.passRate)[0]
                             return (
                                 <>
-                                    <h3 className="text-lg font-bold mb-1">{leader.name}</h3>
+                                    <h3 className="text-base font-display font-black text-foreground uppercase tracking-tight leading-none mb-1">{leader.name}</h3>
                                     <ul className="space-y-2 mt-4">
-                                        <li className="flex items-start gap-2 text-xs text-foreground/80">
-                                            <CheckCircle2 size={12} className="text-teal-600 mt-0.5" />
+                                        <li className="flex items-start gap-2 text-[10px] text-foreground/90 font-medium font-sans">
+                                            <CheckCircle2 size={12} className="text-primary mt-0.5 shrink-0" strokeWidth={3} />
                                             Top pass rate at {leader.passRate}%
                                         </li>
-                                        <li className="flex items-start gap-2 text-xs text-foreground/80">
-                                            <CheckCircle2 size={12} className="text-teal-600 mt-0.5" />
+                                        <li className="flex items-start gap-2 text-[10px] text-foreground/90 font-medium font-sans">
+                                            <CheckCircle2 size={12} className="text-primary mt-0.5 shrink-0" strokeWidth={3} />
                                             Strong academic score of {leader.academicScore}
                                         </li>
                                     </ul>
@@ -235,29 +235,66 @@ function SchoolsCompareContent() {
                         })()}
                     </div>
 
+                    {/* Switch & Save Simulator */}
+                    <SwitchSaveSimulator
+                        category="schools"
+                        current={compareItems[0]}
+                        recommended={[...compareItems].sort((a,b) => a.totalAnnualCost - b.totalAnnualCost)[0]}
+                    />
+
                     {/* Value Pick */}
-                    <div className="bg-white border border-border rounded-2xl p-6 shadow-lg shadow-black/5 hover:border-teal-300 transition-all">
-                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-4">
+                    <div className="glass-floating p-4 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover">
+                        <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-lg bg-white/5 text-muted-foreground text-[8px] font-black uppercase tracking-[0.2em] mb-3 border border-white/10">
                             Value Pick
                         </div>
                         {(() => {
                             const value = [...compareItems].sort((a,b) => a.totalAnnualCost - b.totalAnnualCost)[0]
                             return (
                                 <>
-                                    <h3 className="text-lg font-bold mb-1">{value.name}</h3>
+                                    <h3 className="text-base font-display font-black text-foreground uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{value.name}</h3>
                                     <ul className="space-y-2 mt-4">
-                                        <li className="flex items-start gap-2 text-xs text-foreground/80">
-                                            <CheckCircle2 size={12} className="text-blue-500 mt-0.5" />
+                                        <li className="flex items-start gap-2 text-[10px] text-foreground/80 font-medium font-sans">
+                                            <CheckCircle2 size={12} className="text-primary/60 mt-0.5 shrink-0" strokeWidth={3} />
                                             Lowest annual cost: ${value.totalAnnualCost.toLocaleString()}
                                         </li>
-                                        <li className="flex items-start gap-2 text-xs text-foreground/80">
-                                            <CheckCircle2 size={12} className="text-blue-500 mt-0.5" />
+                                        <li className="flex items-start gap-2 text-[10px] text-foreground/80 font-medium font-sans">
+                                            <CheckCircle2 size={12} className="text-primary/60 mt-0.5 shrink-0" strokeWidth={3} />
                                             Balanced student-teacher ratio
                                         </li>
                                     </ul>
                                 </>
                             )
                         })()}
+                    </div>
+
+                    {/* Enroll Now */}
+                    <div className="glass-floating p-4 shadow-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-500 group relative overflow-hidden flex flex-col teal-glow">
+                        <div className="absolute -bottom-2 -right-2 p-3 text-primary/10 group-hover:scale-110 transition-transform duration-700">
+                             <GraduationCap size={60} />
+                        </div>
+                        <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-lg bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-[0.2em] mb-3 shadow-lg">
+                            Academic Path
+                        </div>
+                        <h3 className="text-base font-display font-black text-foreground uppercase tracking-tight leading-none mb-1">Enrollment</h3>
+                        {(() => {
+                            const leader = [...compareItems].sort((a,b) => b.passRate - a.passRate)[0]
+                            return (
+                                <>
+                                    <p className="text-[9px] font-black text-primary uppercase tracking-[0.1em] mb-4 opacity-80 leading-tight">
+                                        {leader.name}
+                                    </p>
+                                    <div className="flex-1 space-y-2 mb-5">
+                                        <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">
+                                            Secure a placement at {leader.name}. Our cognitive model identifies this as the strongest academic vector for your current criteria.
+                                        </p>
+                                    </div>
+                                </>
+                            )
+                        })()}
+                        
+                        <button className="w-full bg-primary py-2.5 rounded-lg text-[8px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-2 relative z-10">
+                            Apply / Enroll
+                        </button>
                     </div>
                 </div>
             </div>

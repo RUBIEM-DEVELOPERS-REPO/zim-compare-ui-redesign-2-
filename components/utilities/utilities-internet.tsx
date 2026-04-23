@@ -91,7 +91,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                         <label className="text-xs font-medium text-muted-foreground mb-1 block">
-                            Max Price: <span className="text-foreground font-bold">${maxPrice}/mo</span>
+                            Max Price: <span className="text-foreground font-medium">${maxPrice}/mo</span>
                         </label>
                         <input
                             type="range"
@@ -106,7 +106,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                     </div>
                     <div>
                         <label className="text-xs font-medium text-muted-foreground mb-1 block">
-                            Min Speed: <span className="text-foreground font-bold">{minSpeed}Mbps</span>
+                            Min Speed: <span className="text-foreground font-medium">{minSpeed}Mbps</span>
                         </label>
                         <input
                             type="range"
@@ -125,7 +125,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
             {/* Speed vs Price visual summary */}
             {sorted.length > 0 && (
                 <div className="rounded-xl border border-border bg-card p-4">
-                    <p className="text-xs font-semibold text-muted-foreground mb-3">Speed vs Price Overview</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-3">Speed vs Price Overview</p>
                     <div className="space-y-2">
                         {sorted.slice(0, 6).map((p) => {
                             const maxSpeed = Math.max(...sorted.map(x => x.speedMbps))
@@ -136,7 +136,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                                     <div className="flex-1 bg-secondary/30 rounded-full h-2 overflow-hidden">
                                         <ProgressBar progress={widthPct} />
                                     </div>
-                                    <span className="w-16 shrink-0 text-right font-bold text-foreground">{p.speedMbps}Mbps</span>
+                                    <span className="w-16 shrink-0 text-right font-medium text-foreground">{p.speedMbps}Mbps</span>
                                     <span className="w-14 shrink-0 text-right text-primary">${p.monthlyPrice}/mo</span>
                                 </div>
                             )
@@ -149,7 +149,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
             {sorted.length === 0 ? (
                 <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
                     <Wifi className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                    <h3 className="text-lg font-bold text-foreground mb-2">No plans found</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No plans found</h3>
                     <p className="text-muted-foreground">Try adjusting your filters.</p>
                 </div>
             ) : (
@@ -166,11 +166,11 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
                             >
                                 <div className="flex items-start justify-between mb-1">
                                     <div>
-                                        <p className="text-sm font-bold text-foreground">{p.name}</p>
+                                        <p className="text-sm font-medium text-foreground">{p.name}</p>
                                         <p className="text-xs text-muted-foreground">{p.planName}</p>
                                     </div>
                                     {p.badge && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-100 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800 shrink-0 ml-2">
+                                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-100 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800 shrink-0 ml-2">
                                             {p.badge}
                                         </span>
                                     )}
@@ -178,7 +178,7 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
 
                                 <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary text-muted-foreground w-fit mb-3">{p.type}</span>
 
-                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-bold">
+                                <div className="grid grid-cols-2 gap-2 mb-4 text-[11px] font-medium">
                                     <div className="rounded-xl bg-secondary/30 p-3">
                                         <p className="text-muted-foreground uppercase tracking-tight mb-0.5">Speed</p>
                                         <p className="text-teal-600 dark:text-teal-400">{p.speedMbps}Mbps</p>
@@ -234,3 +234,4 @@ export function UtilitiesInternet({ location = "All Locations" }: UtilitiesInter
         </div>
     )
 }
+

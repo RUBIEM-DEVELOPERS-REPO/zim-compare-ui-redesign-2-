@@ -30,7 +30,7 @@ export default function TransportPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-xl font-semibold text-foreground">Transport & Automotive</h1>
+                <h1 className="text-xl font-medium text-foreground">Transport & Automotive</h1>
                 <p className="text-sm text-muted-foreground">Compare car dealerships, vehicles, driving schools, and bus routes in Zimbabwe</p>
             </div>
 
@@ -65,3 +65,4 @@ export default function TransportPage() {
         </div>
     )
 }
+

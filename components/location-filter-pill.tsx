@@ -43,14 +43,14 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "flex items-center gap-2 px-4 py-1.5 h-10 text-xs font-bold transition-all w-full md:w-auto justify-between md:justify-start shadow-xl glass-tab-base",
+                    "flex items-center gap-2 px-5 py-2 h-11 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-500 w-full md:w-auto justify-between md:justify-start shadow-2xl glass-floating floating-hover",
                     selectedLocation !== "All Locations"
-                        ? "glass-tab-active border-primary/40"
-                        : "border-white/10 text-muted-foreground hover:border-primary/40 hover:bg-white/10"
+                        ? "border-primary/50 text-primary teal-glow"
+                        : "border-white/10 text-muted-foreground hover:border-primary/40 hover:bg-white/5"
                 )}
             >
-                <div className="flex items-center gap-1.5 uppercase tracking-widest">
-                    <MapPin className={cn("w-3.5 h-3.5", selectedLocation !== "All Locations" ? "text-teal-600" : "text-muted-foreground")} />
+                <div className="flex items-center gap-2">
+                    <MapPin className={cn("w-4 h-4", selectedLocation !== "All Locations" ? "text-primary" : "text-muted-foreground")} />
                     <span>{selectedLocation}</span>
                 </div>
                 {selectedLocation !== "All Locations" ? (
@@ -63,18 +63,18 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
                             onLocationChange("All Locations")
                             setIsOpen(false)
                         }}
-                        className="hover:bg-teal-100 rounded-full p-0.5 ml-1 transition-colors"
+                        className="hover:bg-primary/20 rounded-full p-1 ml-2 transition-all"
                     >
-                        <X className="w-3 h-3" />
+                        <X className="w-3.5 h-3.5" />
                     </div>
                 ) : (
-                    <ChevronDown className="w-3.5 h-3.5 opacity-50" />
+                    <ChevronDown className="w-4 h-4 opacity-50" />
                 )}
             </button>
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl border border-white/20 bg-background/60 backdrop-blur-2xl p-1.5 shadow-2xl z-[110] animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute right-0 top-full mt-3 w-60 rounded-[1.5rem] border border-white/20 bg-background/40 backdrop-blur-3xl p-2 shadow-2xl z-[110] animate-in fade-in zoom-in-95 duration-500 glass-floating teal-glow">
                     <div className="max-h-72 overflow-y-auto no-scrollbar py-1">
                         {ZIMBABWE_CITIES.map((loc) => (
                             <button
@@ -84,14 +84,14 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
                                     setIsOpen(false)
                                 }}
                                 className={cn(
-                                    "w-full rounded-xl px-3 py-2.5 text-xs font-bold text-left transition-all flex items-center justify-between mb-0.5 last:mb-0",
+                                    "w-full rounded-xl px-4 py-3 text-[10px] font-medium text-left transition-all duration-300 flex items-center justify-between mb-1 last:mb-0",
                                     selectedLocation === loc
-                                        ? "bg-primary text-white shadow-lg"
-                                        : "text-foreground hover:bg-primary/20 hover:translate-x-1"
+                                        ? "bg-primary text-primary-foreground shadow-xl teal-glow"
+                                        : "text-foreground hover:bg-white/10 hover:translate-x-1"
                                 )}
                             >
-                                <span className="uppercase tracking-wide">{loc}</span>
-                                {selectedLocation === loc && <MapPin className="w-3 h-3" />}
+                                <span className="uppercase tracking-[0.15em]">{loc}</span>
+                                {selectedLocation === loc && <MapPin className="w-3.5 h-3.5" />}
                             </button>
                         ))}
                     </div>
@@ -100,3 +100,4 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
         </div>
     )
 }
+

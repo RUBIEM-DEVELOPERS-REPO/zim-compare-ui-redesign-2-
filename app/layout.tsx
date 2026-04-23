@@ -1,18 +1,24 @@
 import React from "react"
 import type { Metadata, Viewport } from "next"
-import { Inter, JetBrains_Mono, Old_Standard_TT } from "next/font/google"
-import { TopNav } from "@/components/top-nav"
+import { Inter, JetBrains_Mono, Old_Standard_TT, DM_Serif_Display, Playfair_Display } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
-import { CompareBar } from "@/components/compare-bar"
-import { AuthGuard } from "@/components/auth-guard"
-import { ChatWidget } from "@/components/chat-widget"
-import { NavArrows } from "@/components/nav-arrows"
+import { ClientShell } from "@/components/client-shell"
 
 const inter = Inter({ subsets: ["latin"] })
 const oldCentury = Old_Standard_TT({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-old-century",
+})
+const dmSerif = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-dm-serif",
+})
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair",
 })
 
 import "./globals.css"
@@ -34,19 +40,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} ${oldCentury.variable} font-sans antialiased min-h-screen bg-background text-foreground`}>
+      <body className={`${inter.className} ${oldCentury.variable} ${dmSerif.variable} ${playfair.variable} font-sans antialiased min-h-screen bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TopNav />
-          <div className="mx-auto max-w-7xl px-4 pt-4">
-            <NavArrows />
-          </div>
-          <main className="mx-auto max-w-7xl px-4 py-6">
-            <AuthGuard>
-              {children}
-            </AuthGuard>
-          </main>
-          <CompareBar />
-          <ChatWidget />
+          <ClientShell>
+            {children}
+          </ClientShell>
         </ThemeProvider>
       </body>
     </html>

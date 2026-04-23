@@ -10,6 +10,8 @@ import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
 import { Zap, Droplets, CreditCard, LayoutDashboard } from "lucide-react"
 import { UtilitiesCompareBar } from "@/components/utilities/utilities-compare-bar"
+import { PageHeader } from "@/components/page-header"
+
 
 const tabs = [
     { key: "overview", label: "Overview", icon: LayoutDashboard },
@@ -24,10 +26,11 @@ export default function UtilitiesPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-xl font-semibold text-foreground">Utilities</h1>
-                <p className="text-sm text-muted-foreground">Compare Zimbabwe recurring services — electricity, water, and subscriptions</p>
-            </div>
+            <PageHeader
+                title="Utility Intelligence"
+                subtitle="Compare Zimbabwe recurring services — electricity, water, and subscriptions"
+            />
+
 
             <UtilitiesCompareBar />
 
@@ -49,3 +52,4 @@ export default function UtilitiesPage() {
         </div>
     )
 }
+

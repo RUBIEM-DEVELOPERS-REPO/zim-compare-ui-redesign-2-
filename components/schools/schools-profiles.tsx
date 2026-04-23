@@ -55,7 +55,7 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
           <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2">{t("schools.noSchoolsFound", { location: displayLocation })}</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">{t("schools.noSchoolsFound", { location: displayLocation })}</h3>
           <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("schools.noSchoolsDetail")}</p>
         </div>
       ) : (
@@ -63,7 +63,7 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-muted-foreground">{t("schools.selectSchools")}</p>
             {error && (
-              <div className="flex items-center gap-1.5 text-xs text-destructive font-bold animate-in fade-in slide-in-from-right-2">
+              <div className="flex items-center gap-1.5 text-xs text-destructive font-medium animate-in fade-in slide-in-from-right-2">
                 <AlertCircle size={14} />
                 {error}
               </div>
@@ -85,7 +85,7 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
                   )}
                 >
                   <div className="absolute top-6 right-6 flex items-center gap-3 z-10 bg-muted/30 px-3 py-1.5 rounded-xl border border-white/5">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{t("schools.compare")}</span>
+                    <span className="text-[9px] font-medium uppercase tracking-widest text-muted-foreground">{t("schools.compare")}</span>
                     <div className={cn(
                       "w-5 h-5 rounded-lg border flex items-center justify-center transition-all duration-500",
                       isSelected ? "bg-primary border-primary rotate-0" : "bg-white/5 border-white/10 group-hover:border-primary/50"
@@ -96,8 +96,8 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pr-20">
                     <div>
-                      <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors uppercase tracking-tight">{s.name}</h3>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{s.city}, {s.province} &middot; <span className="text-primary">{t(`schools.subTabs.${s.type}`)}</span></p>
+                      <h3 className="text-lg font-medium text-foreground group-hover:text-primary transition-colors uppercase tracking-tight">{s.name}</h3>
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{s.city}, {s.province} &middot; <span className="text-primary">{t(`schools.subTabs.${s.type}`)}</span></p>
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       <ScoreBadge score={s.academicScore} label={t("schools.academic")} />
@@ -111,26 +111,26 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
                       <div className="absolute right-0 top-0 p-2 opacity-10 group-hover/stat:scale-110 transition-transform">
                         <Check className="text-primary w-10 h-10" />
                       </div>
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.annualCost")}</p>
-                      <p className="text-base font-black text-primary tabular-nums tracking-tighter">${s.totalAnnualCost.toLocaleString()}</p>
+                      <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.annualCost")}</p>
+                      <p className="text-base font-medium text-primary tabular-nums tracking-tighter">${s.totalAnnualCost.toLocaleString()}</p>
                     </div>
                     <div className="rounded-2xl bg-muted/30 p-5 border border-white/5">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.passRate")}</p>
-                      <p className="text-base font-black text-foreground tabular-nums tracking-tight">{s.passRate}%</p>
+                      <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.passRate")}</p>
+                      <p className="text-base font-medium text-foreground tabular-nums tracking-tight">{s.passRate}%</p>
                     </div>
                     <div className="rounded-2xl bg-muted/30 p-5 border border-white/5">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.ratio")}</p>
-                      <p className="text-base font-black text-foreground tabular-nums tracking-tight">1:{s.studentTeacherRatio}</p>
+                      <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.ratio")}</p>
+                      <p className="text-base font-medium text-foreground tabular-nums tracking-tight">1:{s.studentTeacherRatio}</p>
                     </div>
                     <div className="rounded-2xl bg-muted/30 p-5 border border-white/5">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.curriculum")}</p>
-                      <p className="text-[10px] font-black text-foreground leading-tight uppercase tracking-tight">{s.curriculum.join(", ")}</p>
+                      <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5">{t("schools.curriculum")}</p>
+                      <p className="text-[10px] font-medium text-foreground leading-tight uppercase tracking-tight">{s.curriculum.join(", ")}</p>
                     </div>
                   </div>
 
                   <div className="grid gap-8 sm:grid-cols-2">
                     <div className="space-y-3">
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{t("schools.premiumFacilities")}</p>
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{t("schools.premiumFacilities")}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {s.facilities.map((f) => (
                           <span key={f} className="text-xs font-medium bg-primary/5 text-primary px-2 py-0.5 rounded-full border border-primary/10 shadow-none leading-none h-[18px] flex items-center">{f}</span>
@@ -138,7 +138,7 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{t("schools.sportsCulture")}</p>
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{t("schools.sportsCulture")}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {s.sports.map((sp) => (
                           <span key={sp} className="text-xs font-medium bg-primary/5 text-primary px-2 py-0.5 rounded-full border border-primary/10 shadow-none leading-none h-[18px] flex items-center">{sp}</span>
@@ -151,7 +151,7 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleSelection(s.id); }}
                       className={cn(
-                        "rounded-2xl px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-xl active:scale-95",
+                        "rounded-2xl px-8 py-3 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-300 shadow-xl active:scale-95",
                         isSelected
                           ? "bg-primary/20 text-primary border border-primary/30"
                           : "bg-primary text-primary-foreground border-transparent shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1"
@@ -175,3 +175,4 @@ export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesP
     </div>
   )
 }
+
