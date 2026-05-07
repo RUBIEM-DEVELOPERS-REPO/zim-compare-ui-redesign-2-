@@ -3,751 +3,150 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-
 import { useAppStore } from "@/lib/store"
-import { Role } from "@/lib/types"
-import { Switch } from "@/components/ui/switch"
-import { 
-    Instagram, Twitter, Facebook, Linkedin, Music,
-    User, Mail, Lock, Phone, MapPin, 
-    Target, Wallet, Heart, Activity, 
-    Airplay, ShieldCheck, CheckCircle2,
-    ChevronRight, ChevronLeft, Info,
-    PieChart, Coins, Banknote, Shield, Share2
-} from "lucide-react"
-
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-
-interface FormData {
-    // Step 1: Basic Info
-    name: string
-    email: string
-    phone: string
-    password: string
-    location: string
-    userType: Role
-    // Step 2: Preferences
-    goal: "save" | "value" | "premium" | ""
-    budget: string
-    // Step 3: Budget Profile
-    income: string
-    monthlyBudgetLimit: string
-    currency: string
-    budgetStyle: "conservative" | "balanced" | "aggressive" | ""
-    // Step 4: Interests
-    interests: string[]
-    // Step 5: Usage
-    dataUsage: "low" | "medium" | "high" | ""
-    travelFrequency: string
-    needs: string[]
-    // Step 6: AI Settings
-    aiPreference: "cheapest" | "value" | "ai" | ""
-    // Step 7: Social Media
-    instagram: string
-    twitter: string
-    facebook: string
-    tiktok: string
-    linkedin: string
-    enableSocialInsights: boolean
-    // Step 8: Consent
-    consentTerms: boolean
-    consentAI: boolean
-}
-
-const STEPS = [
-    { title: "Basic Info", icon: User },
-    { title: "Goals", icon: Target },
-    { title: "Budget Profile", icon: PieChart },
-    { title: "Interests", icon: Heart },
-    { title: "Usage", icon: Activity },
-    { title: "AI Settings", icon: Airplay },
-    { title: "Social Media", icon: Share2 },
-    { title: "Consent", icon: ShieldCheck },
-]
 
 export default function SignUpPage() {
-    const [step, setStep] = useState<Step>(1)
-    const [formData, setFormData] = useState<FormData>({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        location: "",
-        userType: "registered",
-        goal: "",
-        budget: "",
-        income: "",
-        monthlyBudgetLimit: "",
-        currency: "USD",
-        budgetStyle: "",
-        interests: [],
-        dataUsage: "",
-        travelFrequency: "",
-        needs: [],
-        aiPreference: "",
-        instagram: "",
-        twitter: "",
-        facebook: "",
-        tiktok: "",
-        linkedin: "",
-        enableSocialInsights: false,
-        consentTerms: false,
-        consentAI: false
-    })
-
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
-    const { login, setSocialData } = useAppStore()
+    const { login } = useAppStore()
 
-<<<<<<< Updated upstream
-    const updateFormData = (data: Partial<FormData>) => {
-        setFormData(prev => ({ ...prev, ...data }))
-    }
-
-    const nextStep = () => {
-        if (step < 8) setStep(prev => (prev + 1) as Step)
-    }
-
-    const prevStep = () => {
-        if (step > 1) setStep(prev => (prev - 1) as Step)
-    }
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (step < 8) {
-            nextStep()
-            return
-        }
-
-        // Final submission logic
-        setSocialData({
-            instagram: formData.instagram,
-            twitter: formData.twitter,
-            facebook: formData.facebook,
-            tiktok: formData.tiktok,
-            linkedin: formData.linkedin,
-        }, formData.enableSocialInsights)
-        
-        // Simple mock auth
-        const mockToken = "mock_token_" + Date.now()
-        localStorage.setItem("zim_auth_token", mockToken)
-        login(formData.email, formData.name, formData.userType)
-        router.push("/dashboard")
-=======
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setError(null)
+        setIsLoading(true)
+        
         try {
             const response = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, name, role: userType })
+                body: JSON.stringify({ name, email, password, role: "registered" })
             })
-            const data = await response.json()
+
+            const contentType = response.headers.get("content-type")
+            let data: any = {}
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json()
+            }
             
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to sign up')
+                setError(data.error || 'Failed to sign up')
+                setIsLoading(false)
+                return
             }
 
             localStorage.setItem("zim_auth_token", data.token)
             login(data.user.email, data.user.name, data.user.role)
-            router.push("/dashboard")
-        } catch (error: any) {
-            alert(error.message)
+            router.push("/interface-selection")
+        } catch (err: any) {
+            console.error('Sign up error:', err)
+            
+            if (!error) {
+                // Fallback for development if it's a network error
+                const mockToken = "mock_token_" + Date.now()
+                localStorage.setItem("zim_auth_token", mockToken)
+                login(email, name, "registered")
+                router.push("/interface-selection")
+            }
+        } finally {
+            setIsLoading(false)
         }
->>>>>>> Stashed changes
-    }
-
-    const toggleMultiSelect = (field: "interests" | "needs", value: string) => {
-        setFormData(prev => {
-            const current = (prev[field] as string[]) || []
-            const exists = current.includes(value)
-            const updated = exists 
-                ? current.filter(i => i !== value)
-                : [...current, value]
-            return { ...prev, [field]: updated }
-        })
     }
 
     return (
-        <div className="h-screen-dynamic overflow-y-auto scrollbar-premium bg-background/50">
-            <div className="flex flex-col items-center justify-center min-h-screen px-4 py-16">
-                {/* Header / Brand */}
-                <div className="flex flex-col items-center mb-8">
-                <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center mb-4 shadow-lg shadow-primary/20">
-                    <span className="text-2xl font-medium text-primary-foreground tracking-tighter">FT</span>
-                </div>
-                <h1 className="text-3xl font-medium tracking-tight text-foreground">Join Fintech</h1>
-                <p className="text-muted-foreground mt-2 font-medium">Fintech AI Comparison Platform</p>
+        <div className="h-screen w-full overflow-hidden bg-background flex items-center justify-center relative">
+            {/* Background glows */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
             </div>
 
-            <div className="w-full max-w-2xl">
-                {/* Progress Bar Container */}
-                <div className="mb-10 px-2">
-                    <div className="flex justify-between items-center mb-4">
-                        <span className="text-sm font-medium text-primary uppercase tracking-widest">Step {step} of 8</span>
-                        <span className="text-sm font-medium text-muted-foreground">{STEPS[step - 1].title}</span>
+            {/* Card */}
+            <div className="w-full max-w-[390px] relative z-10 px-4">
+                <div className="signin-glass-card px-7 py-6 shadow-2xl">
+                    {/* Header */}
+                    <div className="flex flex-col items-center mb-5">
+                        <div className="h-10 w-10 glass-badge flex items-center justify-center mb-3">
+                            <span className="text-[21px] font-medium text-primary tracking-tighter">FT</span>
+                        </div>
+                        <h1 className="text-2xl font-display font-medium text-foreground leading-tight">Create Account</h1>
+                        <p className="text-[13px] text-muted-foreground mt-1 font-medium tracking-tight">Join the Fintech AI comparison platform.</p>
                     </div>
-                    <div className="h-2 w-full bg-border/40 rounded-full overflow-hidden backdrop-blur-sm">
-                        <motion.div 
-                            className="h-full bg-primary"
-                            initial={{ width: "0%" }}
-                            animate={{ width: `${(step / 8) * 100}%` }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                        />
-                    </div>
-                    {/* Small Icons Progress */}
-                    <div className="flex justify-between mt-4">
-                        {STEPS.map((s, idx) => {
-                            const Icon = s.icon
-                            const isActive = step === idx + 1
-                            const isCompleted = step > idx + 1
-                            return (
-                                <div key={idx} className="flex flex-col items-center gap-2">
-                                    <div className={`
-                                        w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300
-                                        ${isActive ? "bg-primary text-white scale-110 shadow-lg shadow-primary/30" : 
-                                          isCompleted ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground opacity-40"}
-                                    `}>
-                                        {isCompleted ? <CheckCircle2 size={16} /> : <Icon size={16} />}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
 
-                {/* Form Content - Glass Panel */}
-                <div className="glass-panel p-8 md:p-10">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={step}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.3 }}
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-3">
+                        {error && (
+                            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-300">
+                                {error}
+                            </div>
+                        )}
+                        <div className="space-y-1">
+                            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Full Name</label>
+                            <input
+                                type="text"
+                                required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full h-10 px-4 glass-input outline-none transition-all text-[14px] font-medium placeholder:text-muted-foreground/50"
+                                placeholder="John Doe"
+                                disabled={isLoading}
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Email</label>
+                            <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full h-10 px-4 glass-input outline-none transition-all text-[14px] font-medium placeholder:text-muted-foreground/50"
+                                placeholder="name@example.com"
+                                disabled={isLoading}
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Password</label>
+                            <input
+                                type="password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full h-10 px-4 glass-input outline-none transition-all text-[14px] font-medium placeholder:text-muted-foreground/50"
+                                placeholder="••••••••"
+                                disabled={isLoading}
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full h-[44px] glass-primary-button text-sm font-medium mt-1 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                {step === 1 && renderStep1(formData, updateFormData)}
-                                {step === 2 && renderStep2(formData, updateFormData)}
-                                {step === 3 && renderStep3(formData, updateFormData)}
-                                {step === 4 && renderStep4(formData, toggleMultiSelect)}
-                                {step === 5 && renderStep5(formData, updateFormData, toggleMultiSelect)}
-                                {step === 6 && renderStep6(formData, updateFormData)}
-                                {step === 7 && renderStepSocial(formData, updateFormData)}
-                                {step === 8 && renderStepConsent(formData, updateFormData)}
+                            {isLoading ? (
+                                <>
+                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/20 border-t-primary-foreground" />
+                                    <span>Creating...</span>
+                                </>
+                            ) : (
+                                "Sign up to Fintech"
+                            )}
+                        </button>
+                    </form>
 
-                                {/* Navigation Buttons */}
-                                <div className="flex items-center gap-4 pt-6 border-t border-white/5 mt-8">
-                                    {step > 1 && (
-                                        <button
-                                            type="button"
-                                            onClick={prevStep}
-                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-medium text-muted-foreground bg-white/5 hover:bg-white/10 transition-all border border-white/10"
-                                        >
-                                            <ChevronLeft size={18} />
-                                            Back
-                                        </button>
-                                    )}
-                                    <button
-                                        type="submit"
-                                        disabled={step === 8 && (!formData.consentTerms || !formData.consentAI)}
-                                        className={`
-                                            flex-[2] flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-medium text-primary-foreground transition-all shadow-md
-                                            ${step === 8 && (!formData.consentTerms || !formData.consentAI) 
-                                                ? "bg-muted opacity-50 cursor-not-allowed" 
-                                                : "bg-primary hover:scale-[1.02] active:scale-[0.98]"}
-                                        `}
-                                    >
-                                        {step === 8 ? "Complete Signup" : "Continue"}
-                                        {step < 8 && <ChevronRight size={18} />}
-                                    </button>
-                                </div>
-                            </form>
-                        </motion.div>
-                    </AnimatePresence>
+                    {/* Footer */}
+                    <div className="mt-5 pt-4 glass-divider">
+                        <p className="text-center text-sm text-muted-foreground font-medium">
+                            Already have an account?{" "}
+                            <Link href="/signin" className="text-primary font-medium hover:underline">
+                                Sign in
+                            </Link>
+                        </p>
+                    </div>
                 </div>
-
-                <p className="text-center text-sm text-muted-foreground mt-8">
-                    Already have an account?{" "}
-                    <Link href="/signin" className="text-primary font-medium hover:underline transition-all">
-                        Sign in
-                    </Link>
-                </p>
-            </div>
             </div>
         </div>
     )
 }
-
-/* Step Render Functions - Defined outside for cleaner JSX */
-
-const renderStep1 = (data: FormData, update: (d: Partial<FormData>) => void) => (
-    <div className="space-y-5">
-        <h2 className="text-xl font-medium text-foreground">Account Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Full Name</label>
-                <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                    <input
-                        type="text"
-                        required
-                        value={data.name}
-                        onChange={(e) => update({ name: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                        placeholder="John Doe"
-                    />
-                </div>
-            </div>
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Email</label>
-                <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                    <input
-                        type="email"
-                        required
-                        value={data.email}
-                        onChange={(e) => update({ email: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                        placeholder="john@example.com"
-                    />
-                </div>
-            </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Phone Number</label>
-                <div className="relative group">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                    <input
-                        type="tel"
-                        required
-                        value={data.phone}
-                        onChange={(e) => update({ phone: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                        placeholder="+263 7..."
-                    />
-                </div>
-            </div>
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Location</label>
-                <div className="relative group">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                    <input
-                        type="text"
-                        required
-                        value={data.location}
-                        onChange={(e) => update({ location: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                        placeholder="Harare, Zimbabwe"
-                    />
-                </div>
-            </div>
-        </div>
-        <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Password</label>
-            <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                <input
-                    type="password"
-                    required
-                    value={data.password}
-                    onChange={(e) => update({ password: e.target.value })}
-                    className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                    placeholder="••••••••"
-                />
-            </div>
-        </div>
-    </div>
-)
-
-const renderStep2 = (data: FormData, update: (d: Partial<FormData>) => void) => (
-    <div className="space-y-6">
-        <h2 className="text-xl font-medium text-foreground">Your Financial Goals</h2>
-        <div className="space-y-4">
-            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Primary Goal</label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {[
-                    { id: "save", label: "Save Money", icon: Wallet },
-                    { id: "value", label: "Best Value", icon: Target },
-                    { id: "premium", label: "Premium Experience", icon: Activity },
-                ].map((option) => (
-                    <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => update({ goal: option.id as any })}
-                        className={`
-                            flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all
-                            ${data.goal === option.id 
-                                ? "bg-primary/20 border-primary text-primary" 
-                                : "bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10"}
-                        `}
-                    >
-                        <option.icon size={24} />
-                        <span className="text-sm font-medium">{option.label}</span>
-                    </button>
-                ))}
-            </div>
-        </div>
-        <div className="space-y-4">
-            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Budget Range (Monthly)</label>
-            <Select
-                value={data.budget}
-                onValueChange={(val) => update({ budget: val })}
-            >
-                <SelectTrigger className="w-full h-14 pl-4 pr-4 glass-input text-sm border-white/10">
-                    <SelectValue placeholder="Select range" />
-                </SelectTrigger>
-                <SelectContent className="glass-premium border-white/10">
-                    <SelectItem value="low">Under $100</SelectItem>
-                    <SelectItem value="mid_low">$100 - $500</SelectItem>
-                    <SelectItem value="mid">$500 - $1000</SelectItem>
-                    <SelectItem value="mid_high">$1000 - $5000</SelectItem>
-                    <SelectItem value="high">$5000+</SelectItem>
-                </SelectContent>
-            </Select>
-        </div>
-    </div>
-)
-
-const renderStep3 = (data: FormData, update: (d: Partial<FormData>) => void) => (
-    <div className="space-y-6">
-        <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/20 rounded-lg text-primary">
-                <PieChart size={24} />
-            </div>
-            <h2 className="text-xl font-medium text-foreground">Global Budget Profile</h2>
-        </div>
-        
-        <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex gap-3 items-start">
-            <Info className="text-primary shrink-0 mt-0.5" size={18} />
-            <p className="text-xs text-muted-foreground leading-relaxed">
-                This budget profile powers personalized recommendations across <span className="text-primary font-medium">Banking, Telecom, Stayscape, and more</span>. It ensures we only suggest products you can actually afford.
-            </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Monthly Income</label>
-                <div className="relative group">
-                    <Coins className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                    <input
-                        type="number"
-                        required
-                        value={data.income}
-                        onChange={(e) => update({ income: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                        placeholder="0.00"
-                    />
-                </div>
-            </div>
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Monthly Budget Limit</label>
-                <div className="relative group">
-                    <Banknote className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                    <input
-                        type="number"
-                        required
-                        value={data.monthlyBudgetLimit}
-                        onChange={(e) => update({ monthlyBudgetLimit: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3.5 glass-input text-sm"
-                        placeholder="0.00"
-                    />
-                </div>
-            </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Currency</label>
-                <Select
-                    value={data.currency}
-                    onValueChange={(val) => update({ currency: val })}
-                >
-                    <SelectTrigger className="w-full h-14 pl-4 pr-4 glass-input text-sm border-white/10">
-                        <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent className="glass-premium border-white/10">
-                        <SelectItem value="USD">USD ($)</SelectItem>
-                        <SelectItem value="ZWG">ZWG (ZiG)</SelectItem>
-                        <SelectItem value="ZAR">ZAR (R)</SelectItem>
-                        <SelectItem value="GBP">GBP (£)</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Budgeting Style</label>
-                <Select
-                    value={data.budgetStyle}
-                    onValueChange={(val) => update({ budgetStyle: val as any })}
-                >
-                    <SelectTrigger className="w-full h-14 pl-4 pr-4 glass-input text-sm border-white/10">
-                        <SelectValue placeholder="Select style" />
-                    </SelectTrigger>
-                    <SelectContent className="glass-premium border-white/10">
-                        <SelectItem value="conservative">Conservative (Safe & Steady)</SelectItem>
-                        <SelectItem value="balanced">Balanced (Optimized)</SelectItem>
-                        <SelectItem value="aggressive">Aggressive (Growth Focused)</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-        </div>
-    </div>
-)
-
-const renderStep4 = (data: FormData, toggle: (f: "interests", v: string) => void) => (
-    <div className="space-y-6">
-        <h2 className="text-xl font-medium text-foreground">What interests you?</h2>
-        <p className="text-sm text-muted-foreground -mt-4">Select categories you'd like the AI to monitor for you.</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {[
-                "Banks", "Insurance", "Telecoms", 
-                "Education", "Mobility", "Utilities", "Hospitality"
-            ].map((interest) => (
-                <button
-                    key={interest}
-                    type="button"
-                    onClick={() => toggle("interests", interest)}
-                    className={`
-                        px-4 py-3 rounded-xl border text-sm font-medium transition-all
-                        ${data.interests.includes(interest)
-                            ? "bg-primary border-primary text-white shadow-lg shadow-primary/25"
-                            : "bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10"}
-                    `}
-                >
-                    {interest}
-                </button>
-            ))}
-        </div>
-    </div>
-)
-
-const renderStep5 = (data: FormData, update: (d: Partial<FormData>) => void, toggle: (f: "needs", v: string) => void) => (
-    <div className="space-y-6">
-        <h2 className="text-xl font-medium text-foreground">Usage & Lifestyle</h2>
-        <div className="space-y-4">
-            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Data Usage</label>
-            <div className="flex gap-4">
-                {["Low", "Medium", "High"].map((val) => (
-                    <button
-                        key={val}
-                        type="button"
-                        onClick={() => update({ dataUsage: val.toLowerCase() as any })}
-                        className={`
-                            flex-1 py-3 rounded-xl border text-sm font-medium transition-all
-                            ${data.dataUsage === val.toLowerCase()
-                                ? "bg-primary/20 border-primary text-primary"
-                                : "bg-white/5 border-white/10 text-muted-foreground"}
-                        `}
-                    >
-                        {val}
-                    </button>
-                ))}
-            </div>
-        </div>
-        <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Travel Frequency</label>
-            <Select
-                value={data.travelFrequency}
-                onValueChange={(val) => update({ travelFrequency: val })}
-            >
-                <SelectTrigger className="w-full h-14 pl-4 pr-4 glass-input text-sm border-white/10">
-                    <SelectValue placeholder="Select frequency" />
-                </SelectTrigger>
-                <SelectContent className="glass-premium border-white/10">
-                    <SelectItem value="rarely">Rarely</SelectItem>
-                    <SelectItem value="occasionally">Occasionally</SelectItem>
-                    <SelectItem value="frequently">Frequently</SelectItem>
-                    <SelectItem value="business">Frequent Business Travel</SelectItem>
-                </SelectContent>
-            </Select>
-        </div>
-        <div className="space-y-4">
-            <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Current Needs</label>
-            <div className="grid grid-cols-2 gap-3">
-                {["Car", "Education"].map((need) => (
-                    <button
-                        key={need}
-                        type="button"
-                        onClick={() => toggle("needs", need)}
-                        className={`
-                            px-4 py-3 rounded-xl border text-sm font-medium transition-all
-                            ${data.needs.includes(need)
-                                ? "bg-primary border-primary text-white"
-                                : "bg-white/5 border-white/10 text-muted-foreground"}
-                        `}
-                    >
-                        {need}
-                    </button>
-                ))}
-            </div>
-        </div>
-    </div>
-)
-
-const renderStep6 = (data: FormData, update: (d: Partial<FormData>) => void) => (
-    <div className="space-y-6">
-        <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/20 rounded-lg text-primary">
-                <Airplay size={24} />
-            </div>
-            <h2 className="text-xl font-medium text-foreground">AI Personalization</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">How should our AI engine prioritize recommendations for you?</p>
-        <div className="space-y-3">
-            {[
-                { id: "cheapest", label: "Strictly Cheapest", desc: "Priority on the lowest absolute cost." },
-                { id: "value", label: "Best Value", desc: "Balance between features and price." },
-                { id: "ai", label: "AI Recommended", desc: "Personalized based on your unique usage patterns." },
-            ].map((pref) => (
-                <button
-                    key={pref.id}
-                    type="button"
-                    onClick={() => update({ aiPreference: pref.id as any })}
-                    className={`
-                        w-full text-left p-4 rounded-2xl border transition-all flex items-center justify-between
-                        ${data.aiPreference === pref.id
-                            ? "bg-primary/10 border-primary shadow-lg shadow-primary/5"
-                            : "bg-white/5 border-white/10 hover:bg-white/10"}
-                    `}
-                >
-                    <div>
-                        <h4 className={`text-sm font-medium ${data.aiPreference === pref.id ? "text-primary" : "text-foreground"}`}>
-                            {pref.label}
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-1">{pref.desc}</p>
-                    </div>
-                    {data.aiPreference === pref.id && <CheckCircle2 className="text-primary" size={20} />}
-                </button>
-            ))}
-        </div>
-    </div>
-)
-
-const renderStepSocial = (data: FormData, update: (d: Partial<FormData>) => void) => (
-    <div className="space-y-8">
-        <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/20 rounded-lg text-primary">
-                <Share2 size={24} />
-            </div>
-            <h2 className="text-xl font-medium text-foreground">Social Media Specialisation</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">Link your profiles (optional) to allow our AI to generate high-fidelity lifestyle-based financial maneuvers.</p>
-        
-        <div className="grid gap-5">
-            {[
-                { id: "instagram", icon: Instagram, placeholder: "@username", label: "Instagram" },
-                { id: "twitter", icon: Twitter, placeholder: "@username or URL", label: "Twitter (X)" },
-                { id: "facebook", icon: Facebook, placeholder: "profile URL", label: "Facebook" },
-                { id: "tiktok", icon: Music, placeholder: "@username", label: "TikTok" },
-                { id: "linkedin", icon: Linkedin, placeholder: "profile URL", label: "LinkedIn" },
-            ].map((social) => (
-                <div key={social.id} className="space-y-2">
-                    <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">{social.label}</label>
-                    <div className="relative group">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
-                            <social.icon size={18} />
-                        </div>
-                        <input
-                            type="text"
-                            value={(data as any)[social.id]}
-                            onChange={(e) => update({ [social.id]: e.target.value })}
-                            placeholder={social.placeholder}
-                            className="w-full h-14 pl-12 pr-4 glass-input text-sm font-medium outline-none transition-all border-white/10 hover:border-white/20 focus:border-primary/50"
-                        />
-                    </div>
-                </div>
-            ))}
-        </div>
-
-        {/* Social Insights Toggle */}
-        <div className="glass-floating p-6 border-primary/20 bg-primary/5 teal-glow">
-            <div className="flex items-center justify-between gap-4">
-                <div className="space-y-1">
-                    <h4 className="text-sm font-medium text-white">Enable Social Insights</h4>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        Allow our Neural Engine to infer lifestyle patterns and recommend financial optimizations based on your social presence. 
-                        We <span className="text-primary font-bold">never</span> scrape private data or share your handles.
-                    </p>
-                </div>
-                <Switch 
-                    checked={data.enableSocialInsights}
-                    onCheckedChange={(val) => update({ enableSocialInsights: val })}
-                />
-            </div>
-        </div>
-    </div>
-)
-
-const renderStepConsent = (data: FormData, update: (d: Partial<FormData>) => void) => (
-    <div className="space-y-6">
-        <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/20 rounded-lg text-primary">
-                <ShieldCheck size={24} />
-            </div>
-            <h2 className="text-xl font-medium text-foreground">Final Consent</h2>
-        </div>
-        <p className="text-sm text-muted-foreground font-sans">
-            To provide you with high-fidelity financial intelligence, we need your confirmation on the following protocols:
-        </p>
-
-        <div className="space-y-4 pt-4">
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                <Switch 
-                    id="consent-terms"
-                    checked={data.consentTerms}
-                    onCheckedChange={(val) => update({ consentTerms: val })}
-                    className="mt-1"
-                />
-                <div className="grid gap-1.5 leading-none">
-                    <label
-                        htmlFor="consent-terms"
-                        className="text-sm font-medium leading-none text-foreground cursor-pointer"
-                    >
-                        Accept Terms of Service
-                    </label>
-                    <p className="text-xs text-muted-foreground">
-                        I agree to the platform's data processing protocols and usage agreements.
-                    </p>
-                </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                <Switch 
-                    id="consent-ai"
-                    checked={data.consentAI}
-                    onCheckedChange={(val) => update({ consentAI: val })}
-                    className="mt-1"
-                />
-                <div className="grid gap-1.5 leading-none">
-                    <label
-                        htmlFor="consent-ai"
-                        className="text-sm font-medium leading-none text-foreground cursor-pointer"
-                    >
-                        Enable Neural Processing
-                    </label>
-                    <p className="text-xs text-muted-foreground">
-                        I permit the AI engine to analyze my profile for optimized financial recommendations.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div className="mt-8 p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 flex gap-3 text-orange-200">
-            <Info size={18} className="shrink-0 mt-0.5" />
-            <p className="text-xs leading-relaxed">
-                Your data is encrypted end-to-end and stored locally within your secure node. We never sell your personal metrics.
-            </p>
-        </div>
-    </div>
-)
-
-

@@ -6,12 +6,7 @@ import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
-<<<<<<< Updated upstream
-import { Suspense, useEffect, useState } from "react"
-=======
-import { Suspense, useEffect, useMemo } from "react"
-import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
->>>>>>> Stashed changes
+import { Suspense, useEffect, useState, useMemo } from "react"
 
 function CompareContent() {
   const searchParams = useSearchParams()
@@ -229,11 +224,21 @@ function CompareContent() {
             </p>
           </div>
 
-          <SwitchSaveSimulator
-            category="banking"
-            current={items[0]}
-            recommended={winner}
-          />
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 text-primary/5 rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                 <span className="text-4xl font-black">$$</span>
+            </div>
+            <h3 className="text-sm font-medium text-foreground mb-4 relative z-10 flex items-center gap-2">
+              Neural Fiscal Path
+            </h3>
+            <p className="text-xs text-muted-foreground leading-relaxed relative z-10 mb-4">
+              Transitioning your capital distribution to <strong className="text-foreground">{winner?.bankName}</strong> yields a projected 14% improvement in net annual yields.
+            </p>
+            <div className="mt-auto flex items-center justify-between relative z-10">
+              <span className="text-[10px] font-medium text-primary uppercase tracking-widest">Logic Efficiency</span>
+              <span className="text-[10px] font-bold text-foreground">Optimal</span>
+            </div>
+          </div>
         </div>
       )}
 

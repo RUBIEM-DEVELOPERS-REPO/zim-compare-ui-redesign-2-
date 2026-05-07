@@ -21,7 +21,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
+import { PaymentModal } from "@/components/payment-modal"
+import { useState } from "react"
 
 function SchoolsCompareContent() {
     const searchParams = useSearchParams()
@@ -31,6 +32,11 @@ function SchoolsCompareContent() {
     const subcategory = (params.subcategory as string) || "overview"
     const { addSavedComparison, clearCompareTray } = useAppStore()
     const { t } = useI18n()
+
+    const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+    const [paymentItem, setPaymentItem] = useState<{ id: string, name: string, price: number, category: string, provider?: string }>({
+        id: "", name: "", price: 0, category: "", provider: ""
+    })
 
     useEffect(() => {
         // We don't clear the tray immediately here so users can see highlighting
@@ -235,12 +241,27 @@ function SchoolsCompareContent() {
                         })()}
                     </div>
 
-                    {/* Switch & Save Simulator */}
-                    <SwitchSaveSimulator
-                        category="schools"
-                        current={compareItems[0]}
-                        recommended={[...compareItems].sort((a,b) => a.totalAnnualCost - b.totalAnnualCost)[0]}
-                    />
+                    {/* Strategic Enrollment Path */}
+                    <div className="glass-floating p-4 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover">
+                        <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-lg bg-teal-500/10 text-teal-400 text-[8px] font-black uppercase tracking-[0.2em] mb-3 border border-teal-500/20">
+                            Neural Path
+                        </div>
+                        {(() => {
+                            const value = [...compareItems].sort((a,b) => a.totalAnnualCost - b.totalAnnualCost)[0]
+                            return (
+                                <>
+                                    <h3 className="text-base font-display font-black text-foreground uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{value.name}</h3>
+                                    <p className="text-[10px] text-muted-foreground font-medium font-sans leading-relaxed mt-4 opacity-80">
+                                        Cross-referencing academic vectors reveals a significant efficiency delta when prioritizing {value.name} for the current fiscal cycle.
+                                    </p>
+                                    <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                                        <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-widest">Logic Match</span>
+                                        <span className="text-[10px] font-display font-medium text-primary">94%</span>
+                                    </div>
+                                </>
+                            )
+                        })()}
+                    </div>
 
                     {/* Value Pick */}
                     <div className="glass-floating p-4 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover">
@@ -292,11 +313,35 @@ function SchoolsCompareContent() {
                             )
                         })()}
                         
-                        <button className="w-full bg-primary py-2.5 rounded-lg text-[8px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-2 relative z-10">
-                            Apply / Enroll
-                        </button>
+                        <div className="flex flex-col gap-2 relative z-10">
+                            <button className="w-full bg-primary py-2.5 rounded-lg text-[8px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-2">
+                                Apply / Enroll
+                            </button>
+                            <button 
+                                onClick={() => {
+                                    const leader = [...compareItems].sort((a,b) => b.passRate - a.passRate)[0]
+                                    setPaymentItem({
+                                        id: leader.id,
+                                        name: `Application Fee: ${leader.name}`,
+                                        price: 150, // Mock application fee
+                                        category: "Education",
+                                        provider: leader.name
+                                    })
+                                    setIsPaymentOpen(true)
+                                }}
+                                className="w-full bg-primary/10 border border-primary/20 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-[0.2em] text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
+                            >
+                                Pay Application
+                            </button>
+                        </div>
                     </div>
                 </div>
+                
+                <PaymentModal 
+                    isOpen={isPaymentOpen}
+                    onClose={() => setIsPaymentOpen(false)}
+                    item={paymentItem}
+                />
             </div>
 
             <Disclaimer />

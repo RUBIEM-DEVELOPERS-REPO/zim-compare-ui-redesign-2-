@@ -5,17 +5,10 @@ import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
-<<<<<<< Updated upstream
-import { X, Plus, CheckCircle2 } from "lucide-react"
+import { X, Plus, CheckCircle2, MapPin, Signal, Battery, Network, Globe2, AlertTriangle, ShieldCheck } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
-import { useAppStore } from "@/lib/store"
-import { cn } from "@/lib/utils"
+import type { TelecomProvider } from "@/lib/types"
 import { TelecomCompareBar } from "./telecom-compare-bar"
-=======
-import { X, MapPin, Signal, Battery, Network, Globe2, AlertTriangle, ShieldCheck } from "lucide-react"
-import { useI18n } from "@/lib/i18n"
-import type { TelecomProvider } from "@prisma/client"
->>>>>>> Stashed changes
 
 const coverageByRegion = [
   { regionKey: "harare", region: "Harare", econet: 98, netone: 95, telecel: 90, telone: 80, liquid: 85 },

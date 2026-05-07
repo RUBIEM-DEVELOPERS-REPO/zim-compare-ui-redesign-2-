@@ -4,7 +4,6 @@ import { vehicles } from "@/lib/mock/transport"
 import { cn } from "@/lib/utils"
 import { Car, X } from "lucide-react"
 import { useAppStore } from "@/lib/store"
-import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
 
 const fuelColors: Record<string, string> = {
     petrol: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -114,11 +113,22 @@ export function TransportVehicleCompare() {
                         </div>
                     </div>
 
-                    <SwitchSaveSimulator
-                        category="mobility"
-                        current={selectedVehicles[0]}
-                        recommended={[...selectedVehicles].sort((a,b) => a.price - b.price)[0]}
-                    />
+                    <div className="glass-floating p-5 bg-primary/5 border-primary/20 shadow-xl rounded-xl group relative overflow-hidden teal-glow">
+                        <div className="absolute top-0 right-0 p-4 text-primary/5 rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                             <Car className="w-16 h-16" />
+                        </div>
+                        <p className="text-[9px] font-medium text-primary uppercase tracking-[0.2em] mb-2 relative z-10">Strategic Asset Insight</p>
+                        <h4 className="text-sm font-display font-medium text-white tracking-tight uppercase leading-none mb-3 relative z-10">
+                            {[...selectedVehicles].sort((a,b) => a.price - b.price)[0].make} {[...selectedVehicles].sort((a,b) => a.price - b.price)[0].model}
+                        </h4>
+                        <p className="text-[10px] text-muted-foreground font-medium font-sans leading-relaxed relative z-10 mb-4 opacity-80">
+                            Neural analysis identifies this asset as the optimal entry point for high-liquidity transport requirements within the current economic quadrant.
+                        </p>
+                        <div className="pt-3 border-t border-white/10 flex items-center justify-between relative z-10">
+                            <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-widest">Efficiency Delta</span>
+                            <span className="text-[10px] font-display font-medium text-primary">Neural Optimized</span>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

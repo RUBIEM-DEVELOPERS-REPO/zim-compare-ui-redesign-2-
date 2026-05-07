@@ -63,7 +63,7 @@ export function TopNav() {
         {mounted && (
           <div className="flex items-center gap-4">
             {!isAuthPage && (
-              <div className="hidden md:flex items-center gap-1 bg-secondary/50 p-1 rounded-xl border border-border/50">
+              <div className="hidden md:flex items-center gap-1 bg-secondary/50 p-1 rounded-xl border border-primary/15">
                 {(["en", "sn", "nd"] as const).map((lang) => (
                   <button
                     key={lang}
@@ -83,7 +83,7 @@ export function TopNav() {
 
             <button
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              className="p-2.5 rounded-xl bg-secondary/80 border border-border/50 text-muted-foreground hover:text-primary hover:bg-secondary transition-all duration-300 shadow-sm"
+              className="p-2.5 rounded-xl bg-secondary/80 border border-primary/15 text-muted-foreground hover:text-primary hover:bg-secondary transition-all duration-300 shadow-sm"
               title={resolvedTheme === "dark" ? t("settings.lightMode") : t("settings.darkMode")}
             >
               {mounted && (resolvedTheme === "dark" ? <Sun size={18} /> : <Moon size={18} />)}

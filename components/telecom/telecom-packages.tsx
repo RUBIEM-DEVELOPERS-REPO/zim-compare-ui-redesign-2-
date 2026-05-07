@@ -1,20 +1,14 @@
 "use client"
 
 import { Disclaimer } from "@/components/disclaimer"
-<<<<<<< Updated upstream
-import { useAppStore } from "@/lib/store"
-import { cn } from "@/lib/utils"
-=======
 import { cn, formatDate } from "@/lib/utils"
->>>>>>> Stashed changes
+import { useAppStore } from "@/lib/store"
 import { X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
-<<<<<<< Updated upstream
-import { useAppStore } from "@/lib/store"
+import { PaymentModal } from "@/components/payment-modal"
+import { useState } from "react"
+import type { TelecomProvider, DataBundle } from "@/lib/types"
 import { TelecomCompareBar } from "./telecom-compare-bar"
-=======
-import type { TelecomProvider, DataBundle } from "@prisma/client"
->>>>>>> Stashed changes
 
 const promos = [
   { providerId: "econet", provider: "Econet Wireless", name: "Weekend Data Blast", detail: "Double data on all bundles purchased Friday-Sunday", validUntil: "2026-03-31" },
@@ -33,6 +27,10 @@ interface TelecomPackagesProps {
 export function TelecomPackages({ location = "All Locations", bundles = [], providers = [] }: TelecomPackagesProps) {
   const { t } = useI18n()
   const { addToCompareTray, compareTray } = useAppStore()
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const [paymentItem, setPaymentItem] = useState<{ id: string, name: string, price: number, category: string, provider?: string }>({
+    id: "", name: "", price: 0, category: "", provider: ""
+  })
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   const filteredProviders = location === "All Locations"
@@ -41,8 +39,8 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
 
   // Best value: cheapest bundle per provider by cost-per-MB
   const bestValue = filteredProviders.map((p) => {
-    const providerBundles = bundles.filter((b) => b.operator === p.id && b.total_data_mb > 0)
-    const best = providerBundles.sort((a, b) => (a.price / a.total_data_mb) - (b.price / b.total_data_mb))[0]
+    const providerBundles = bundles.filter((b) => (b.operator === p.id || b.providerId === p.id) && ((b.total_data_mb || 0) > 0 || b.dataGB > 0))
+    const best = providerBundles.sort((a, b) => (a.price / (a.total_data_mb || 1)) - (b.price / (b.total_data_mb || 1)))[0]
     return best ? { provider: p.name, bundle: best } : null
   }).filter(Boolean)
 
@@ -99,13 +97,10 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
             <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-muted-foreground" />
             </div>
-<<<<<<< Updated upstream
-            <h3 className="text-lg font-bold text-foreground mb-2">No bundles found</h3>
-            <p className="text-muted-foreground mb-6 max-w-xs mx-auto">Upload telecom data via the Admin panel to see best value bundles.</p>
-=======
-            <h3 className="text-lg font-medium text-foreground mb-2">{t("telecom.noBundlesFound", { sub: t("telecom.subTabs.monthly"), location: displayLocation })}</h3>
-            <p className="text-muted-foreground mb-6 max-w-xs mx-auto">{t("telecom.noBundlesDetail", { sub: t("telecom.subTabs.monthly") })}</p>
->>>>>>> Stashed changes
+            <h3 className="text-lg font-bold text-foreground mb-2">No Active Promos Detected</h3>
+            <p className="text-muted-foreground mb-6 max-w-xs mx-auto text-xs uppercase tracking-widest leading-relaxed">
+              Upload telecom data via the Admin panel to activate Neural Signal Analysis.
+            </p>
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -116,61 +111,68 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
                   key={item.provider}
                   className="glass-floating p-6 transition-all duration-500 group relative overflow-hidden floating-hover border-white/5 bg-white/5"
                 >
-<<<<<<< Updated upstream
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{item.provider}</p>
-                  <p className="text-sm font-bold text-foreground mt-1 group-hover:text-teal-600 transition-colors uppercase tracking-tight">{item.bundle.bundle_name}</p>
-                  <div className="flex items-center gap-4 mt-4 mb-1">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">{t("telecom.data")}</span>
-                      <span className="text-sm font-black text-foreground">{formatData(item.bundle.total_data_mb)}</span>
-                    </div>
-                    <div className="flex flex-col border-l border-border pl-4">
-                      <span className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">{t("telecom.price")}</span>
-                      <span className="text-sm font-black text-teal-600">{item.bundle.currency} {item.bundle.price.toFixed(2)}</span>
-=======
                   <div className="absolute top-0 right-0 p-4 text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
                     <CheckCircle2 size={80} />
                   </div>
-                  <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] mb-2 opacity-60">{item.provider}</p>
-                  <p className="text-lg font-display font-medium text-white mt-1 group-hover:text-primary transition-colors uppercase tracking-tight leading-tight relative z-10">{item.bundle.name}</p>
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">{item.provider}</p>
+                  <p className="text-sm font-bold text-foreground mt-1 group-hover:text-teal-600 transition-colors uppercase tracking-tight leading-tight relative z-10">
+                    {item.bundle.bundle_name || (item.bundle as any).name}
+                  </p>
                   
-                  <div className="grid grid-cols-2 gap-4 mt-8 mb-6 relative z-10">
-                    <div className="glass-floating bg-white/5 p-3 border-white/10 shadow-inner group-hover:bg-primary/5 transition-colors duration-500">
-                      <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.data")}</span>
-                      <span className="text-sm font-display font-medium text-white tabular-nums">{item.bundle.dataGB}GB</span>
+                  <div className="grid grid-cols-2 gap-4 mt-6 mb-6 relative z-10">
+                    <div className="glass-floating bg-white/5 p-3 border-white/10 shadow-inner group-hover:bg-primary/5 transition-colors duration-500 rounded-xl">
+                      <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.data")}</span>
+                      <span className="text-sm font-black text-foreground tabular-nums">
+                        {formatData(item.bundle.total_data_mb || ((item.bundle as any).dataGB * 1024))}
+                      </span>
                     </div>
-                    <div className="glass-floating bg-primary/5 p-3 border-primary/20 shadow-inner group-hover:bg-primary/10 transition-colors duration-500 teal-glow">
-                      <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.price")}</span>
-                      <span className="text-sm font-display font-medium text-primary tabular-nums">${item.bundle.price.toFixed(2)}</span>
->>>>>>> Stashed changes
+                    <div className="glass-floating bg-primary/5 p-3 border-primary/20 shadow-inner group-hover:bg-primary/10 transition-colors duration-500 teal-glow rounded-xl">
+                      <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.price")}</span>
+                      <span className="text-sm font-black text-teal-600 tabular-nums">
+                        {item.bundle.currency || "$"} {item.bundle.price.toFixed(2)}
+                      </span>
                     </div>
-                  </div>
+                    </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-white/10 relative z-10 mt-auto">
+                    <div className="flex items-center gap-2">
+                      {(() => {
+                        const inTray = compareTray.ids.includes(item.bundle.id)
+                        return (
+                          <button
+                            onClick={() => addToCompareTray("telecom", item.bundle.id, "packages")}
+                            className={cn(
+                              "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xl teal-glow",
+                              inTray ? "bg-primary text-primary-foreground scale-110" : "bg-white/5 border border-white/10 text-muted-foreground hover:bg-primary/20 hover:text-primary"
+                            )}
+                          >
+                            {inTray ? <CheckCircle2 className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
+                          </button>
+                        )
+                      })()}
+                      <button 
+                        onClick={() => {
+                          setPaymentItem({
+                            id: item.bundle.id,
+                            name: item.bundle.bundle_name || (item.bundle as any).name,
+                            price: item.bundle.price,
+                            category: "Telecom",
+                            provider: item.provider
+                          })
+                          setIsPaymentOpen(true)
+                        }}
+                        className="px-4 h-10 bg-primary/10 border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all"
+                      >
+                        Buy Now
+                      </button>
+                    </div>
                     <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60 italic tabular-nums">${item.bundle.costPerGB.toFixed(2)} / GB Signal</p>
-                    {(() => {
-                      const inTray = compareTray.ids.includes(item.bundle.id)
-                      return (
-                        <button
-                          onClick={() => addToCompareTray("telecom", item.bundle.id, "packages")}
-                          className={cn(
-                            "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xl teal-glow",
-                            inTray ? "bg-primary text-primary-foreground scale-110" : "bg-white/5 border border-white/10 text-muted-foreground hover:bg-primary/20 hover:text-primary"
-                          )}
-                        >
-                          {inTray ? <CheckCircle2 className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
-                        </button>
-                      )
-                    })()}
                   </div>
-<<<<<<< Updated upstream
-                  <p className="text-[10px] font-bold text-muted-foreground mt-2 italic">
-                    {item.bundle.total_data_mb > 0
-                      ? `$${(item.bundle.price / (item.bundle.total_data_mb / 1024)).toFixed(2)} / GB`
-                      : "Per bundle"}
+                  <p className="text-[10px] font-bold text-muted-foreground mt-2 italic opacity-60">
+                    {(item.bundle.total_data_mb || 0) > 0
+                      ? `$${(item.bundle.price / ((item.bundle.total_data_mb || 1) / 1024)).toFixed(2)} / GB Neural`
+                      : "Neural optimized"}
                   </p>
-=======
->>>>>>> Stashed changes
                 </div>
               )
             })}
@@ -178,6 +180,11 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
         )}
       </section>
       <Disclaimer />
+      <PaymentModal 
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        item={paymentItem}
+      />
     </div>
   )
 }

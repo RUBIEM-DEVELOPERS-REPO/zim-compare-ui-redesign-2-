@@ -19,7 +19,7 @@ const tabs = [
   { key: "fees", label: "Fees & Charges" },
   { key: "non-interest", label: "Non-Interest Income" },
   { key: "digital", label: "Digital Banking" },
-  { key: "profiles", label: "Bank Profiles" },
+  { key: "profiles", labelKey: "nav.profiles", label: "Bank Profiles" },
 ] as const
 
 export function BankingSection() {

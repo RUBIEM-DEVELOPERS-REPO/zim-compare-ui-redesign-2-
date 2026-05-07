@@ -8,6 +8,8 @@ import { Disclaimer } from "@/components/disclaimer"
 import { Plus, Check, AlertCircle, X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 import { BankingCompareBar } from "./banking-compare-bar"
+import { ScoreBadge } from "@/components/score-badge"
+import { Sparkles } from "lucide-react"
 
 const subTabs = [
   { key: "personal", label: "Personal" },
@@ -26,12 +28,17 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
   const { addToCompareTray, removeFromCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
 
+  const [loanAmount, setLoanAmount] = useState<number>(0)
+
   const filtered = bankLoans.filter((l) => {
     const categoryMatch = l.category === sub
     if (!categoryMatch) return false
 
-    // National scope by default
-    if (location === "All Locations") return true
+    // Location filter
+    const bank = banks.find(b => b.id === l.bankId)
+    if (location !== "All Locations" && bank && !bank.locations.includes(location)) {
+      return false
+    }
 
     return true
   })
@@ -39,20 +46,22 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
   return (
     <div className="space-y-4">
       <BankingCompareBar />
-      {/* Sub-tabs - 3 Column Grid */}
-      <div className="glass-tab-container grid grid-cols-3 sm:grid-cols-5 gap-1.5 p-1.5">
-        {subTabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setSub(t.key)}
-            className={cn(
-              "glass-tab-base text-[10px] font-medium uppercase tracking-wider h-10 w-full flex items-center justify-center",
-              sub === t.key ? "glass-tab-active" : "text-muted-foreground"
-            )}
-          >
-            {t.label}
-          </button>
-        ))}
+      {/* Sub-tabs & Filters */}
+      <div className="flex flex-col gap-4">
+        <div className="glass-tab-container grid grid-cols-3 sm:grid-cols-5 gap-1.5 p-1.5">
+          {subTabs.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setSub(t.key)}
+              className={cn(
+                "glass-tab-base text-[10px] font-medium uppercase tracking-wider h-10 w-full flex items-center justify-center",
+                sub === t.key ? "glass-tab-active" : "text-muted-foreground"
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -76,10 +85,26 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
                 </div>
               )}
 
+              {(() => {
+                const bank = banks.find(b => b.id === l.bankId)
+                const recScore = bank?.recommendationScore || 85
+                const isRecommended = recScore > 90
+                return isRecommended && (
+                  <div className="absolute -top-2.5 left-4 z-10">
+                    <span className="flex items-center gap-1 text-[8px] font-bold text-amber-400 bg-black/80 px-2 py-1 rounded-full border border-amber-500/30 uppercase tracking-widest shadow-lg">
+                      <Sparkles size={8} /> Neural Recommended
+                    </span>
+                  </div>
+                )
+              })()}
+
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-medium text-foreground">{l.name}</p>
+                <div className="flex flex-col">
+                  <p className="text-base font-display font-medium text-foreground tracking-tight uppercase">{l.name}</p>
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">{l.bankName}</p>
+                </div>
+                <ScoreBadge score={banks.find(b => b.id === l.bankId)?.recommendationScore || 85} label="AI Score" />
               </div>
-              <p className="text-xs text-muted-foreground mb-3">{l.bankName}</p>
 
               <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
                 <div className="rounded-lg bg-secondary/50 p-2">
@@ -101,16 +126,16 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
               </div>
 
               {/* Total cost preview */}
-              <div className="glass-card bg-secondary/10 p-3 mb-3">
-                <p className="text-xs text-muted-foreground mb-1">Total cost of $1,000 borrowed</p>
-                <div className="flex gap-4 text-xs">
+              <div className="glass-card bg-secondary/10 p-3 mb-3 border border-white/5">
+                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-2 opacity-60">Cost of $1,000 borrowed</p>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="text-muted-foreground">12 months:</span>{" "}
-                    <span className="text-foreground font-medium">${totalCost12.toFixed(0)}</span>
+                    <span className="text-[10px] text-muted-foreground">12 Months:</span>{" "}
+                    <span className="text-sm font-medium text-foreground">${totalCost12.toFixed(0)}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">24 months:</span>{" "}
-                    <span className="text-foreground font-medium">${totalCost24.toFixed(0)}</span>
+                    <span className="text-[10px] text-muted-foreground">24 Months:</span>{" "}
+                    <span className="text-sm font-medium text-foreground">${totalCost24.toFixed(0)}</span>
                   </div>
                 </div>
               </div>
@@ -126,27 +151,22 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
                 </div>
               </div>
 
-              <button
-                onClick={() => inTray ? removeFromCompareTray(l.id) : addToCompareTray("banking", l.id, "loans")}
-                className={cn(
-                  "btn-compare-standard w-full",
-                  (inTray || trayFull) && "opacity-60"
-                )}
-              >
-                {inTray ? (
-                  <>{t("common.removeFromCompare")}</>
-                ) : trayFull ? (
-                  <>
-                    <AlertCircle size={14} />
-                    {t("common.compareLimitReached")}
-                  </>
-                ) : (
-                  <>
-                    <Plus size={14} />
-                    {t("common.addToCompare")}
-                  </>
-                )}
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => inTray ? removeFromCompareTray(l.id) : addToCompareTray("banking", l.id, l.category)}
+                  className={cn(
+                    "btn-compare-standard py-2.5",
+                    (inTray || trayFull) && "opacity-60"
+                  )}
+                >
+                  {inTray ? "Remove" : "Compare"}
+                </button>
+                <button
+                  className="bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest py-2.5 rounded-xl hover:scale-[1.02] transition-all shadow-lg shadow-primary/20"
+                >
+                  Apply Now
+                </button>
+              </div>
             </div>
           )
         })}

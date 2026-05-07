@@ -2,12 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { useAppStore } from "@/lib/store"
-<<<<<<< Updated upstream
-import { cn } from "@/lib/utils"
-
-import { apiPost } from "@/lib/api"
-=======
 import { cn, formatDate } from "@/lib/utils"
+import { apiPost } from "@/lib/api"
 import { processUserIntention } from "@/lib/engines/chat-ai"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -17,7 +13,6 @@ import {
   Clock, X, Trash2, ArrowRight,
   Paperclip, ImagePlus, Mic, MicOff, FileText
 } from "lucide-react"
->>>>>>> Stashed changes
 
 export default function ChatPage() {
   const { 
@@ -112,43 +107,32 @@ export default function ChatPage() {
     setInput("")
     setIsTyping(true)
 
-<<<<<<< Updated upstream
     apiPost('/chat', { message: userMsg.content })
         .then(res => {
             addChatMessage({
               id: (Date.now() + 1).toString(),
               role: "assistant",
-              content: res.message || "I could not generate a response. Please try again.",
+              content: res.message || "I could not generate a response.",
               timestamp: new Date().toISOString(),
+              actions: res.actions || []
             })
             setIsTyping(false)
         })
         .catch(() => {
+            const response = processUserIntention(currentInput)
             addChatMessage({
               id: (Date.now() + 1).toString(),
               role: "assistant",
-              content: "I'm sorry, I'm having trouble connecting right now. Please try again later.",
+              content: response.content,
               timestamp: new Date().toISOString(),
+              actions: response.actions,
             })
             setIsTyping(false)
         })
-=======
-    setTimeout(() => {
-      const response = processUserIntention(currentInput)
-      addChatMessage({
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: response.content,
-        timestamp: new Date().toISOString(),
-        actions: response.actions,
-      })
-      setIsTyping(false)
-    }, 1000)
->>>>>>> Stashed changes
   }
 
   return (
-    <div className="flex flex-col h-screen w-full relative overflow-hidden bg-background scrollbar-hidden">
+    <div className="flex flex-col h-full w-full relative overflow-hidden bg-background">
         {/* TOP OVERLAY CONTROLS */}
         <div className="absolute top-6 right-8 z-40 flex items-center gap-3">
             <button 
@@ -160,21 +144,21 @@ export default function ChatPage() {
             </button>
         </div>
 
-        {/* TOP-CENTER HEADING — shown when chat is empty */}
+        {/* TOP-CENTER HEADING — centered near top */}
         {chatMessages.length === 0 && (
-          <div className="absolute top-0 left-0 right-0 z-10 flex flex-col items-center text-center pt-14 pointer-events-none px-6">
-            <h1 className="text-3xl md:text-4xl font-playfair font-medium text-foreground leading-tight tracking-tight">
+          <div className="absolute top-[20%] left-0 right-0 z-10 flex flex-col items-center text-center pointer-events-none px-6 animate-in fade-in slide-in-from-top-4 duration-700">
+            <h1 className="text-4xl md:text-5xl font-playfair font-medium text-foreground leading-tight tracking-tight">
               How can I assist <span className="text-primary">your finances</span> today?
             </h1>
-            <p className="text-sm text-muted-foreground mt-2.5 font-medium max-w-lg">
+            <p className="text-base text-muted-foreground mt-4 font-medium max-w-lg">
               Ask about banking fees, cheapest telecoms, or medical aid comparisons with real-time Zimbabwe data.
             </p>
           </div>
         )}
 
-        <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full relative px-6">
+        <div className="flex-1 flex flex-col w-full relative overflow-hidden">
             {/* MESSAGING AREA */}
-        <div className="flex-1 overflow-y-auto scrollbar-hidden pt-6 pb-32">
+            <div className="flex-1 overflow-y-auto scrollbar-hidden px-6 pt-10 pb-32">
               {chatMessages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full" />
               ) : (
@@ -226,8 +210,8 @@ export default function ChatPage() {
             </div>
 
             {/* CHAT INPUT AREA */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background/90 to-transparent pointer-events-none">
-                <div className="max-w-[720px] mx-auto w-full pointer-events-auto">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[min(720px,calc(100%-48px))] px-0 pointer-events-none z-20">
+                <div className="w-full pointer-events-auto">
                     <div className="relative group">
 
                         {/* Attachment previews above input */}
@@ -369,6 +353,7 @@ export default function ChatPage() {
                     </div>
                 </div>
             </div>
+
         </div>
 
         {/* HISTORY DRAWER */}

@@ -2,25 +2,23 @@
 
 import { useState, useMemo, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { MapPin, X, ChevronDown, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { UniversitiesOverview } from "@/components/universities/universities-overview"
 import { UniversitiesFees } from "@/components/universities/universities-fees"
 import { UniversitiesPrograms } from "@/components/universities/universities-programs"
 import { UniversitiesCampus } from "@/components/universities/universities-campus"
 import { UniversitiesProfiles } from "@/components/universities/universities-profiles"
 import { CategorySelector } from "@/components/category-selector"
-<<<<<<< Updated upstream
-import { useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { UniversitiesCompareBar } from "@/components/universities/universities-compare-bar"
-<<<<<<< Updated upstream
-=======
-import type { University } from "@/lib/types"
->>>>>>> Stashed changes
-=======
 import { PageHeader } from "@/components/page-header"
+import type { University } from "@/lib/types"
 
->>>>>>> Stashed changes
+
+import { analyzeInput, AnalysisResult } from "@/lib/neural-engine"
+import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
+import { UniversityResultsAnalyzer } from "@/components/universities/university-results-analyzer"
+import { UniversityRecommendationForm } from "@/components/universities/university-recommendation-form"
 
 const tabs = [
     { key: "overview", label: "Overview" },
@@ -28,14 +26,18 @@ const tabs = [
     { key: "programs", label: "Programs" },
     { key: "campus", label: "Campus Life" },
     { key: "profiles", label: "University Profiles" },
+    { key: "results", label: "Recommendation Engine" },
 ] as const
 
 export default function UniversitiesPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
-    const [isLocationOpen, setIsLocationOpen] = useState(false)
-<<<<<<< Updated upstream
+    const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
+    
     const { compareTray, clearCompareTray } = useAppStore()
+    const [universities, setUniversities] = useState<University[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
     // Clear stale comparison state if not universities
     useEffect(() => {
@@ -43,10 +45,13 @@ export default function UniversitiesPage() {
             clearCompareTray()
         }
     }, [compareTray.category, compareTray.ids.length, clearCompareTray])
-=======
-    const [universities, setUniversities] = useState<University[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+
+    const handleAnalysis = (result: AnalysisResult | null) => {
+        setAnalysisResult(result)
+        if (result && tab !== "results") {
+            setTab("results")
+        }
+    }
 
     useEffect(() => {
         async function fetchUniversities() {
@@ -65,12 +70,7 @@ export default function UniversitiesPage() {
         }
         fetchUniversities()
     }, [])
->>>>>>> Stashed changes
 
-    const uniqueLocations = useMemo(() => {
-        const cities = universities.map(u => u.location)
-        return ["All Locations", ...Array.from(new Set(cities)).sort()]
-    }, [universities])
 
     if (loading) {
         return (
@@ -102,6 +102,7 @@ export default function UniversitiesPage() {
             />
 
 
+
             {universities.length === 0 && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
                     No university data yet. Go to the <strong>Admin Dashboard</strong> and upload a CSV file to populate this page.
@@ -110,88 +111,28 @@ export default function UniversitiesPage() {
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 {/* Category Dropdown */}
-                <CategorySelector
-                    value={tab}
-                    onValueChange={setTab}
-                    categories={tabs}
-                />
-
-                {/* Location Filter */}
-                <div className="relative shrink-0">
-                    <button
-                        onClick={() => setIsLocationOpen(!isLocationOpen)}
-                        onBlur={() => setTimeout(() => setIsLocationOpen(false), 200)}
-                        className={cn(
-                            "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-all w-full md:w-auto justify-between md:justify-start",
-                            location !== "All Locations"
-                                ? "bg-teal-50 border-teal-200 text-teal-700"
-                                : "bg-white border-border text-muted-foreground hover:border-gray-300"
-                        )}
-                    >
-                        <div className="flex items-center gap-1.5">
-                            <MapPin className="w-3.5 h-3.5" />
-                            <span>{location}</span>
-                        </div>
-                        {location !== "All Locations" ? (
-                            <div
-                                role="button"
-                                aria-label="Clear location filter"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    setLocation("All Locations")
-                                }}
-                                className="hover:bg-teal-100 rounded-full p-0.5 ml-1"
-                            >
-                                <X className="w-3 h-3" />
-                            </div>
-                        ) : (
-                            <ChevronDown className="w-3.5 h-3.5 opacity-50" />
-                        )}
-                    </button>
-
-                    {/* Dropdown Menu */}
-                    {isLocationOpen && (
-                        <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-border bg-popover p-1 shadow-lg z-50 animate-in fade-in zoom-in-95">
-                            <div className="max-h-64 overflow-y-auto scrollbar-thin">
-                                {uniqueLocations.map((loc) => (
-                                    <button
-                                        key={loc}
-                                        onClick={() => {
-                                            setLocation(loc)
-                                            setIsLocationOpen(false)
-                                        }}
-                                        className={cn(
-                                            "w-full rounded-lg px-3 py-2 text-xs font-medium text-left transition-colors flex items-center justify-between",
-                                            location === loc
-                                                ? "bg-teal-50 text-teal-700"
-                                                : "text-foreground hover:bg-muted"
-                                        )}
-                                    >
-                                        {loc}
-                                        {location === loc && <MapPin className="w-3 h-3" />}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                <div className="flex items-center gap-3 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                    <CategorySelector
+                        value={tab}
+                        onValueChange={setTab}
+                        categories={tabs}
+                        mainCategory="schools"
+                        onAnalysis={handleAnalysis}
+                    />
                 </div>
+
             </div>
 
-<<<<<<< Updated upstream
             <UniversitiesCompareBar />
 
-            {tab === "overview" && <UniversitiesOverview onTabChange={setTab} location={location} />}
-            {tab === "fees" && <UniversitiesFees location={location} />}
-            {tab === "programs" && <UniversitiesPrograms location={location} />}
-            {tab === "campus" && <UniversitiesCampus location={location} />}
-            {tab === "profiles" && <UniversitiesProfiles location={location} />}
-=======
-            {tab === "overview" && <UniversitiesOverview universities={universities} onTabChange={setTab} location={location} />}
-            {tab === "fees" && <UniversitiesFees universities={universities} location={location} />}
-            {tab === "programs" && <UniversitiesPrograms universities={universities} location={location} />}
-            {tab === "campus" && <UniversitiesCampus universities={universities} location={location} />}
-            {tab === "profiles" && <UniversitiesProfiles universities={universities} location={location} />}
->>>>>>> Stashed changes
+            <div className="animate-in fade-in duration-500">
+                {tab === "overview" && <UniversitiesOverview universities={universities} onTabChange={setTab} location={location} />}
+                {tab === "fees" && <UniversitiesFees universities={universities} location={location} />}
+                {tab === "programs" && <UniversitiesPrograms universities={universities} location={location} />}
+                {tab === "campus" && <UniversitiesCampus universities={universities} location={location} />}
+                {tab === "profiles" && <UniversitiesProfiles universities={universities} location={location} />}
+                {tab === "results" && <UniversityRecommendationForm />}
+            </div>
         </div>
     )
 }

@@ -11,6 +11,9 @@ import { HotelsReviews } from "@/components/hotels/hotels-reviews"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
 
+import { analyzeInput, AnalysisResult } from "@/lib/neural-engine"
+import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
+
 const tabs = [
     { key: "overview", label: "Overview" },
     { key: "hotels", label: "Hotels" },
@@ -18,11 +21,20 @@ const tabs = [
     { key: "deals", label: "Deals & Packages" },
     { key: "seasonal", label: "Seasonal Prices" },
     { key: "reviews", label: "Reviews & Ratings" },
+    { key: "analysis", label: "Recommendations / Analysis" },
 ] as const
 
 export default function HotelsPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
+    const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
+
+    const handleAnalysis = (result: AnalysisResult | null) => {
+        setAnalysisResult(result)
+        if (result && tab !== "analysis") {
+            setTab("analysis")
+        }
+    }
 
     return (
         <div className="space-y-6">
@@ -36,16 +48,33 @@ export default function HotelsPage() {
                     value={tab}
                     onValueChange={setTab}
                     categories={tabs}
+                    mainCategory="hospitality"
+                    onAnalysis={handleAnalysis}
                 />
                 <LocationFilterPill selectedLocation={location} onLocationChange={setLocation} />
             </div>
 
-            {tab === "overview" && <HotelsOverview location={location} />}
-            {tab === "hotels" && <HotelsList location={location} />}
-            {tab === "lodges" && <LodgesList location={location} />}
-            {tab === "deals" && <HotelsDeals location={location} />}
-            {tab === "seasonal" && <HotelsSeasonal />}
-            {tab === "reviews" && <HotelsReviews location={location} />}
+            <div className="animate-in fade-in duration-500">
+                {tab === "overview" && <HotelsOverview location={location} />}
+                {tab === "hotels" && <HotelsList location={location} />}
+                {tab === "lodges" && <LodgesList location={location} />}
+                {tab === "deals" && <HotelsDeals location={location} />}
+                {tab === "seasonal" && <HotelsSeasonal />}
+                {tab === "reviews" && <HotelsReviews location={location} />}
+                {tab === "analysis" && (
+                    <div className="space-y-6">
+                        {analysisResult ? (
+                            <NeuralAnalysisPanel result={analysisResult} />
+                        ) : (
+                            <div className="glass-panel p-12 text-center">
+                                <p className="text-muted-foreground font-playfair italic">
+                                    Enter your nightly budget or stay requirements in the input above for neural stay optimization.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

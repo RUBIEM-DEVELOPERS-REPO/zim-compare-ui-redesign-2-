@@ -25,7 +25,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
 
 function UtilitiesCompareContent() {
     const searchParams = useSearchParams()
@@ -282,12 +281,16 @@ function UtilitiesCompareContent() {
                         </div>
                     </div>
 
-                    {/* Switch & Save Simulator */}
-                    <SwitchSaveSimulator
-                        category="utilities"
-                        current={compareItems[0]}
-                        recommended={compareItems.sort((a:any, b:any) => (a.monthlyPrice || a.tariffPerKwh) - (b.monthlyPrice || b.tariffPerKwh))[0]}
-                    />
+                    {/* Supply Integrity */}
+                    <div className="glass-floating bg-white/5 p-6 border-white/10 hover:border-primary/40 transition-all duration-500 group/item">
+                        <h3 className="text-lg font-display font-black text-foreground uppercase tracking-tight mb-3 flex items-center gap-3">
+                            <Info size={18} className="text-primary" />
+                            Supply Integrity
+                        </h3>
+                        <p className="text-xs text-foreground/70 font-medium font-sans leading-relaxed">
+                            Cross-referencing network nodes reveals <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (b.reliabilityScore || 0) - (a.reliabilityScore || 0))[0]?.name}</strong> maintains the most stable supply vector for the current geopolitical quadrant.
+                        </p>
+                    </div>
 
                     {/* Subscription Action */}
                     <div className="glass-floating p-6 shadow-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-500 group relative overflow-hidden flex flex-col teal-glow">

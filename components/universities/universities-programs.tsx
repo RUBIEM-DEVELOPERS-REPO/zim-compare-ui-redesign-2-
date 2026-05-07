@@ -22,19 +22,12 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
 
     const handleCompare = (uniId: string) => {
         const isSelected = compareTray.ids.includes(uniId)
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         if (isSelected) {
             removeFromCompareTray(uniId)
         } else {
             if (compareTray.ids.length >= 3) {
-<<<<<<< Updated upstream
                 setError("You can only compare up to 3 institutions.")
-=======
-                setError("You can only compare up to 3 universities.")
->>>>>>> Stashed changes
                 setTimeout(() => setError(null), 3000)
                 return
             }
@@ -45,11 +38,7 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
     return (
         <div className="space-y-6">
             <section>
-<<<<<<< Updated upstream
-                <h3 className="text-sm font-semibold text-foreground mb-3">Programmes by Institution</h3>
-=======
-                <h3 className="text-sm font-medium text-foreground mb-3">Programs & Faculties by Institution</h3>
->>>>>>> Stashed changes
+                <h3 className="text-sm font-medium text-foreground mb-3 uppercase tracking-widest">Faculties & Programmes by Institution</h3>
                 <div className="grid gap-4">
                     {filteredUniversities.map((uni) => (
                         <div
@@ -61,100 +50,55 @@ export function UniversitiesPrograms({ universities, location }: UniversitiesPro
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-<<<<<<< Updated upstream
                                     <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">{uni.university}</h4>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1">
-                                        {uni.location}, {uni.provinceArea}
+                                        {uni.location || uni.city}, {uni.provinceArea || uni.province}
                                     </p>
                                 </div>
-<<<<<<< Updated upstream
                                 <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
-=======
-                                    <h4 className="text-sm font-medium text-foreground uppercase tracking-tight">{uni.name}</h4>
-                                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-1">
-                                        {uni.city}, {uni.province}
-                                    </p>
-                                </div>
-                                <span className="text-[9px] font-medium uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
->>>>>>> Stashed changes
                                     {uni.type.replace("_", " ")}
                                 </span>
                             </div>
 
-                            <div className="space-y-3">
-                                <div>
-                                    <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Faculties ({uni.faculties.length})</p>
+                            {uni.faculties && uni.faculties.length > 0 && (
+                                <div className="mb-4">
+                                    <p className="text-[9px] font-bold text-muted-foreground mb-2 uppercase tracking-widest">Available Faculties ({uni.faculties.length})</p>
                                     <div className="flex flex-wrap gap-1.5">
                                         {uni.faculties.map((faculty) => (
                                             <span
                                                 key={faculty}
-                                                className="text-[10px] font-medium bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-100"
+                                                className="text-[9px] font-medium bg-teal-50 text-teal-700 px-2.5 py-1 rounded-lg border border-teal-100 shadow-sm"
                                             >
                                                 {faculty}
                                             </span>
                                         ))}
                                     </div>
                                 </div>
-
-                                <div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {uni.programs.map((program) => {
-                                            const isSelected = compareTray.ids.includes(uni.id)
-                                            return (
-                                                <button
-                                                    key={program}
-                                                    onClick={() => handleCompare(uni.id)}
-                                                    className={cn(
-                                                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium uppercase tracking-widest transition-all border",
-                                                        isSelected
-                                                            ? "bg-teal-600 text-white border-teal-600 shadow-lg shadow-teal-600/20"
-                                                            : "bg-teal-50 text-teal-700 border-teal-100 hover:bg-teal-100"
-                                                    )}
-                                                >
-                                                    {isSelected ? (
-                                                        <>
-                                                            <Check size={12} strokeWidth={3} />
-                                                            <span>Added</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <Plus size={12} strokeWidth={3} />
-                                                            <span>Add</span>
-                                                        </>
-                                                    )}
-                                                    <span className="ml-1">{program}</span>
-                                                </button>
-                                            )
-                                        })}
-                                    </div>
-=======
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100">
-                                        {uni.type.replace("_", " ")}
-                                    </span>
-                                    <button
-                                        onClick={() => handleCompare(uni.id)}
-                                        className={cn(
-                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border",
-                                            compareTray.ids.includes(uni.id)
-                                                ? "bg-teal-600 text-white border-teal-600 shadow-lg shadow-teal-600/20"
-                                                : "bg-teal-50 text-teal-700 border-teal-100 hover:bg-teal-100"
-                                        )}
-                                    >
-                                        {compareTray.ids.includes(uni.id) ? (
-                                            <>
-                                                <Check size={12} strokeWidth={3} />
-                                                <span>Added</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Plus size={12} strokeWidth={3} />
-                                                <span>Compare</span>
-                                            </>
-                                        )}
-                                    </button>
->>>>>>> Stashed changes
-                                </div>
+                            )}
+                            
+                            <div className="pt-3 border-t border-border/30 flex items-center justify-between mb-4">
+                                <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-tight">Compare this institution</span>
+                                <button
+                                    onClick={() => handleCompare(uni.id)}
+                                    className={cn(
+                                        "flex items-center gap-1.5 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg",
+                                        compareTray.ids.includes(uni.id)
+                                            ? "bg-teal-600 text-white border-teal-600 shadow-teal-600/20"
+                                            : "bg-teal-50 text-teal-700 border-teal-100 hover:bg-teal-100"
+                                    )}
+                                >
+                                    {compareTray.ids.includes(uni.id) ? (
+                                        <>
+                                            <Check size={12} strokeWidth={3} />
+                                            <span>Added</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Plus size={12} strokeWidth={3} />
+                                            <span>Compare</span>
+                                        </>
+                                    )}
+                                </button>
                             </div>
 
                             {uni.programmeSummary && (

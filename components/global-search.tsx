@@ -57,8 +57,11 @@ export function GlobalSearch() {
         r.push({ group: "Products", label: p.name, sublabel: p.bankName, href: `/banking?tab=accounts` })
     }
     for (const b of dataBundles) {
-      if (b.bundle_name.toLowerCase().includes(q) || b.bundle_group.toLowerCase().includes(q))
-        r.push({ group: "Products", label: b.bundle_name, sublabel: b.operator.replace(/^tel-/, "").replace(/-/g, " "), href: `/telecom?tab=data` })
+      const name = b.bundle_name || b.name || "Unknown Bundle"
+      const group = b.bundle_group || b.category || "General"
+      const operator = b.operator || b.providerName || "Unknown"
+      if (name.toLowerCase().includes(q) || group.toLowerCase().includes(q))
+        r.push({ group: "Products", label: name, sublabel: operator.replace(/^tel-/, "").replace(/-/g, " "), href: `/telecom?tab=data` })
     }
     for (const p of policies) {
       if (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q))

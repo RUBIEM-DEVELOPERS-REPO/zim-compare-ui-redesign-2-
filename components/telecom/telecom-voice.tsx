@@ -4,15 +4,10 @@ import { useState } from "react"
 import { useAppStore } from "@/lib/store"
 import { Disclaimer } from "@/components/disclaimer"
 import { cn } from "@/lib/utils"
-<<<<<<< Updated upstream
 import { LucideIcon, X, Check, Plus, CheckCircle2 } from "lucide-react"
-import { useAppStore } from "@/lib/store"
-import { TelecomCompareBar } from "./telecom-compare-bar"
-=======
-import { LucideIcon, X, Check } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
-import type { VoiceRate, TelecomProvider } from "@prisma/client"
->>>>>>> Stashed changes
+import type { VoiceRate, TelecomProvider } from "@/lib/types"
+import { TelecomCompareBar } from "./telecom-compare-bar"
 
 interface TelecomVoiceProps {
   location?: string
@@ -20,15 +15,11 @@ interface TelecomVoiceProps {
   providers?: TelecomProvider[]
 }
 
-<<<<<<< Updated upstream
-export function TelecomVoice({ location = "All Locations" }: TelecomVoiceProps) {
-  const { addToCompareTray, compareTray } = useAppStore()
-=======
 export function TelecomVoice({ location = "All Locations", voiceRates = [], providers = [] }: TelecomVoiceProps) {
+  const { addToCompareTray, compareTray } = useAppStore()
   const [minutes, setMinutes] = useState(60)
   const [sms, setSms] = useState(30)
   const { t } = useI18n()
->>>>>>> Stashed changes
 
   const filteredProviders = location === "All Locations"
     ? providers
@@ -37,8 +28,8 @@ export function TelecomVoice({ location = "All Locations", voiceRates = [], prov
   const providerData = filteredProviders
     .filter((p) => p.type === "MNO")
     .map((p) => {
-      const onNet = voiceRates.find((v) => v.providerId === p.id && v.type === "on_net")
-      const offNet = voiceRates.find((v) => v.providerId === p.id && v.type === "off_net")
+      const onNet = voiceRates.find((v) => (v.operator === p.id || v.providerId === p.id) && v.type === "on_net")
+      const offNet = voiceRates.find((v) => (v.operator === p.id || v.providerId === p.id) && v.type === "off_net")
       return {
         id: p.id,
         name: p.name,

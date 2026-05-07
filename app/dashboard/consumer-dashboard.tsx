@@ -2,10 +2,6 @@
 
 import { useState } from "react"
 import { useAppStore } from "@/lib/store"
-import { NewsPopup } from "@/components/dashboard/news-popup"
-import { AlertsModule } from "@/components/dashboard/alerts-module"
-import { RecentViews } from "@/components/dashboard/recent-views"
-import { MarketHighlights } from "@/components/dashboard/market-highlights"
 import { useI18n } from "@/lib/i18n"
 import { ChevronDown, FileCheck, Send, Plus } from "lucide-react"
 import { validatePrice, validateRequired } from "@/lib/validation"
@@ -190,25 +186,12 @@ export function ConsumerDashboard() {
                         )}
                     </div>
 
-                    {/* Alerts */}
-                    <div className="sm:col-span-2">
-                        <AlertsModule />
-                    </div>
 
-                    {/* Recent Views */}
-                    <div className="sm:col-span-3">
-                        <RecentViews />
-                    </div>
 
-                    {/* Market Highlights */}
-                    <div className="sm:col-span-3">
-                        <MarketHighlights />
-                    </div>
 
                 </div>
             </section>
 
-            <NewsPopup />
         </div>
     )
 }

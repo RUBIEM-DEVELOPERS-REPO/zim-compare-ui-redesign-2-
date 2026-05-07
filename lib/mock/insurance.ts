@@ -1,10 +1,13 @@
 import type { InsuranceProvider, Policy } from "@/lib/types"
 
-export const insuranceProviders: InsuranceProvider[] = [];
+export const insuranceProviders: InsuranceProvider[] = [
+  { id: "old-mutual", name: "Old Mutual Zimbabwe", type: "Insurance", transparencyScore: 85, digitalScore: 88, claimsScore: 90, avgClaimDays: 14, serviceAreas: ["Nationwide", "International"], website: "https://www.oldmutual.co.zw" },
+  { id: "zimnat", name: "Zimnat Insurance", type: "Insurance", transparencyScore: 82, digitalScore: 85, claimsScore: 88, avgClaimDays: 10, serviceAreas: ["Nationwide"], website: "https://www.zimnat.co.zw" },
+  { id: "nicoz-diamond", name: "Nicoz Diamond", type: "Insurance", transparencyScore: 80, digitalScore: 80, claimsScore: 85, avgClaimDays: 12, serviceAreas: ["Nationwide"], website: "https://www.nicozdiamond.co.zw" },
+  { id: "cimas", name: "CIMAS Medical Aid", type: "Health Insurance", transparencyScore: 88, digitalScore: 92, claimsScore: 94, avgClaimDays: 5, serviceAreas: ["Nationwide", "Region"], website: "https://www.cimas.co.zw" },
+  { id: "psmas", name: "PSMAS", type: "Health Insurance", transparencyScore: 65, digitalScore: 60, claimsScore: 70, avgClaimDays: 20, serviceAreas: ["Nationwide"], website: "https://www.psmas.co.zw" },
+]
 
-export const policies: Policy[] = [];
-
-<<<<<<< Updated upstream
 export const policies: Policy[] = [
   // Motor
   { id: "om-motor-comp", providerId: "old-mutual", providerName: "Old Mutual", category: "motor", name: "Comprehensive Motor", monthlyPremium: 45, annualPremium: 500, excess: 200, waitingPeriodDays: 0, coverLimit: 50000, benefits: ["Accident cover", "Theft cover", "Third party", "Windscreen", "Roadside assist"], exclusions: ["Racing", "Unlicensed drivers", "Intoxication"], type: "Full Cover" },
@@ -44,5 +47,3 @@ export const policies: Policy[] = [
   { id: "nicoz-biz", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "property_business", name: "Nicoz Business Protect", monthlyPremium: 55, annualPremium: 610, excess: 700, waitingPeriodDays: 0, coverLimit: 120000, benefits: ["Property", "Liability", "Stock cover"], exclusions: ["Cyber", "Employee fraud"], type: "Landlord Cover" },
   { id: "om-biz", providerId: "old-mutual", providerName: "Old Mutual", category: "property_business", name: "Old Mutual Business Suite", monthlyPremium: 90, annualPremium: 1000, excess: 1200, waitingPeriodDays: 0, coverLimit: 250000, benefits: ["All risks", "Business interruption", "Liability", "Fidelity", "Money"], exclusions: ["War", "Nuclear", "Cyber"], type: "All Risks Cover" },
 ]
-=======
->>>>>>> Stashed changes

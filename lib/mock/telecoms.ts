@@ -1,6 +1,5 @@
 import type { TelecomProvider, DataBundle, VoiceRate } from "@/lib/types"
 
-<<<<<<< Updated upstream
 export const telecomProviders: TelecomProvider[] = [
   { id: "econet", name: "Econet Wireless", type: "MNO", transparencyScore: 75, digitalScore: 90, coverageScore: 92, networkType: "4G/LTE", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Chinhoyi", "Marondera", "Kwekwe", "Kadoma", "Victoria Falls"] },
   { id: "netone", name: "NetOne", type: "MNO", transparencyScore: 70, digitalScore: 75, coverageScore: 80, networkType: "4G/LTE", bundles: [], voiceRates: [], coverageCities: ["Harare", "Bulawayo", "Gweru", "Mutare", "Masvingo", "Chinhoyi"] },
@@ -49,11 +48,13 @@ export const dataBundles: DataBundle[] = [
   { id: "dm-i1", providerId: "dandemutande", providerName: "Dandemutande", category: "internet", name: "Utande VSAT Basic", price: 80.00, dataGB: 30, validityDays: 30, costPerGB: 2.67, speedClass: "VSAT 5Mbps", fupNote: "Available nationwide" },
   { id: "dm-i2", providerId: "dandemutande", providerName: "Dandemutande", category: "internet", name: "Ignite Fibre Home", price: 40.00, dataGB: 100, validityDays: 30, costPerGB: 0.4, speedClass: "Fibre 20Mbps", fupNote: "" },
 ]
-=======
-export const telecomProviders: TelecomProvider[] = [];
 
-export const dataBundles: DataBundle[] = [];
-
-export const voiceRates: VoiceRate[] = [];
->>>>>>> Stashed changes
+export const voiceRates: VoiceRate[] = [
+  { id: "eco-v1", providerId: "econet", providerName: "Econet Wireless", type: "on_net", ratePerMin: 0.12, smsRate: 0.05 },
+  { id: "eco-v2", providerId: "econet", providerName: "Econet Wireless", type: "off_net", ratePerMin: 0.15, smsRate: 0.05 },
+  { id: "net-v1", providerId: "netone", providerName: "NetOne", type: "on_net", ratePerMin: 0.10, smsRate: 0.04 },
+  { id: "net-v2", providerId: "netone", providerName: "NetOne", type: "off_net", ratePerMin: 0.14, smsRate: 0.04 },
+  { id: "tel-v1", providerId: "telecel", providerName: "Telecel", type: "on_net", ratePerMin: 0.09, smsRate: 0.03 },
+  { id: "tel-v2", providerId: "telecel", providerName: "Telecel", type: "off_net", ratePerMin: 0.13, smsRate: 0.03 },
+]
 

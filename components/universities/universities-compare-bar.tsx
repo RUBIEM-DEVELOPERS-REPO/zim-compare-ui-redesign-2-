@@ -26,8 +26,8 @@ export function UniversitiesCompareBar() {
                 <div className="flex -space-x-3">
                     {compareTray.ids.map(id => {
                         const uni = universities.find(x => x.id === id)
-                        const name = uni?.name || id
-                        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 3).toUpperCase()
+                        const name = uni?.university || id
+                        const initials = name.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase()
                         
                         return (
                             <div key={id} title={name} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-teal-600/10 flex items-center justify-center font-medium text-teal-600 text-[10px] uppercase shadow-md backdrop-blur-sm">

@@ -96,6 +96,7 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
               <tr className="border-b border-white/10 bg-muted/40 uppercase tracking-[0.2em]">
                 <th className="text-left px-4 py-4 font-medium text-muted-foreground leading-none">Chikoro</th>
                 <th className="text-left px-4 py-4 font-medium text-muted-foreground leading-none">{t("common.category")}</th>
+                <th className="text-center px-4 py-4 font-medium text-muted-foreground leading-none">Rank</th>
                 <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.tuitionPerTerm")}</th>
                 <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.boardingPerTerm")}</th>
                 <th className="text-right px-4 py-4 font-medium text-muted-foreground leading-none">{t("schools.annualTotal")}</th>
@@ -112,6 +113,9 @@ export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {
                     <td className="px-4 py-4 text-foreground font-medium tracking-tight">{s.name}</td>
                     <td className="px-4 py-4">
                       <span className="text-[9px] font-medium uppercase tracking-widest bg-muted/30 px-2 py-1 rounded-lg border border-white/5">{t(`schools.subTabs.${s.type}`)}</span>
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <span className="text-[10px] font-black text-primary px-2 py-1 rounded-md bg-primary/10 border border-primary/20">#{s.ranking}</span>
                     </td>
                     <td className="px-4 py-4 text-right tabular-nums text-foreground font-medium">${s.tuitionPerTerm.toLocaleString()}</td>
                     <td className="px-4 py-4 text-right tabular-nums text-foreground">{s.boardingFeePerTerm ? `$${s.boardingFeePerTerm.toLocaleString()}` : <span className="opacity-20">--</span>}</td>

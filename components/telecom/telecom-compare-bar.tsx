@@ -5,7 +5,7 @@ import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Trash2, ArrowRight } from "lucide-react"
-import { telecomProviders, dataBundles } from "@/lib/mock/telecoms"
+import { telecomProviders, dataBundles, voiceRates } from "@/lib/mock/telecoms"
 
 export function TelecomCompareBar() {
     const { t } = useI18n()
@@ -31,14 +31,14 @@ export function TelecomCompareBar() {
             <div className="flex items-center gap-4">
                 <div className="flex -space-x-3">
                     {compareTray.ids.map(id => {
-                        const bundle = allBundles.find(x => x.id === id)
-                        const provider = allProviders.find(x => x.id === id || x.id === bundle?.providerId)
+                        const allTelecomItems = [...telecomProviders, ...dataBundles, ...voiceRates];
+                        const item = allTelecomItems.find(x => x.id === id);
                         
-                        const name = bundle?.name || provider?.name || id
-                        const initials = name.substring(0, 2).toUpperCase()
+                        const name = (item as any)?.name || (item as any)?.providerName || id;
+                        const initials = name.substring(0, 2).toUpperCase();
                         
                         return (
-                            <div key={id} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-teal-500/10 flex items-center justify-center font-medium text-teal-600 text-[10px] uppercase shadow-md backdrop-blur-sm">
+                            <div key={id} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-teal-500/10 flex items-center justify-center font-bold text-teal-400 text-[10px] uppercase shadow-xl backdrop-blur-md border-white/10">
                                 {initials}
                             </div>
                         )

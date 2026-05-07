@@ -8,6 +8,8 @@ import { Disclaimer } from "@/components/disclaimer"
 import { X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 import { BankingCompareBar } from "./banking-compare-bar"
+import { Plus, CheckCircle2, Zap, ArrowRight, CreditCard, Sparkles } from "lucide-react"
+import { ScoreBadge } from "@/components/score-badge"
 
 const subTabs = [
   { key: "savings", labelKey: "banking.subTabs.savings" },
@@ -23,39 +25,51 @@ interface BankingAccountsProps {
 
 export function BankingAccounts({ location = "All Locations" }: BankingAccountsProps) {
   const [sub, setSub] = useState<string>("savings")
-  const { addToCompareTray, compareTray } = useAppStore()
+  const { addToCompareTray, removeFromCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
+
+  const [amount, setAmount] = useState<number>(0)
 
   const filtered = bankingProducts.filter((p) => {
     const categoryMatch = p.category === sub
     if (!categoryMatch) return false
 
-    // National scope by default: if "All Locations" or nothing specific is passed, show all.
-    // If a location is passed, we still show all national banks because they are available everywhere via digital/USSD.
-    // We only filter if an institution is strictly local (none currently are).
-    if (location === "All Locations") return true
+    // Location filter
+    const bank = banks.find(b => b.id === p.bankId)
+    if (location !== "All Locations" && bank && !bank.locations.includes(location)) {
+      return false
+    }
 
-    // Show products for all licensed banks as they have national reach
+    // Amount filter (minBalance)
+    if (amount > 0 && p.minBalance > amount) {
+      return false
+    }
+
     return true
   })
 
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-10">
       <BankingCompareBar />
-      {/* Sub-tabs */}
-      <div className="glass-tab-container grid grid-cols-5 gap-1.5 p-1.5">
-        {subTabs.map((t_item) => (
-          <button
-            key={t_item.key}
-            onClick={() => setSub(t_item.key)}
-            className={cn(
-              "glass-tab-base text-[10px] sm:text-[11px] font-medium uppercase tracking-wider h-10 w-full flex items-center justify-center",
-              sub === t_item.key ? "glass-tab-active" : "text-muted-foreground"
-            )}
-          >
-            {t(t_item.labelKey)}
-          </button>
-        ))}
+      
+
+      {/* Sub-tabs & Filters */}
+      <div className="flex flex-col gap-4">
+        <div className="glass-tab-container grid grid-cols-5 gap-1.5 p-1.5">
+          {subTabs.map((t_item) => (
+            <button
+              key={t_item.key}
+              onClick={() => setSub(t_item.key)}
+              className={cn(
+                "glass-tab-base text-[10px] sm:text-[11px] font-medium uppercase tracking-wider h-10 w-full flex items-center justify-center",
+                sub === t_item.key ? "glass-tab-active" : "text-muted-foreground"
+              )}
+            >
+              {t(t_item.labelKey)}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Product Cards */}
@@ -75,51 +89,71 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => {
             const inTray = compareTray.ids.includes(p.id)
+            const bank = banks.find(b => b.id === p.bankId)
+            const recScore = p.aiScore || bank?.recommendationScore || 85
+            const isRecommended = recScore >= 90
+            
             return (
               <div
                 key={p.id}
-                className="glass-card p-4 flex flex-col hover:-translate-y-1 transition-all duration-300"
+                className={cn(
+                  "glass-floating p-4 transition-all duration-500 relative group flex flex-col floating-hover rounded-2xl",
+                  inTray ? "border-primary/60 bg-primary/10 ring-2 ring-primary/20 shadow-xl shadow-primary/20 teal-glow" : "hover:border-primary/40",
+                  isRecommended && !inTray ? "border-amber-500/30 bg-amber-500/5 ring-1 ring-amber-500/20" : ""
+                )}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-medium text-foreground">{p.name}</p>
-                </div>
-                <p className="text-xs text-muted-foreground mb-3">{p.bankName}</p>
-
-                <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-                  <div className="rounded-lg bg-secondary/50 p-2">
-                    <p className="text-muted-foreground">{t("banking.interestRate")}</p>
-                    <p className="text-foreground font-medium">{p.interestRate}% APY</p>
+                {isRecommended && (
+                  <div className="absolute -top-2.5 right-4 z-10">
+                    <span className="flex items-center gap-1 text-[9px] font-bold text-amber-400 bg-black/80 px-2 py-1 rounded-full border border-amber-500/30 uppercase tracking-widest shadow-lg animate-pulse">
+                      <Sparkles size={10} className="text-amber-400" />
+                      Neural Recommended
+                    </span>
                   </div>
-                  <div className="rounded-lg bg-secondary/50 p-2">
-                    <p className="text-muted-foreground">{t("banking.monthlyFee")}</p>
-                    <p className="text-foreground font-medium">${p.monthlyFee}</p>
+                )}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex flex-col">
+                    <p className="text-base font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{p.name}</p>
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-60 mt-1">{p.bankName}</p>
                   </div>
-                  <div className="rounded-lg bg-secondary/50 p-2">
-                    <p className="text-muted-foreground">{t("banking.minBalance")}</p>
-                    <p className="text-foreground font-medium">${p.minBalance}</p>
-                  </div>
+                  <ScoreBadge score={recScore} label="AI Score" />
                 </div>
 
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="grid grid-cols-2 gap-2.5 mb-4">
+                  <div className="rounded-xl bg-white/5 border border-white/5 p-2.5">
+                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.15em] mb-1">{t("banking.interestRate")}</p>
+                    <p className="text-sm font-display font-medium text-foreground">{p.interestRate}% <span className="text-[10px] opacity-60">APY</span></p>
+                  </div>
+                  <div className="rounded-xl bg-white/5 border border-white/5 p-2.5">
+                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-[0.15em] mb-1">{t("banking.monthlyFee")}</p>
+                    <p className="text-sm font-display font-medium text-primary">${p.monthlyFee}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 mb-6">
                   {p.perks.map((perk) => (
-                    <span key={perk} className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                    <span key={perk} className="text-[8px] font-medium uppercase tracking-wider bg-primary/10 text-primary px-2 py-1 rounded-lg border border-primary/20">
                       {perk}
                     </span>
                   ))}
                 </div>
 
-                <div className="mt-auto">
-                  <button
-                    onClick={() => addToCompareTray("banking", p.id, "accounts")}
-                    className={cn(
-                      "btn-compare-standard w-full",
-                      inTray && "opacity-60"
-                    )}
-                  >
-                    {inTray ? t("common.addedToCompare") : t("common.addToCompare")}
-                  </button>
+                  <div className="grid grid-cols-2 gap-2 mt-auto">
+                    <button
+                      onClick={() => inTray ? removeFromCompareTray(p.id) : addToCompareTray("banking", p.id, p.category)}
+                      className={cn(
+                        "btn-compare-standard py-2.5",
+                        inTray && "opacity-60"
+                      )}
+                    >
+                      {inTray ? t("common.addedToCompare") : "Compare"}
+                    </button>
+                    <button
+                      className="bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest py-2.5 rounded-xl hover:scale-[1.02] transition-all shadow-lg shadow-primary/20"
+                    >
+                      Apply Now
+                    </button>
+                  </div>
                 </div>
-              </div>
             )
           })}
         </div>

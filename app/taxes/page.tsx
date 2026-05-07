@@ -5,6 +5,10 @@ import { cn } from "@/lib/utils"
 import { taxesAndLevies } from "@/lib/mock/taxes"
 import { Scale, Landmark, Smartphone, Zap, Car, BookOpen, HeartPulse, Building2 } from "lucide-react"
 import { useState } from "react"
+import { CategorySelector } from "@/components/category-selector"
+
+import { analyzeInput, AnalysisResult } from "@/lib/neural-engine"
+import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
 
 const sectors = [
   { id: "all", name: "All Sectors", icon: Scale },
@@ -14,12 +18,21 @@ const sectors = [
   { id: "mobility", name: "Mobility", icon: Car },
   { id: "utilities", name: "Utilities", icon: Zap },
   { id: "general", name: "General Statutory", icon: Building2 },
+  { id: "analysis", name: "Recommendations / Analysis", icon: Scale },
 ]
 
 export default function TaxesModulePage() {
   const [activeSector, setActiveSector] = useState("all")
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
 
-  const filteredTaxes = activeSector === "all" 
+  const handleAnalysis = (result: AnalysisResult | null) => {
+    setAnalysisResult(result)
+    if (result && activeSector !== "analysis") {
+      setActiveSector("analysis")
+    }
+  }
+
+  const filteredTaxes = activeSector === "all" || activeSector === "analysis"
     ? taxesAndLevies 
     : taxesAndLevies.filter(t => t.sector === activeSector || t.sector === "general")
 
@@ -36,26 +49,29 @@ export default function TaxesModulePage() {
         </div>
       </div>
 
-      {/* Sector Filter */}
-      <div className="flex flex-wrap gap-2">
-        {sectors.map((s) => (
-          <button
-            key={s.id}
-            onClick={() => setActiveSector(s.id)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all border",
-              activeSector === s.id 
-                ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20" 
-                : "bg-card border-border text-muted-foreground hover:border-primary/30"
-            )}
-          >
-            <s.icon className="w-4 h-4" />
-            {s.name}
-          </button>
-        ))}
-      </div>
+      <CategorySelector
+        value={activeSector}
+        onValueChange={setActiveSector}
+        categories={sectors.map(s => ({ key: s.id, label: s.name }))}
+        mainCategory="tax"
+        label="Select Sector"
+        onAnalysis={handleAnalysis}
+      />
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      {activeSector === "analysis" ? (
+        <div className="space-y-6">
+          {analysisResult ? (
+            <NeuralAnalysisPanel result={analysisResult} />
+          ) : (
+            <div className="glass-panel p-12 text-center">
+              <p className="text-muted-foreground font-playfair italic">
+                Enter your monthly salary in the input above for neural tax efficiency optimization.
+              </p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
            <div className="glass-card overflow-hidden">
              <table className="w-full text-left border-collapse">
@@ -146,7 +162,8 @@ export default function TaxesModulePage() {
              </button>
            </section>
         </div>
-      </div>
+        </div>
+      )}
     </div>
   )
 }

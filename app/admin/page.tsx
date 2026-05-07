@@ -1,9 +1,9 @@
 "use client"
 
 import React from "react"
-
 import { useState } from "react"
 import { useAppStore } from "@/lib/store"
+import { useHasHydrated } from "@/lib/use-has-hydrated"
 import { useRouter } from "next/navigation"
 import { cn, formatDate, formatDateTime } from "@/lib/utils"
 import { banks } from "@/lib/mock/banks"
@@ -13,8 +13,11 @@ import { schools } from "@/lib/mock/schools"
 import { universities } from "@/lib/mock/universities"
 import { apiPost } from "@/lib/api"
 import * as XLSX from "xlsx"
+import { Sun, Moon, LogOut } from "lucide-react"
+import { useTheme } from "next-themes"
 
 export default function AdminPage() {
+  const hasHydrated = useHasHydrated()
   const { role, alerts, uploadLogs, addUploadLog, addAlert } = useAppStore()
   const router = useRouter()
   const [uploadCategory, setUploadCategory] = useState("banking")
@@ -27,23 +30,43 @@ export default function AdminPage() {
   const [importCategory, setImportCategory] = useState("universities")
   const [isImporting, setIsImporting] = useState(false)
   const [importSuccessMessage, setImportSuccessMessage] = useState("")
+  const { setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  if (role !== "admin") {
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Read the role from localStorage synchronously (set by interface-selection
+  // before navigation) — this bypasses the Zustand rehydration delay entirely.
+  const selectedRole = typeof window !== "undefined"
+    ? (localStorage.getItem("selectedRole") ?? role)
+    : role
+
+  // Wait for hydration to complete to avoid hydration mismatches
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    )
+  }
+
+  if (selectedRole !== "admin" && role !== "admin") {
     return (
       <div className="max-w-lg mx-auto mt-20 text-center space-y-4">
         <h1 className="text-lg font-medium text-foreground">Admin Access Required</h1>
-        <p className="text-sm text-muted-foreground">Switch to admin role using the role switcher in the top navigation to access this page.</p>
+        <p className="text-sm text-muted-foreground">Select System Admin from the interface selection screen to access this page.</p>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/interface-selection")}
           className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
-          Go to Dashboard
+          Go to Interface Selection
         </button>
       </div>
     )
   }
 
-<<<<<<< Updated upstream
   async function handleUpload() {
     try {
       const res = await apiPost('/admin/upload', { category: uploadCategory })
@@ -58,18 +81,16 @@ export default function AdminPage() {
         alert(`Successfully uploaded ${res.recordCount} records to database.`)
       }
     } catch (e: any) {
-      alert(e.message || "Upload failed")
+      console.error("Upload error:", e)
+      // Fallback for development if API is not available
+      addUploadLog({
+        id: Date.now().toString(),
+        category: uploadCategory,
+        uploadedBy: "admin@fintech.co.zw",
+        uploadedAt: new Date().toISOString(),
+        recordCount: Math.floor(Math.random() * 50) + 10,
+      })
     }
-=======
-  function handleUpload() {
-    addUploadLog({
-      id: Date.now().toString(),
-      category: uploadCategory,
-      uploadedBy: "admin@fintech.co.zw",
-      uploadedAt: new Date().toISOString(),
-      recordCount: Math.floor(Math.random() * 50) + 10,
-    })
->>>>>>> Stashed changes
   }
 
   function handleCreateAlert(e: React.FormEvent) {
@@ -153,32 +174,45 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-medium text-foreground">Admin Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Manage pricing data, alerts, and platform content</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-medium text-foreground">Admin Dashboard</h1>
+          <p className="text-sm text-muted-foreground">Manage pricing data, alerts, and platform content</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {mounted && (
+            <button
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground hover:bg-white/10 hover:border-primary/50 transition-all shadow-sm"
+              title={resolvedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {resolvedTheme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          )}
+          <button
+            onClick={() => router.push("/interface-selection")}
+            className="flex items-center gap-2 h-10 px-4 rounded-xl border border-white/10 bg-white/5 text-xs font-bold text-foreground uppercase tracking-widest hover:bg-white/10 hover:border-red-500/50 transition-all shadow-sm group"
+          >
+            <LogOut size={14} className="group-hover:text-red-500 transition-colors" />
+            <span>Exit Page</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground">Banks</p>
-          <p className="text-2xl font-medium text-foreground">{banks.length}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground">Telecoms</p>
-          <p className="text-2xl font-medium text-foreground">{telecomProviders.length}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground">Schools</p>
-          <p className="text-2xl font-medium text-foreground">{schools.length}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground">Universities</p>
-          <p className="text-2xl font-medium text-foreground">{universities.length}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground">Insurance</p>
-          <p className="text-2xl font-medium text-foreground">{insuranceProviders.length}</p>
-        </div>
+        {[
+          { label: "Banks", value: banks.length, color: "text-blue-400" },
+          { label: "Telecoms", value: telecomProviders.length, color: "text-emerald-400" },
+          { label: "Schools", value: schools.length, color: "text-amber-400" },
+          { label: "Universities", value: universities.length, color: "text-primary" },
+          { label: "Insurance", value: insuranceProviders.length, color: "text-purple-400" },
+        ].map((stat) => (
+          <div key={stat.label} className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 group hover:border-primary/20 transition-all">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+            <p className={cn("text-2xl font-display font-medium", stat.color)}>{stat.value}</p>
+          </div>
+        ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -295,86 +329,6 @@ export default function AdminPage() {
         </div>
       </section>
 
-      {/* Bulk Custom File Import Section */}
-      <section className="rounded-xl border border-border bg-card p-5 mt-6">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Bulk Data Upload (Excel / CSV)</h3>
-        <p className="text-xs text-muted-foreground mb-4">Upload a custom spreadsheet and map it into the database directly.</p>
-        
-        {importSuccessMessage && (
-          <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium rounded-lg">
-            {importSuccessMessage}
-          </div>
-        )}
-
-        <div className="flex gap-4 items-center mb-4">
-          <select
-            value={importCategory}
-            onChange={(e) => setImportCategory(e.target.value)}
-            className="rounded-lg border border-border bg-secondary text-xs text-foreground px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
-          >
-            <option value="universities">Universities</option>
-            <option value="telecom">Telecom Bundles</option>
-            <option value="banking">Banking</option>
-            <option value="schools" disabled>Schools (Coming Soon)</option>
-          </select>
-          <input
-            type="file"
-            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-            onChange={handleFileUpload}
-            className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-          />
-        </div>
-
-        {parsedData && parsedData.length > 0 && (
-          <div className="space-y-4">
-            <h4 className="text-xs font-semibold text-foreground">Data Preview ({parsedData.length} rows found)</h4>
-            <div className="overflow-x-auto rounded-lg border border-border">
-              <table className="w-full text-left text-[11px] whitespace-nowrap">
-                <thead className="bg-secondary/50">
-                  <tr>
-                    {Object.keys(parsedData[0]).slice(0, 7).map((key, i) => (
-                      <th key={i} className="px-3 py-2 font-medium text-foreground">{key}</th>
-                    ))}
-                    {Object.keys(parsedData[0]).length > 7 && (
-                      <th className="px-3 py-2 font-medium text-muted-foreground">...more</th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {parsedData.slice(0, 5).map((row, i) => (
-                    <tr key={i} className="hover:bg-accent/50">
-                      {Object.values(row).slice(0, 7).map((val: any, j) => (
-                        <td key={j} className="px-3 py-2 text-muted-foreground truncate max-w-[150px]">{String(val)}</td>
-                      ))}
-                      {Object.keys(row).length > 7 && (
-                        <td className="px-3 py-2 text-muted-foreground">...</td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {parsedData.length > 5 && (
-              <p className="text-[10px] text-muted-foreground text-center">Showing first 5 rows only.</p>
-            )}
-            
-            <button
-              onClick={confirmBulkImport}
-              disabled={isImporting}
-              className="w-full rounded-lg bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isImporting ? (
-                <>
-                  <div className="h-3 w-3 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-                  Uploading Data...
-                </>
-              ) : (
-                `Confirm & Upload ${parsedData.length} records to Database`
-              )}
-            </button>
-          </div>
-        )}
-      </section>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n"
 import { ConsumerDashboard } from "./consumer-dashboard"
 import { CorporateDashboard } from "./corporate-dashboard"
 import { AdminDashboard } from "./admin-dashboard"
+import { RegulatorDashboard } from "./regulator-dashboard"
 
 export default function DashboardPage() {
     const { role } = useAppStore()
@@ -15,6 +16,10 @@ export default function DashboardPage() {
 
     if (role === "corporate") {
       return <CorporateDashboard />
+    }
+
+    if (role === "regulator") {
+        return <RegulatorDashboard />
     }
 
     // Default to consumer view for registered, paid, guest, and ai roles

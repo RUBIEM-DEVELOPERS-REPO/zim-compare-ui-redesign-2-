@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils"
 import { Star, MapPin, Wifi, Car, Coffee, Dumbbell, Waves, Sparkles, UtensilsCrossed, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
+import { StayAnalysisPanel } from "./stay-analysis-panel"
+
 interface HotelsListProps {
     location?: string
 }
@@ -68,18 +70,24 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
         e.stopPropagation()
         setSelected(prev => {
             if (prev.includes(id)) return prev.filter(x => x !== id)
-            if (prev.length >= 3) return prev
             return [...prev, id]
         })
     }
 
-    const handleCompare = () => {
-        if (selected.length < 2) return
-        router.push(`/hotels/compare?ids=${selected.join(",")}`)
-    }
+    const clearComparison = () => setSelected([])
+
+    const selectedHotels = hotels.filter(h => selected.includes(h.id))
 
     return (
         <div className="space-y-6">
+            {/* Analysis Panel */}
+            {selected.length >= 2 && (
+                <StayAnalysisPanel 
+                    selectedHotels={selectedHotels} 
+                    onClear={clearComparison} 
+                />
+            )}
+
             {/* Filter Bar */}
             <div className="glass-panel p-5 bg-card/40 border-border/50 shadow-xl relative overflow-hidden">
                 <div className="flex flex-col gap-5">
@@ -123,7 +131,7 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
             </div>
 
             {/* Compare Bar */}
-            {selected.length > 0 && (
+            {selected.length > 0 && selected.length < 2 && (
                 <div className="glass-card px-6 py-5 flex items-center justify-between border-primary/50 bg-primary/10 shadow-2xl shadow-primary/20 animate-in slide-in-from-top-6 backdrop-blur-2xl sticky top-24 z-40 border-2">
                     <div className="flex items-center gap-5">
                         <div className="flex -space-x-4 relative">
@@ -144,19 +152,15 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
                             </p>
                             <div className="flex items-center gap-1.5 mt-1">
                                 <Plus className="w-3 h-3 text-primary" />
-                                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">{t("stays.selectUpTo3")}</p>
+                                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">Select 1 more for neural analysis</p>
                             </div>
                         </div>
                     </div>
                     <button
-                        onClick={handleCompare}
-                        disabled={selected.length < 2}
-                        className={cn("rounded-2xl px-8 py-3 text-[10px] font-medium uppercase tracking-[0.2em] transition-all shadow-xl hover:scale-105 active:scale-95",
-                            selected.length >= 2
-                                ? "bg-primary text-primary-foreground shadow-primary/40 hover:shadow-primary/60"
-                                : "bg-muted/50 text-muted-foreground cursor-not-allowed opacity-50"
-                        )}>
-                        {t("stays.analyzeComparison")}
+                        onClick={clearComparison}
+                        className="rounded-2xl px-8 py-3 text-[10px] font-medium uppercase tracking-[0.2em] transition-all bg-white/5 border border-white/10 text-muted-foreground hover:text-red-400 hover:bg-red-400/10"
+                    >
+                        Clear
                     </button>
                 </div>
             )}

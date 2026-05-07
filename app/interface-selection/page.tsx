@@ -1,16 +1,24 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { User, Building2, ShieldCheck, ArrowRight } from "lucide-react"
+import { User, Building2, ShieldCheck, ArrowRight, Scale } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { Role } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/lib/i18n"
+import { useState, useEffect } from "react"
 
 export default function InterfaceSelectionPage() {
     const router = useRouter()
     const { setRole, userName } = useAppStore()
     const { t } = useI18n()
+    const [displayName, setDisplayName] = useState("User")
+
+    useEffect(() => {
+        // Always read the freshest username from localStorage, overriding any stale store value
+        const stored = localStorage.getItem("username")
+        setDisplayName(stored?.trim() || userName?.trim() || "User")
+    }, [])
 
     const interfaces = [
         {
@@ -30,6 +38,14 @@ export default function InterfaceSelectionPage() {
             accentColor: "rgba(99, 102, 241, 1)",
         },
         {
+            id: "regulator" as Role,
+            titleKey: "common.regulator",
+            descriptionKey: "common.regulatorDesc",
+            icon: Scale,
+            color: "text-teal-600 dark:text-teal-400",
+            accentColor: "rgba(20, 184, 166, 1)",
+        },
+        {
             id: "admin" as Role,
             titleKey: "common.systemAdmin",
             descriptionKey: "common.systemAdminDesc",
@@ -40,11 +56,20 @@ export default function InterfaceSelectionPage() {
     ]
 
     const handleSelect = (role: Role) => {
+        // Persist selected role synchronously to localStorage so destination
+        // pages can read it immediately — before Zustand finishes rehydrating.
+        localStorage.setItem("selectedRole", role)
         setRole(role)
         if (role === "registered") {
             router.push("/chat")
+        } else if (role === "corporate") {
+            router.push("/corporate")
+        } else if (role === "regulator") {
+            router.push("/regulator")
+        } else if (role === "admin") {
+            router.push("/admin")
         } else {
-            router.push("/dashboard")
+            router.push("/chat")
         }
     }
 
@@ -55,7 +80,7 @@ export default function InterfaceSelectionPage() {
                 <div className="text-center mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
                     <h1 className="text-3xl md:text-4xl font-display font-medium text-[#111827] dark:text-[rgba(255,255,255,0.92)] tracking-tight mb-2">
                         Welcome back,{" "}
-                        <span className="text-primary">{userName || "User"}</span>
+                        <span className="text-primary">{displayName}</span>
                     </h1>
                     <p className="text-sm md:text-base text-[#667085] dark:text-[rgba(255,255,255,0.68)] max-w-xl mx-auto leading-relaxed">
                         {t("common.selectInterface")}
@@ -63,11 +88,12 @@ export default function InterfaceSelectionPage() {
                 </div>
 
                 {/* Role Selection Grid */}
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {interfaces.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => handleSelect(item.id)}
+                            title={t(item.titleKey)}
                             className={cn(
                                 "animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both stagger-item",
                                 "group relative flex flex-col text-left glass-teal-card p-6 transition-all duration-500 active:scale-[0.98]",

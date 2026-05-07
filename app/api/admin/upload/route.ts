@@ -19,8 +19,33 @@ export async function POST(request: Request) {
         else if (category === "telecom") {
             const { telecomProviders, dataBundles, voiceRates } = await import("@/lib/mock/telecoms")
             await prisma.telecomProvider.createMany({ data: telecomProviders.map(t => ({ ...t, coverageCities: JSON.stringify(t.coverageCities) })) })
-            await prisma.dataBundle.createMany({ data: dataBundles })
-            await prisma.voiceRate.createMany({ data: voiceRates })
+            await prisma.dataBundle.createMany({ 
+                data: dataBundles.map(b => ({
+                    ...b,
+                    operator: b.operator || b.providerId || "unknown",
+                    currency: b.currency || "USD",
+                    bundle_group: b.bundle_group || b.category || "general",
+                    bundle_name: b.bundle_name || b.name || "Unknown Bundle",
+                    total_data_mb: b.total_data_mb || (b.dataGB ? b.dataGB * 1024 : 0),
+                    validity_type: b.validity_type || b.category || "daily",
+                    validity_value: b.validity_value || b.validityDays || 1,
+                    validity_unit: b.validity_unit || "days"
+                })) 
+            })
+            await prisma.voiceRate.createMany({ 
+                data: voiceRates.map(v => ({
+                    ...v,
+                    operator: v.operator || v.providerId || "unknown",
+                    currency: v.currency || "USD",
+                    offer_type: v.offer_type || "standard",
+                    bundle_group: v.bundle_group || v.type || "on_net",
+                    bundle_name: v.bundle_name || (v.providerName || v.providerId) + " " + (v.type || "Rate"),
+                    price: v.price || v.ratePerMin || 0,
+                    validity_type: v.validity_type || "unlimited",
+                    validity_value: v.validity_value || 0,
+                    validity_unit: v.validity_unit || "none"
+                })) 
+            })
             recordCount = telecomProviders.length + dataBundles.length + voiceRates.length
         }
         else if (category === "schools") {

@@ -12,6 +12,7 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const { t } = useI18n()
 
+
   const highlightCards = [
     { key: "policies", labelKey: "insurance.highlight.policyTypes.label", subtitleKey: "insurance.highlight.policyTypes.subtitle" },
     { key: "policies", labelKey: "insurance.highlight.premiums.label", subtitleKey: "insurance.highlight.premiums.subtitle" },
@@ -61,7 +62,8 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
   const displayLocation = location === "All Locations" ? t("common.allLocations") : location
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-10">
+
       <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow rounded-2xl">
         <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-1000" />
         <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1.5">{t("insurance.bestForYou")}</p>

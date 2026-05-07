@@ -4,12 +4,11 @@ import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
-import { Signal, Activity, Zap, Shield, Smartphone } from "lucide-react"
-import type { TelecomProvider } from "@prisma/client"
+import { Signal, Activity, Zap, Shield, Smartphone, X, Plus, CheckCircle2 } from "lucide-react"
+import type { TelecomProvider } from "@/lib/types"
 import { useI18n } from "@/lib/i18n"
-import { X, Plus, CheckCircle2 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { TelecomCompareBar } from "./telecom-compare-bar"
+
 
 const summaryCards = [
   { labelKey: "bestNetwork", value: "Econet Wireless", detailKey: "coverageDetail", detailVars: { score: "92" } },
@@ -23,13 +22,8 @@ interface TelecomOverviewProps {
   providers?: TelecomProvider[]
 }
 
-<<<<<<< Updated upstream
-export function TelecomOverview({ location = "All Locations" }: TelecomOverviewProps) {
-  const { preferences, addToCompareTray, compareTray } = useAppStore()
-=======
 export function TelecomOverview({ location = "All Locations", providers = [] }: TelecomOverviewProps) {
-  const { preferences } = useAppStore()
->>>>>>> Stashed changes
+  const { preferences, addToCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
   const providerContext = "Based on aggregate analysis of all available mobile network operators and fixed-line fibre ISPs across Zimbabwe's coverage areas."
   const bestProvider = preferences.scenario === "sme" ? "Liquid Telecom" : preferences.scenario === "student" ? "NetOne" : "Econet Wireless"
@@ -38,15 +32,19 @@ export function TelecomOverview({ location = "All Locations", providers = [] }: 
     ? providers
     : providers.filter(p => (p.coverageCities || "[]").includes(location))
 
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-10">
       <TelecomCompareBar />
-      <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow">
+
+
+      {/* Best for you — only shown when bank is available in the selected location */}
+      <div className="glass-floating p-4 bg-primary/5 border-primary/20 shadow-xl relative overflow-hidden group teal-glow rounded-2xl">
         <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-1000" />
         <p className="text-[9px] font-medium text-primary uppercase tracking-[0.3em] mb-1.5">{t("telecom.bestNetworkForYou")}</p>
         <h2 className="text-2xl font-display font-medium text-white tracking-tight leading-tight">{bestProvider}</h2>
         <p className="text-xs text-muted-foreground mt-2 max-w-xl font-sans opacity-80 leading-relaxed font-medium">
-          {t("telecom.basedOnProfile", { profile: t(`dashboard.${preferences.scenario}`) })} Optimized for rural penetration and institutional bandwidth.
+          {t("telecom.basedOnProfile", { profile: t(`dashboard.${preferences.scenario}`) })} Optimized for rural penetration and institutional stability.
         </p>
         <div className="mt-3 pt-3 border-t border-white/10">
           <Disclaimer />

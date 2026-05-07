@@ -281,44 +281,26 @@ export function ChatWidget() {
                             </div>
                         )}
 
-                        <div className="relative glass-floating !rounded-2xl border-white/10 bg-white/5 overflow-hidden">
-                            {isRecording ? (
-                                <div className="flex items-center justify-between px-4 py-3 h-[52px] bg-primary/5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-                                        <span className="text-sm font-medium text-foreground">{formatTime(recordingTime)}</span>
-                                        <span className="text-xs text-muted-foreground ml-2">Recording voice...</span>
-                                    </div>
-                                    <button 
-                                        onClick={toggleRecording}
-                                        className="h-8 w-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center hover:bg-destructive hover:text-white transition-all shadow-sm"
-                                        title="Stop recording"
-                                        aria-label="Stop recording"
-                                    >
-                                        <StopCircle size={18} />
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex items-end gap-1 px-2 py-2">
-                                    {/* Small Left Icons Cluster */}
-                                    <div className="flex items-center pb-1">
+                        <div className="flex flex-col gap-3">
+                            {/* Message Input Container */}
+                            <div className="relative glass-floating !rounded-2xl border-white/10 bg-white/5 overflow-hidden transition-all duration-300 focus-within:border-primary/30 focus-within:bg-white/10">
+                                {isRecording ? (
+                                    <div className="flex items-center justify-between px-4 py-3 h-[52px] bg-primary/5">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                                            <span className="text-sm font-medium text-foreground">{formatTime(recordingTime)}</span>
+                                            <span className="text-xs text-muted-foreground ml-2">Recording voice...</span>
+                                        </div>
                                         <button 
-                                            onClick={() => handleFileClick("image")}
-                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
-                                            title="Attach Image"
+                                            onClick={toggleRecording}
+                                            className="h-8 w-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center hover:bg-destructive hover:text-white transition-all shadow-sm"
+                                            title="Stop recording"
+                                            aria-label="Stop recording"
                                         >
-                                            <Image size={18} />
-                                        </button>
-                                        <button 
-                                            onClick={() => handleFileClick("video")}
-                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
-                                            title="Attach Video"
-                                        >
-                                            <Film size={18} />
+                                            <StopCircle size={18} />
                                         </button>
                                     </div>
-
-                                    {/* Main Textarea */}
+                                ) : (
                                     <textarea
                                         ref={textareaRef}
                                         value={input}
@@ -326,30 +308,50 @@ export function ChatWidget() {
                                         onKeyDown={handleKeyDown}
                                         rows={1}
                                         placeholder="Message assistant..."
-                                        className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 px-2 max-h-[120px] resize-none overflow-y-auto scrollbar-none"
+                                        className="w-full bg-transparent border-none focus:ring-0 text-sm py-3 px-4 min-h-[52px] max-h-[150px] resize-none overflow-y-auto scrollbar-none transition-all"
                                     />
+                                )}
+                            </div>
 
-                                    {/* Action Icons Right */}
-                                    <div className="flex items-center gap-1 pb-1">
+                            {/* Action Icons Row */}
+                            {!isRecording && (
+                                <div className="flex items-center justify-between px-1">
+                                    <div className="flex items-center gap-1">
+                                        <button 
+                                            onClick={() => handleFileClick("image")}
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-xl hover:bg-white/5"
+                                            title="Attach Image"
+                                        >
+                                            <Image size={18} />
+                                        </button>
+                                        <button 
+                                            onClick={() => handleFileClick("video")}
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-xl hover:bg-white/5"
+                                            title="Attach Video"
+                                        >
+                                            <Film size={18} />
+                                        </button>
                                         <button 
                                             onClick={() => handleFileClick("audio")}
-                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-xl hover:bg-white/5"
                                             title="Attach Audio"
                                         >
                                             <Music size={18} />
                                         </button>
                                         <button 
                                             onClick={() => handleFileClick("file")}
-                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                                            className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-xl hover:bg-white/5"
                                             title="Attach File"
                                         >
                                             <Paperclip size={18} />
                                         </button>
-                                        <div className="w-px h-6 bg-white/10 mx-1" />
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
                                         <button 
                                             onClick={toggleRecording}
                                             className={cn(
-                                                "p-2 rounded-lg transition-all",
+                                                "p-2 rounded-xl transition-all",
                                                 isRecording ? "text-destructive bg-destructive/10 mic-pulse" : "text-primary hover:bg-primary/10"
                                             )}
                                             title="Record Voice"
@@ -359,10 +361,10 @@ export function ChatWidget() {
                                         <button
                                             onClick={() => handleSend()}
                                             disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                                            className="p-2 ml-1 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-30 disabled:grayscale transition-all shadow-md"
+                                            className="h-10 w-10 flex items-center justify-center rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-30 disabled:grayscale transition-all shadow-lg teal-glow"
                                             title="Send Message"
                                         >
-                                            <Send size={18} />
+                                            <Send size={18} fill="currentColor" />
                                         </button>
                                     </div>
                                 </div>

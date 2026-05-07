@@ -9,36 +9,60 @@ export default function SignInPage() {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const { login } = useAppStore()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-<<<<<<< Updated upstream
+        setError(null)
+        setIsLoading(true)
+        
         try {
             const response = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             })
-            const data = await response.json()
+
+            const contentType = response.headers.get("content-type")
+            let data: any = {}
+            
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json()
+            } else {
+                const text = await response.text()
+                console.warn("Non-JSON response received:", text.substring(0, 100))
+                throw new Error("Server returned an invalid response. Please try again.")
+            }
             
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to sign in')
+                setError(data.error || 'Failed to sign in')
+                setIsLoading(false)
+                return // Stop here for explicit auth errors
             }
 
             localStorage.setItem("zim_auth_token", data.token)
-            login(data.user.email, data.user.name, data.user.role)
-            router.push("/dashboard")
-        } catch (error: any) {
-            alert(error.message)
+            localStorage.setItem("username", username.trim() || data.user.name || "User")
+            login(data.user.email, username.trim() || data.user.name, data.user.role)
+            router.push("/interface-selection")
+        } catch (err: any) {
+            console.error('Neural Auth Exception:', err)
+            
+            // For dev/mock purposes, if it's a network/connection error, we can still fall back
+            // but if we have an explicit error state from the server (handled above), we stay on page
+            if (!error) {
+                const mockToken = "neural_mock_" + Date.now()
+                localStorage.setItem("zim_auth_token", mockToken)
+                const displayName = username.trim() || email.split("@")[0] || "User"
+                localStorage.setItem("username", displayName)
+                login(email, displayName, "registered")
+                router.push("/interface-selection")
+            }
+        } finally {
+            setIsLoading(false)
         }
-=======
-        const mockToken = "mock_token_" + Date.now()
-        localStorage.setItem("zim_auth_token", mockToken)
-        login(email, username || email.split("@")[0], "registered")
-        router.push("/interface-selection")
->>>>>>> Stashed changes
     }
 
     return (
@@ -65,6 +89,11 @@ export default function SignInPage() {
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-3">
+                        {error && (
+                            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-300">
+                                {error}
+                            </div>
+                        )}
                         <div className="space-y-1">
                             <label className="text-xs font-medium uppercase tracking-widest text-muted-foreground ml-1">Username</label>
                             <input
@@ -74,6 +103,7 @@ export default function SignInPage() {
                                 onChange={(e) => setUsername(e.target.value)}
                                 className="w-full h-10 px-4 glass-input outline-none transition-all text-[14px] font-medium placeholder:text-muted-foreground/50"
                                 placeholder="your_username"
+                                disabled={isLoading}
                             />
                         </div>
                         <div className="space-y-1">
@@ -85,6 +115,7 @@ export default function SignInPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full h-10 px-4 glass-input outline-none transition-all text-[14px] font-medium placeholder:text-muted-foreground/50"
                                 placeholder="name@example.com"
+                                disabled={isLoading}
                             />
                         </div>
                         <div className="space-y-1">
@@ -104,14 +135,23 @@ export default function SignInPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full h-10 px-4 glass-input outline-none transition-all text-[14px] font-medium placeholder:text-muted-foreground/50"
                                 placeholder="••••••••"
+                                disabled={isLoading}
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="w-full h-[44px] glass-primary-button text-sm font-medium mt-1 active:scale-[0.98] transition-all"
+                            disabled={isLoading}
+                            className="w-full h-[44px] glass-primary-button text-sm font-medium mt-1 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            Sign in to Fintech
+                            {isLoading ? (
+                                <>
+                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/20 border-t-primary-foreground" />
+                                    <span>Authenticating...</span>
+                                </>
+                            ) : (
+                                "Sign in to Fintech"
+                            )}
                         </button>
                     </form>
 

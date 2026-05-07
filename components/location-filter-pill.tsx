@@ -46,7 +46,7 @@ export function LocationFilterPill({ selectedLocation, onLocationChange, classNa
                     "flex items-center gap-2 px-5 py-2 h-11 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-500 w-full md:w-auto justify-between md:justify-start shadow-2xl glass-floating floating-hover",
                     selectedLocation !== "All Locations"
                         ? "border-primary/50 text-primary teal-glow"
-                        : "border-white/10 text-muted-foreground hover:border-primary/40 hover:bg-white/5"
+                        : "border-primary/15 text-muted-foreground hover:border-primary/40 hover:bg-white/5"
                 )}
             >
                 <div className="flex items-center gap-2">

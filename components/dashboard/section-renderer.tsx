@@ -38,18 +38,18 @@ const UtilitiesSection = dynamic(() => import("@/app/utilities/page"), {
 const SavedSection = dynamic(() => import("@/app/saved/page"), { 
   loading: () => <SectionSkeleton /> 
 })
-const RegulatedPricesSection = dynamic(() => import("@/app/regulated-prices/page"), { 
+const RegulatedPricesSection = dynamic(() => import("@/app/regulated/page"), { 
   loading: () => <SectionSkeleton /> 
 })
-const TaxesLeviesSection = dynamic(() => import("@/app/taxes-levies/page"), { 
+const TaxesLeviesSection = dynamic(() => import("@/app/taxes/page"), { 
   loading: () => <SectionSkeleton /> 
 })
-const SmartAlertsSection = dynamic(() => import("@/app/smart-alerts/page"), { 
+const SmartAlertsSection = dynamic(() => import("@/app/alerts/page"), { 
   loading: () => <SectionSkeleton /> 
 })
-const ApplicationsSection = dynamic(() => import("@/app/applications/page"), { 
-  loading: () => <SectionSkeleton /> 
-})
+// const ApplicationsSection = dynamic(() => import("@/app/applications/page"), { 
+//   loading: () => <SectionSkeleton /> 
+// })
 
 function SectionSkeleton() {
   return (
@@ -86,7 +86,7 @@ export function SectionRenderer({ activeSection }: SectionRendererProps) {
     case "regulated": return <RegulatedPricesSection />
     case "taxes": return <TaxesLeviesSection />
     case "alerts": return <SmartAlertsSection />
-    case "applications": return <ApplicationsSection />
+    case "applications": return <div className="p-12 text-center text-muted-foreground italic">Applications module coming soon.</div>
     case "saved": return <SavedSection />
     default: return <DashboardHome />
   }

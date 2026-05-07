@@ -3,7 +3,7 @@
 import { useAppStore } from "@/lib/store"
 import { cn, formatDate } from "@/lib/utils"
 import { regulatedPrices } from "@/lib/mock/regulated"
-import { Fuel, Landmark, UtilityPole, AlertCircle, TrendingUp, TrendingDown } from "lucide-react"
+import { Fuel, Landmark, UtilityPole, AlertCircle, TrendingUp, TrendingDown, ShoppingBag } from "lucide-react"
 
 export default function RegulatedPricesPage() {
   const categories = [
@@ -96,6 +96,36 @@ export default function RegulatedPricesPage() {
                     </div>
                   </div>
                 ))}
+             </div>
+           </section>
+
+           <section className="glass-card p-6 relative overflow-hidden group border-primary/20 bg-primary/5">
+             <div className="absolute -right-4 -top-4 w-20 h-20 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-700" />
+             <div className="flex items-center gap-2 mb-5">
+               <ShoppingBag className="w-4 h-4 text-primary" />
+               <h3 className="font-medium text-sm text-foreground uppercase tracking-tight">Essential Commodity Prices</h3>
+             </div>
+             <div className="space-y-3">
+               {[
+                 { name: "Mealie Meal (10kg)", price: "8.50" },
+                 { name: "Bread", price: "1.20" },
+                 { name: "Sugar (2kg)", price: "3.40" },
+                 { name: "Cooking Oil (2L)", price: "4.80" },
+                 { name: "Rice (2kg)", price: "3.90" },
+                 { name: "Milk (1L)", price: "1.50" },
+                 { name: "Eggs (Tray)", price: "4.20" },
+                 { name: "Salt (1kg)", price: "0.80" },
+                 { name: "Soap Bar", price: "1.00" },
+                 { name: "Fuel (Petrol/L)", price: "1.55" },
+               ].map((item, i) => (
+                 <div key={i} className="flex items-center justify-between pb-2 border-b border-white/5 last:border-0 last:pb-0">
+                   <span className="text-[11px] font-medium text-muted-foreground">{item.name}</span>
+                   <span className="text-[11px] font-bold text-foreground font-mono bg-white/5 px-2 py-0.5 rounded-lg border border-white/5">${item.price}</span>
+                 </div>
+               ))}
+             </div>
+             <div className="mt-5 pt-4 border-t border-white/10">
+                <p className="text-[9px] text-muted-foreground italic text-center uppercase tracking-widest opacity-60">Avg Market Reference Nodes</p>
              </div>
            </section>
         </div>

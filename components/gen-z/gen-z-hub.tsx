@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Card } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 
 const categories = [
   { id: "music", label: "Music", icon: Music },
@@ -143,9 +144,13 @@ const platforms = {
   ]
 }
 
+import { GenZComparisonPanel } from "./gen-z-comparison-panel"
+import { Trash2 } from "lucide-react"
+
 export function GenZHub() {
   const [activeTab, setActiveTab] = useState("music")
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([])
+  const [showComparison, setShowComparison] = useState(false)
 
   const currentPlatforms = platforms[activeTab as keyof typeof platforms] || []
 
@@ -154,6 +159,13 @@ export function GenZHub() {
       prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
     )
   }
+
+  const clearSelection = () => {
+    setSelectedForCompare([])
+    setShowComparison(false)
+  }
+
+  const selectedPlatforms = currentPlatforms.filter(p => selectedForCompare.includes(p.name))
 
   return (
     <div className="min-h-screen bg-[#020408] text-foreground pb-20 overflow-hidden">
@@ -181,7 +193,10 @@ export function GenZHub() {
             return (
               <button
                 key={cat.id}
-                onClick={() => setActiveTab(cat.id)}
+                onClick={() => {
+                    setActiveTab(cat.id)
+                    clearSelection()
+                }}
                 className={cn(
                   "relative flex items-center gap-3 px-8 py-4 rounded-full backdrop-blur-xl border transition-all duration-500 group",
                   isActive 
@@ -199,6 +214,14 @@ export function GenZHub() {
           })}
         </nav>
 
+        {/* COMPARISON PANEL TRIGGERED BY SELECTION */}
+        {showComparison && selectedPlatforms.length >= 2 && (
+            <GenZComparisonPanel 
+                selectedPlatforms={selectedPlatforms} 
+                onClear={clearSelection} 
+            />
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
           
           {/* MAIN CONTENT AREA */}
@@ -206,72 +229,77 @@ export function GenZHub() {
             
             {/* PLATFORM CARDS GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-              {currentPlatforms.map((platform, idx) => (
-                <Card 
-                  key={idx}
-                  className="group relative overflow-hidden bg-white/[0.03] border-white/[0.08] backdrop-blur-2xl rounded-[2.5rem] p-6 hover:-translate-y-2 hover:bg-white/[0.05] transition-all duration-500"
-                >
-                  {/* Glow effect on hover */}
-                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  
-                  {/* Status Tags */}
-                  <div className="absolute top-5 right-5">
-                    {platform.isTrending ? (
-                      <div className="flex items-center gap-1 bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter border border-orange-500/20">
-                        <Flame size={10} fill="currentColor" />
-                        Trending
-                      </div>
-                    ) : platform.isBestValue ? (
-                      <div className="flex items-center gap-1 bg-primary/20 text-primary px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter border border-primary/20">
-                        <Zap size={10} fill="currentColor" />
-                        Best Value
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <div className="relative z-10 space-y-6">
-                    <div className="w-14 h-14 rounded-2xl bg-[#0a0c10] border border-white/10 p-3 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                      <img src={platform.logo} alt={platform.name} className="w-full h-full object-contain filter brightness-90 group-hover:brightness-110" />
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-bold tracking-tight mb-1">{platform.name}</h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-black">${platform.price}</span>
-                        <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">/mo</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      {platform.features.map((feature, fidx) => (
-                        <div key={fidx} className="flex items-center gap-2.5 text-[11px] text-muted-foreground/80 font-medium">
-                          <div className="h-1 w-1 rounded-full bg-primary/40 shadow-[0_0_5px_#00E5C0]" />
-                          {feature}
+              {currentPlatforms.map((platform, idx) => {
+                const isSelected = selectedForCompare.includes(platform.name)
+                return (
+                  <Card 
+                    key={idx}
+                    className={cn(
+                      "group relative overflow-hidden bg-white/[0.03] border-white/[0.08] backdrop-blur-2xl rounded-[2.5rem] p-6 hover:-translate-y-2 hover:bg-white/[0.05] transition-all duration-500 cursor-pointer",
+                      isSelected && "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-[0_0_30px_rgba(0,229,192,0.1)]"
+                    )}
+                    onClick={() => toggleCompare(platform.name)}
+                  >
+                    {/* Glow effect on hover */}
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    
+                    {/* Status Tags */}
+                    <div className="absolute top-5 right-5">
+                      {platform.isTrending ? (
+                        <div className="flex items-center gap-1 bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter border border-orange-500/20">
+                          <Flame size={10} fill="currentColor" />
+                          Trending
                         </div>
-                      ))}
+                      ) : platform.isBestValue ? (
+                        <div className="flex items-center gap-1 bg-primary/20 text-primary px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter border border-primary/20">
+                          <Zap size={10} fill="currentColor" />
+                          Best Value
+                        </div>
+                      ) : null}
                     </div>
 
-                    <div className="pt-4 space-y-2">
-                      <div className="flex items-center justify-between text-[9px] uppercase font-black tracking-widest text-muted-foreground/40">
-                        <span>Usage Trend</span>
-                        <span>{platform.popularity}%</span>
+                    <div className="relative z-10 space-y-6">
+                      <div className="w-14 h-14 rounded-2xl bg-[#0a0c10] border border-white/10 p-3 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                        <img src={platform.logo} alt={platform.name} className="w-full h-full object-contain filter brightness-90 group-hover:brightness-110" />
                       </div>
-                      <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-primary/40 to-primary shadow-[0_0_10px_#00E5C0] transition-all duration-1000 ease-out"
-                          style={{ width: `${platform.popularity}%` }}
-                        />
+
+                      <div>
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-bold tracking-tight mb-1">{platform.name}</h3>
+                            {isSelected && <ShieldCheck className="text-primary h-5 w-5" />}
+                        </div>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-2xl font-black">${platform.price}</span>
+                          <span className="text-[10px] text-muted-foreground/60 uppercase font-bold tracking-widest">/mo</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        {platform.features.map((feature, fidx) => (
+                          <div key={fidx} className="flex items-center gap-2.5 text-[11px] text-muted-foreground/80 font-medium">
+                            <div className="h-1 w-1 rounded-full bg-primary/40 shadow-[0_0_5px_#00E5C0]" />
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
+   
+                      <div className="pt-4 space-y-2">
+                        <div className="flex items-center justify-between text-[9px] uppercase font-black tracking-widest text-muted-foreground/40">
+                          <span>Usage Trend</span>
+                          <span>{platform.popularity}%</span>
+                        </div>
+                        <Progress value={platform.popularity} className="h-1 bg-white/5" />
                       </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                )
+              })}
             </div>
 
             {/* COMPARISON TABLE */}
             <div className="space-y-6 pt-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight">Intelligence matrix</h2>
+                <h2 className="text-2xl font-bold tracking-tight uppercase">Intelligence matrix</h2>
                 <div className="flex items-center gap-4">
                   <button className="text-[11px] uppercase font-black tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">
                     Export Data
@@ -298,7 +326,14 @@ export function GenZHub() {
                   </thead>
                   <tbody className="divide-y divide-white/[0.04]">
                     {currentPlatforms.map((p, idx) => (
-                      <tr key={idx} className="group hover:bg-white/[0.02] transition-colors cursor-pointer">
+                      <tr 
+                        key={idx} 
+                        className={cn(
+                            "group transition-colors cursor-pointer",
+                            selectedForCompare.includes(p.name) ? "bg-primary/[0.03]" : "hover:bg-white/[0.02]"
+                        )}
+                        onClick={() => toggleCompare(p.name)}
+                      >
                         <td className="px-8 py-6">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-lg bg-[#0a0c10] border border-white/10 p-1.5">
@@ -324,11 +359,10 @@ export function GenZHub() {
                         </td>
                         <td className="px-8 py-6 text-right">
                           <button 
-                            onClick={() => toggleCompare(p.name)}
                             className={cn(
                               "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
                               selectedForCompare.includes(p.name)
-                                ? "bg-primary text-black"
+                                ? "bg-primary text-black shadow-[0_0_15px_rgba(0,229,192,0.4)]"
                                 : "bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground"
                             )}
                           >
@@ -347,10 +381,22 @@ export function GenZHub() {
                   <span>Showing real-time synthesized pricing from Zimbabwean regions.</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <button className="px-8 py-4 rounded-full text-[11px] font-black uppercase tracking-[0.2em] bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                  <button 
+                    onClick={clearSelection}
+                    className="px-8 py-4 rounded-full text-[11px] font-black uppercase tracking-[0.2em] bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-muted-foreground hover:text-red-400"
+                  >
                     Clear Selection
                   </button>
-                  <button className="px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-[0.2em] bg-primary text-black shadow-[0_0_20px_rgba(0,229,192,0.3)] hover:scale-105 transition-all">
+                  <button 
+                    onClick={() => setShowComparison(true)}
+                    disabled={selectedForCompare.length < 2}
+                    className={cn(
+                        "px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-[0.2em] transition-all",
+                        selectedForCompare.length >= 2 
+                            ? "bg-primary text-black shadow-[0_0_20px_rgba(0,229,192,0.3)] hover:scale-105" 
+                            : "bg-white/5 text-muted-foreground/30 cursor-not-allowed"
+                    )}
+                  >
                     Compare Platforms
                   </button>
                 </div>
@@ -385,12 +431,7 @@ export function GenZHub() {
                     <span>Precision Match</span>
                     <span>94%</span>
                   </div>
-                  <div className="relative h-2 w-full bg-black/40 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-primary shadow-[0_0_15px_#00E5C0] animate-pulse transition-all duration-1000" 
-                      style={{ width: '94%' }} 
-                    />
-                  </div>
+                  <Progress value={94} className="h-2 bg-black/40" />
                 </div>
 
                 <div className="flex flex-wrap gap-2">

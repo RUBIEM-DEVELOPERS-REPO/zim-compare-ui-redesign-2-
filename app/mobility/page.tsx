@@ -13,16 +13,22 @@ import { TransportCompareBar } from "@/components/transport/transport-compare-ba
 import { PageHeader } from "@/components/page-header"
 
 
+import { analyzeInput, AnalysisResult } from "@/lib/neural-engine"
+import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
+
+
 const tabs = [
     { key: "overview", label: "Overview" },
     { key: "cars", label: "Cars" },
     { key: "schools", label: "Driving Schools" },
     { key: "bus", label: "Bus" },
+    { key: "analysis", label: "Mobility Compare" },
 ] as const
 
 export default function MobilityPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
+    const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
     const { compareTray, clearCompareTray } = useAppStore()
 
     // Clear stale comparison state if not mobility
@@ -32,6 +38,13 @@ export default function MobilityPage() {
         }
     }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
+    const handleAnalysis = (result: AnalysisResult | null) => {
+        setAnalysisResult(result)
+        if (result && tab !== "analysis") {
+            setTab("analysis")
+        }
+    }
+
     return (
         <div className="space-y-6">
             <PageHeader
@@ -40,11 +53,14 @@ export default function MobilityPage() {
             />
 
 
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <CategorySelector
                     value={tab}
                     onValueChange={setTab}
                     categories={tabs}
+                    mainCategory="mobility"
+                    onAnalysis={handleAnalysis}
                 />
 
                 {(tab === "overview" || tab === "cars" || tab === "schools" || tab === "bus") && (
@@ -58,11 +74,24 @@ export default function MobilityPage() {
             <TransportCompareBar />
 
             {/* Tab Content */}
-            <div className="mt-6">
+            <div className="mt-6 animate-in fade-in duration-500">
                 {tab === "overview" && <TransportOverview location={location} />}
                 {tab === "cars" && <TransportVehicles location={location} />}
                 {tab === "schools" && <TransportDrivingSchools location={location} />}
                 {tab === "bus" && <TransportBusSection location={location} />}
+                {tab === "analysis" && (
+                    <div className="space-y-6">
+                        {analysisResult ? (
+                            <NeuralAnalysisPanel result={analysisResult} />
+                        ) : (
+                            <div className="glass-panel p-12 text-center">
+                                <p className="text-muted-foreground font-playfair italic">
+                                    Enter your mobility budget or requirements in the input above for neural transport optimization.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )

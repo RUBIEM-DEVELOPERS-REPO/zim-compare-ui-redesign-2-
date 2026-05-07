@@ -1,6 +1,6 @@
 // ── Fintech Types ──
 
-export type Role = "guest" | "registered" | "paid" | "admin" | "ai" | "corporate"
+export type Role = "guest" | "registered" | "paid" | "admin" | "corporate" | "regulator"
 
 export interface User {
   id: string
@@ -14,7 +14,7 @@ export interface Institution {
   id: string
   name: string
   type: string
-  logo?: string
+  logo?: string | null
   transparencyScore: number
   digitalScore?: number
   website?: string | null
@@ -32,6 +32,9 @@ export interface Bank extends Institution {
   fees: BankFee[]
   digitalFeatures: string[]
   locations: string[]
+  internalTransferFee?: number
+  externalTransferFee?: number
+  recommendationScore?: number
 }
 
 export interface BankingProduct {
@@ -44,6 +47,7 @@ export interface BankingProduct {
   minBalance: number
   monthlyFee: number
   perks: string[]
+  aiScore?: number
 }
 
 export interface BankFee {
@@ -68,6 +72,8 @@ export interface BankLoan {
   earlySettlementPenalty: number
   maxTermMonths: number
   requirements: string[]
+  loanInterestRate?: number // explicit alias for apr if needed
+  benefits?: string[] // alias for perks
 }
 
 // ── Telecom ──
@@ -77,27 +83,29 @@ export interface TelecomProvider extends Institution {
   networkType: string
   bundles: DataBundle[]
   voiceRates: VoiceRate[]
-  coverageCities: string[]
+  coverageCities: string[] | string
 }
 
 export interface DataBundle {
   id: string
-<<<<<<< Updated upstream
   providerId: string
   providerName: string
   category: "daily" | "weekly" | "monthly" | "night" | "social" | "unlimited" | "internet"
   name: string
-=======
-  operator: string
-  currency: string
-  bundle_group: string
-  bundle_name: string
->>>>>>> Stashed changes
   price: number
-  validity_type: string
-  validity_value: number
-  validity_unit: string
-  total_data_mb: number
+  dataGB: number
+  validityDays: number
+  costPerGB: number
+  speedClass: string
+  fupNote: string
+  bundle_name?: string
+  operator?: string
+  bundle_group?: string
+  currency?: string
+  validity_type?: string
+  validity_value?: number
+  validity_unit?: string
+  total_data_mb?: number
   peak_data_mb?: number | null
   offpeak_data_mb?: number | null
   onnet_minutes?: number | null
@@ -117,11 +125,28 @@ export interface DataBundle {
 
 export interface VoiceRate {
   id: string
-  providerId: string
-  providerName: string
-  type: "on_net" | "off_net" | "landline" | "international"
-  ratePerMin: number
-  smsRate: number
+  providerId?: string
+  providerName?: string
+  type?: "on_net" | "off_net" | "landline" | "international"
+  ratePerMin?: number
+  smsRate?: number
+  operator?: string
+  currency?: string
+  offer_type?: string
+  bundle_group?: string
+  bundle_name?: string
+  price?: number
+  validity_type?: string
+  validity_value?: number
+  validity_unit?: string
+  onnet_minutes?: number | null
+  other_minutes?: number | null
+  cug_minutes?: number | null
+  international_minutes?: number | null
+  sms_count?: number | null
+  ussd_code?: string | null
+  source_url?: string | null
+  source_name?: string | null
 }
 
 export interface CoverageMetric {
@@ -150,6 +175,8 @@ export interface School {
   transparencyScore: number
   academicScore: number
   safetyScore: number
+  recommendationScore: number
+  ranking: number
 }
 
 // ── Universities ──
@@ -166,6 +193,27 @@ export interface University {
   feeNote?: string | null
   feeConfidence?: string | null
   programmeSourceUrl?: string | null
+  // Additional metrics
+  annualFees?: number | null
+  acceptanceRate?: number | null
+  academicScore?: number | null
+  affordabilityScore?: number | null
+  employabilityScore?: number | null
+  studentLifeRating?: number | null
+  graduateEmployabilityScore?: number | null
+  accommodationAvailable?: boolean | null
+  onlineLearningAvailable?: boolean | null
+  faculties?: string[] | null
+  city?: string | null
+  province?: string | null
+  applicationFee?: number | null
+  ranking?: {
+    local?: number | null
+    global?: number | null
+  } | null
+  accreditationStatus?: string | null
+  programs?: string[] | null
+  applicationRequirements?: string[] | null
 }
 
 // ── Insurance ──
@@ -301,18 +349,6 @@ export interface PricingSnapshot {
   uploadedAt: string
   recordCount: number
 }
-
-export interface PricingUpdate {
-  id: string
-  provider: string
-  item: string
-  old: string
-  new: string
-  status: "pending" | "approved" | "rejected"
-  category: string
-  createdAt: string
-}
-
 export interface Alert {
   id: string
   type: "price_drop" | "new_promo" | "fee_increase" | "claims_change" | "transaction" | "application"
@@ -321,9 +357,8 @@ export interface Alert {
   message: string
   createdAt: string
   read: boolean
-  channel?: "in_app" | "sms" | "whatsapp"
-  status?: "sent" | "delivered" | "failed"
-  isPaid?: boolean
+  channel?: "email" | "sms" | "app" | "push"
+  status?: "active" | "resolved" | "dismissed"
 }
 
 export interface AlertPreference {
@@ -332,28 +367,6 @@ export interface AlertPreference {
   category: string
   channels: ("in_app" | "sms" | "whatsapp")[]
   active: boolean
-}
-
-// ── Transactions ──
-
-export interface TransactionMethod {
-  id: string
-  name: string // ATM, Swipe, ZIPIT, RTGS, Mobile Money
-  speed: "instant" | "fast" | "same_day" | "next_day"
-  category: "online" | "physical" | "both"
-}
-
-export interface TransactionQuote {
-  methodId: string
-  methodName: string
-  bankId: string
-  bankName: string
-  amount: number
-  fee: number
-  tax: number // e.g. IMTT
-  levy: number
-  total: number
-  isBest?: boolean
 }
 
 export interface Transaction {
@@ -369,8 +382,6 @@ export interface Transaction {
   createdAt: string
 }
 
-// ── Service Applications ──
-
 export interface ServiceApplication {
   id: string
   userId: string
@@ -384,7 +395,40 @@ export interface ServiceApplication {
   updatedAt: string
 }
 
-// ── Regulated Prices & Taxes ──
+export interface PricingUpdate {
+  id: string
+  provider: string
+  item: string
+  old: string
+  new: string
+  status: "pending" | "approved" | "rejected" | "submitted"
+  category: string
+  createdAt: string
+}
+
+// ── Transaction Advisory ──
+
+export interface TransactionMethod {
+  id: string
+  name: string
+  speed: "instant" | "same_day" | "next_day"
+  category: "online" | "physical"
+}
+
+export interface TransactionQuote {
+  methodId: string
+  methodName: string
+  bankId: string
+  bankName: string
+  amount: number
+  fee: number
+  tax: number
+  levy: number
+  total: number
+  isBest?: boolean
+}
+
+// ── Regulated Prices ──
 
 export interface RegulatedPrice {
   id: string
@@ -395,6 +439,8 @@ export interface RegulatedPrice {
   lastUpdated: string
 }
 
+// ── Taxes & Levies ──
+
 export interface TaxLevy {
   id: string
   name: string
@@ -402,18 +448,4 @@ export interface TaxLevy {
   rate: number
   type: "percentage" | "fixed"
   appliesTo: string
-}
-// ── News & Ads ──
-
-export interface NewsItem {
-  id: string
-  title: string
-  source: string // Maps to Category
-  time: string
-  link: string
-  category: string
-  description?: string
-  tag?: "New" | "Promo" | "Update"
-  image?: string
-  createdAt: string
 }

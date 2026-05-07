@@ -8,11 +8,13 @@ import { InsuranceClaims } from "@/components/insurance/insurance-claims"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { CategorySelector } from "@/components/category-selector"
 import { InsuranceCompareBar } from "@/components/insurance/insurance-compare-bar"
+import { PaymentsInterface } from "@/components/payments-interface"
 
 const tabs = [
   { key: "overview", label: "Overview" },
   { key: "policies", label: "Policies" },
   { key: "claims", label: "Claims" },
+  { key: "payment", label: "Payment" },
 ] as const
 
 export function InsuranceSection() {
@@ -56,6 +58,19 @@ export function InsuranceSection() {
         {tab === "overview" && <InsuranceOverview location={location} onTabChange={setTab} />}
         {tab === "policies" && <InsurancePolicies location={location} />}
         {tab === "claims" && <InsuranceClaims location={location} />}
+        {tab === "payment" && (
+          <PaymentsInterface 
+            category="Insurance" 
+            items={[
+              { id: "old_mutual", name: "Old Mutual", detail: "Premium / Policy Pay" },
+              { id: "zimnat", name: "Zimnat", detail: "Motor / Life / Funeral" },
+              { id: "alliance", name: "Alliance Insurance", detail: "Motor / Medical" },
+              { id: "cimas", name: "CIMAS", detail: "Medical Aid Premiums" },
+              { id: "first_mutual", name: "First Mutual Health", detail: "Medical / Life" },
+              { id: "nyaradzo", name: "Nyaradzo Group", detail: "Sahwira Mukuru Premiums" },
+            ]} 
+          />
+        )}
       </div>
     </div>
   )

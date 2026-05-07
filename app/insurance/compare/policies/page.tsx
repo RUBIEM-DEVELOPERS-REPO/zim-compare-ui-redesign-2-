@@ -10,7 +10,7 @@ import { Suspense, useEffect, useState } from "react"
 import { ArrowLeft, CheckCircle2, TrendingUp, Clock, ShieldCheck, ChevronLeft, X, Zap, Award, BarChart3, HeartHandshake } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { SwitchSaveSimulator } from "@/components/dashboard/switch-save-simulator"
+import { PaymentModal } from "@/components/payment-modal"
 
 function InsuranceCompareContent() {
     const searchParams = useSearchParams()
@@ -22,6 +22,10 @@ function InsuranceCompareContent() {
     const [policies, setPolicies] = useState<any[]>([])
     const [insuranceProviders, setInsuranceProviders] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+    const [paymentItem, setPaymentItem] = useState<{ id: string, name: string, price: number, category: string, provider?: string }>({
+        id: "", name: "", price: 0, category: "", provider: ""
+    })
 
     useEffect(() => {
         clearCompareTray()
@@ -160,89 +164,84 @@ function InsuranceCompareContent() {
                     </thead>
                     <tbody>
                         <tr className="hover:bg-secondary/30 transition-colors">
-                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Neural Benefits</td>
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Monthly Premium</td>
                             {selectedPolicies.map((p) => (
-<<<<<<< Updated upstream
-                                <td key={p.id} className="p-6 text-center border-l border-border/50">
+                                <td key={p.id} className="p-8 text-center border-l border-white/5">
                                     <span className={cn(
                                         "text-lg font-black",
-                                        p.monthlyPremium === lowestPremium ? "text-emerald-600 scale-110" : "text-foreground"
+                                        p.monthlyPremium === lowestPremium ? "text-emerald-500 teal-glow" : "text-foreground"
                                     )}>
                                         ${p.monthlyPremium}
                                     </span>
-                                    {p.monthlyPremium === lowestPremium && <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter mt-1">Best Price</p>}
+                                    {p.monthlyPremium === lowestPremium && <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-tighter mt-1 opacity-70">Best Entry Point</p>}
                                 </td>
                             ))}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Annual Premium</td>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Annual Premium</td>
                             {selectedPolicies.map((p) => (
-                                <td key={p.id} className="p-6 text-center text-sm font-semibold border-l border-border/50">${p.annualPremium}</td>
+                                <td key={p.id} className="p-8 text-center border-l border-white/5 text-sm font-semibold opacity-70">
+                                    ${p.annualPremium.toLocaleString()}
+                                </td>
                             ))}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Cover Limit</td>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Neural Cover</td>
                             {selectedPolicies.map((p) => (
-                                <td key={p.id} className="p-6 text-center border-l border-border/50">
+                                <td key={p.id} className="p-8 text-center border-l border-white/5">
                                     <div className={cn(
-                                        "inline-flex flex-col",
-                                        p.coverLimit === highestCover ? "text-teal-600 font-bold" : "text-foreground"
+                                        "flex flex-col",
+                                        p.coverLimit === highestCover ? "text-primary" : "text-foreground"
                                     )}>
                                         <span className="text-lg font-black">${p.coverLimit.toLocaleString()}</span>
-                                        {p.coverLimit === highestCover && <span className="text-[10px] uppercase tracking-tighter">Max Coverage</span>}
+                                        {p.coverLimit === highestCover && <span className="text-[9px] font-bold uppercase tracking-tighter opacity-70">Max Shield</span>}
                                     </div>
                                 </td>
                             ))}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Excess / Deductible</td>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Risk Excess</td>
                             {selectedPolicies.map((p) => (
-                                <td key={p.id} className="p-6 text-center border-l border-border/50">
+                                <td key={p.id} className="p-8 text-center border-l border-white/5">
                                     <span className={cn(
                                         "text-sm font-bold",
-                                        p.excess === lowestExcess ? "text-emerald-600" : "text-foreground"
+                                        p.excess === lowestExcess ? "text-emerald-500" : "text-foreground"
                                     )}>
                                         ${p.excess}
                                     </span>
-                                    {p.excess === lowestExcess && <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter mt-1">Lowest Risk</p>}
+                                    {p.excess === lowestExcess && <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-tighter mt-1 opacity-70">Min Friction</p>}
                                 </td>
                             ))}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Waiting Period</td>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Latency Days</td>
                             {selectedPolicies.map((p) => (
-                                <td key={p.id} className="p-6 text-center border-l border-border/50">
-                                    <span className="text-sm font-medium">{p.waitingPeriodDays} days</span>
+                                <td key={p.id} className="p-8 text-center border-l border-white/5 text-sm font-medium opacity-70">
+                                    {p.waitingPeriodDays} days
                                 </td>
                             ))}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Claim Reliability</td>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Claim Confidence</td>
                             {selectedPolicies.map((p) => {
                                 const provider = getProvider(p.providerId)
                                 return (
-                                    <td key={p.id} className="p-6 text-center border-l border-border/50">
-                                        <div className="flex flex-col items-center gap-1">
+                                    <td key={p.id} className="p-8 text-center border-l border-white/5">
+                                        <div className="flex flex-col items-center gap-2">
                                             <ScoreBadge score={provider?.claimsScore || 0} label="" />
-                                            <span className="text-[10px] text-muted-foreground">Avg. {provider?.avgClaimDays} days</span>
+                                            <span className="text-[9px] text-muted-foreground uppercase tracking-widest opacity-50">Avg {provider?.avgClaimDays}d</span>
                                         </div>
                                     </td>
                                 )
                             })}
                         </tr>
-                        <tr>
-                            <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5 sticky left-0 bg-muted/5 z-10">Key Benefits</td>
+                        <tr className="hover:bg-secondary/30 transition-colors">
+                            <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-background/80 backdrop-blur-3xl z-10">Neural Benefits</td>
                             {selectedPolicies.map((p) => (
-                                <td key={p.id} className="p-6 border-l border-border/50">
-                                    <div className="flex flex-wrap justify-center gap-1">
-                                        {p.benefits.map((b: string) => (
-                                            <span key={b} className="text-[9px] font-black uppercase tracking-tight bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100">
-=======
                                 <td key={p.id} className="p-8 border-l border-white/5">
                                     <div className="flex flex-wrap justify-center gap-2">
-                                        {p.benefits.map(b => (
+                                        {p.benefits.map((b: string) => (
                                             <span key={b} className="text-[9px] font-medium uppercase tracking-widest bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-lg border border-emerald-500/20 shadow-inner">
->>>>>>> Stashed changes
                                                 {b}
                                             </span>
                                         ))}
@@ -253,17 +252,10 @@ function InsuranceCompareContent() {
                         <tr className="hover:bg-white/5 transition-colors">
                             <td className="p-8 text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] sticky left-0 bg-[#0A0A0A]/80 backdrop-blur-3xl z-10">Risk Exclusions</td>
                             {selectedPolicies.map((p) => (
-<<<<<<< Updated upstream
-                                <td key={p.id} className="p-6 border-l border-border/50">
-                                    <div className="flex flex-wrap justify-center gap-1">
-                                        {p.exclusions.map((e: string) => (
-                                            <span key={e} className="text-[9px] font-black uppercase tracking-tight bg-red-50 text-red-700 px-2 py-0.5 rounded-full border border-red-100">
-=======
                                 <td key={p.id} className="p-8 border-l border-white/5">
                                     <div className="flex flex-wrap justify-center gap-2">
-                                        {p.exclusions.map(e => (
+                                        {p.exclusions.map((e: string) => (
                                             <span key={e} className="text-[9px] font-medium uppercase tracking-widest bg-red-500/10 text-red-400 px-3 py-1 rounded-lg border border-red-500/20 shadow-inner">
->>>>>>> Stashed changes
                                                 {e}
                                             </span>
                                         ))}
@@ -351,12 +343,21 @@ function InsuranceCompareContent() {
                         <p className="text-[10px] font-medium text-muted-foreground bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 uppercase tracking-widest text-center opacity-60">High limits</p>
                     </div>
 
-                    {/* Cheapest premium / Switch & Save Simulator */}
-                    <SwitchSaveSimulator
-                        category="insurance"
-                        current={selectedPolicies[0]}
-                        recommended={cheapest}
-                    />
+                    {/* Strategic Premium Path */}
+                    <div className="glass-floating p-8 shadow-xl border-white/5 hover:border-primary/40 transition-all duration-500 group floating-hover lg:col-span-1">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 text-muted-foreground text-[10px] font-medium uppercase tracking-[0.2em] mb-6 border border-white/10">
+                            Neural Premium
+                        </div>
+                        <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight leading-none mb-1 group-hover:text-primary transition-colors">{cheapest.name}</h3>
+                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.1em] mb-8 opacity-60">{cheapest.providerName}</p>
+                        <p className="text-[11px] text-foreground/80 leading-relaxed italic mb-8">
+                            Optimizing your risk vector for the {cheapest.providerName} cluster yields a significant efficiency delta in monthly liquidity.
+                        </p>
+                        <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                            <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-widest">Efficiency Delta</span>
+                            <span className="text-[10px] font-display font-medium text-primary">High Tier</span>
+                        </div>
+                    </div>
 
                     {/* Get Covered */}
                     <div className="glass-floating p-8 shadow-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-500 group relative overflow-hidden flex flex-col teal-glow">
@@ -377,11 +378,34 @@ function InsuranceCompareContent() {
                             </p>
                         </div>
 
-                        <button className="w-full bg-primary py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3 relative z-10">
-                            Get Cover / Request Quote
-                        </button>
+                        <div className="flex flex-col gap-2 relative z-10">
+                            <button className="w-full bg-primary py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3">
+                                Get Cover / Request Quote
+                            </button>
+                            <button 
+                                onClick={() => {
+                                    setPaymentItem({
+                                        id: bestValue.id,
+                                        name: `Initial Premium: ${bestValue.name}`,
+                                        price: bestValue.monthlyPremium,
+                                        category: "Insurance",
+                                        provider: bestValue.providerName
+                                    })
+                                    setIsPaymentOpen(true)
+                                }}
+                                className="w-full bg-primary/10 border border-primary/20 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-3"
+                            >
+                                Pay Initial Premium
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                <PaymentModal 
+                    isOpen={isPaymentOpen}
+                    onClose={() => setIsPaymentOpen(false)}
+                    item={paymentItem}
+                />
             </div>
 
             {/* Smart Summary */}

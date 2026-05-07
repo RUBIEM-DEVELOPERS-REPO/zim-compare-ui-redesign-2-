@@ -318,7 +318,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid hsla(var(--primary) / 0.15);
     box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02), 0 4px 12px rgba(0, 0, 0, 0.1);
     color: hsl(var(--foreground));
   }
@@ -405,6 +405,22 @@ body {
   .bg-cat-hospitality { @apply bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100; }
   .bg-cat-utilities { @apply bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100; }
   .bg-cat-mobility { @apply bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100; }
+  
+  .glass-anti-gravity {
+    background: rgba(10, 20, 25, 0.55);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(0, 255, 200, 0.15);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 30px rgba(0,255,200,0.05);
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .glass-anti-gravity:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(0,255,200,0.1);
+  }
+
 
   .match-badge {
     @apply px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-widest bg-primary/20 text-primary border border-primary/30;
@@ -424,7 +440,7 @@ body {
   .nav-primary-tab {
     @apply relative px-4 py-2 rounded-xl text-xs font-medium transition-all duration-300 backdrop-blur-md;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid hsla(var(--primary) / 0.15);
     color: hsl(var(--foreground) / 0.8);
   }
 
@@ -444,7 +460,7 @@ body {
     @apply relative px-3 py-1.5 rounded-lg text-[10px] font-medium uppercase tracking-wider transition-all duration-200;
     color: hsl(var(--muted-foreground));
     background: transparent;
-    border: 1px solid transparent;
+    border: 1px solid hsla(var(--primary) / 0.1);
   }
 
   .nav-secondary-tab:hover {
@@ -621,10 +637,11 @@ body {
     height: 100dvh;
     position: relative;
     z-index: 50;
+    overflow-y: auto;
   }
 
   .workspace-content {
-    @apply flex-1 flex flex-col overflow-y-auto bg-background/50 relative;
+    @apply flex-1 flex flex-col bg-background/50 relative overflow-hidden;
     height: 100vh;
     height: 100dvh;
   }
@@ -633,7 +650,7 @@ body {
     @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium relative overflow-hidden;
     color: hsl(var(--muted-foreground));
     background: transparent;
-    border: 1px solid transparent;
+    border: 1px solid hsla(var(--primary) / 0.15);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -669,7 +686,11 @@ body {
   }
 
   .workspace-content-inner {
-    @apply flex-1 p-6 md:p-10 lg:p-12 max-w-7xl mx-auto w-full transition-all duration-500;
+    @apply flex-1 flex flex-col w-full transition-all duration-500 overflow-y-auto;
+  }
+
+  .workspace-container {
+    @apply flex-1 p-6 md:p-10 lg:p-12 max-w-7xl mx-auto w-full;
   }
 
   /* Dashboard-specific utility classes (replaces inline styles in consumer-dashboard.tsx) */
@@ -737,26 +758,27 @@ body {
   html, body, #__next, #root {
     @apply bg-background text-foreground;
     height: 100%;
+    min-height: 100vh;
     width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    position: fixed;
+    position: relative;
   }
 
   :root {
     --background: 210 20% 98%;
-    --foreground: 220 15% 10%;
+    --foreground: 0 0% 0%; /* Black #000 */
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 10%;
+    --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 10%;
+    --popover-foreground: 0 0% 0%;
     --primary: 175 77% 32%;
     --primary-foreground: 0 0% 100%;
     --secondary: 220 14% 96%;
-    --secondary-foreground: 220 15% 18%;
+    --secondary-foreground: 0 0% 10%; /* Near black */
     --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 46%;
+    --muted-foreground: 0 0% 33%; /* Dark gray #555 */
     --accent: 175 77% 32%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
@@ -775,21 +797,21 @@ body {
     --anti-gravity-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.03);
     --teal-glow: 0 4px 20px rgba(19, 145, 135, 0.08);
     --sidebar-background: 220 20% 97%;
-    --sidebar-foreground: 220 15% 18%;
+    --sidebar-foreground: 0 0% 10%;
     --sidebar-primary: 175 77% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 14% 94%;
-    --sidebar-accent-foreground: 220 15% 18%;
+    --sidebar-accent-foreground: 0 0% 10%;
     --sidebar-border: 220 13% 90%;
     --sidebar-ring: 175 77% 32%;
     --sidebar-width: 16rem;
     --sidebar-width-icon: 3rem;
     --sidebar-width-mobile: 18rem;
-    --heading-color: #0d1117;
+    --heading-color: #000000;
     /* Light Mode Form Visibility */
-    --input-label-color: #374151;
-    --input-text-color: #111827;
-    --input-placeholder-color: rgba(107, 114, 128, 0.5);
+    --input-label-color: #111111;
+    --input-text-color: #000000;
+    --input-placeholder-color: rgba(0, 0, 0, 0.4);
   }
 
   .dark {

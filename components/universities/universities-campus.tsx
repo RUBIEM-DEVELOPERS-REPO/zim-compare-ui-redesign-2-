@@ -3,9 +3,10 @@
 import type { University } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { Check, Plus, AlertCircle } from "lucide-react"
+import { Check, Plus, AlertCircle, Home, Globe } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { useState } from "react"
+import { ScoreBadge } from "@/components/score-badge"
 
 interface UniversitiesCampusProps {
     universities: University[]
@@ -23,11 +24,7 @@ export function UniversitiesCampus({ universities, location }: UniversitiesCampu
     return (
         <div className="space-y-6">
             <section>
-<<<<<<< Updated upstream
-                <h3 className="text-sm font-semibold text-foreground mb-3">Campus &amp; Institution Detail</h3>
-=======
-                <h3 className="text-sm font-medium text-foreground mb-3">Campus Life & Facilities</h3>
->>>>>>> Stashed changes
+                <h3 className="text-sm font-medium text-foreground mb-3 uppercase tracking-widest">Campus Life & Facilities</h3>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredUniversities.map((uni) => (
                         <div
@@ -46,79 +43,66 @@ export function UniversitiesCampus({ universities, location }: UniversitiesCampu
                                 </div>
                             )}
                             <div className="flex items-center justify-between mb-3">
-<<<<<<< Updated upstream
                                 <p className="text-sm font-bold text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">
                                     {uni.university}
                                 </p>
                             </div>
                             <p className="text-[10px] font-bold text-muted-foreground mb-4 uppercase tracking-wider">
-                                {uni.location}, {uni.provinceArea}
-                            </p>
-
-                            <div className="space-y-2 mb-4 text-xs">
-                                <div className="rounded-xl bg-secondary/30 p-3">
-                                    <p className="text-muted-foreground uppercase tracking-tight mb-0.5 text-[10px] font-bold">Type</p>
-                                    <p className="font-medium capitalize">{uni.type.replace("_", " ")}</p>
-=======
-                                <p className="text-sm font-medium text-foreground group-hover:text-teal-600 transition-colors uppercase tracking-tight">
-                                    {uni.name}
-                                </p>
-                            </div>
-                            <p className="text-[10px] font-medium text-muted-foreground mb-4 uppercase tracking-wider">
-                                {uni.city}, {uni.province}
+                                {uni.location || uni.city}, {uni.provinceArea || uni.province}
                             </p>
 
                             <div className="flex gap-2 flex-wrap mb-4">
-                                <ScoreBadge score={uni.studentLifeRating} label="Student Life" />
-                                <ScoreBadge score={uni.graduateEmployabilityScore} label="Employment" />
+                                {uni.studentLifeRating && <ScoreBadge score={uni.studentLifeRating} label="Student Life" />}
+                                {uni.graduateEmployabilityScore && <ScoreBadge score={uni.graduateEmployabilityScore} label="Employment" />}
                             </div>
 
                             <div className="space-y-3 mb-4">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3 bg-secondary/30 p-2.5 rounded-xl border border-white/5">
                                     <div className={cn(
-                                        "w-8 h-8 rounded-lg flex items-center justify-center",
-                                        uni.accommodationAvailable ? "bg-teal-50" : "bg-gray-100"
+                                        "w-8 h-8 rounded-lg flex items-center justify-center shadow-inner",
+                                        uni.accommodationAvailable ? "bg-teal-500/10" : "bg-gray-100/5"
                                     )}>
                                         <Home className={cn(
                                             "w-4 h-4",
-                                            uni.accommodationAvailable ? "text-teal-600" : "text-gray-400"
+                                            uni.accommodationAvailable ? "text-teal-500" : "text-gray-500"
                                         )} />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-medium text-foreground">Accommodation</p>
-                                        <p className="text-[10px] text-muted-foreground">
-                                            {uni.accommodationAvailable ? "Available on campus" : "Not available"}
+                                        <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">Accommodation</p>
+                                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest">
+                                            {uni.accommodationAvailable ? "Available on campus" : "Off-campus only"}
                                         </p>
                                     </div>
->>>>>>> Stashed changes
+                                </div>
+                                <div className="flex items-center gap-3 bg-secondary/30 p-2.5 rounded-xl border border-white/5">
+                                    <div className={cn(
+                                        "w-8 h-8 rounded-lg flex items-center justify-center shadow-inner",
+                                        uni.onlineLearningAvailable ? "bg-blue-500/10" : "bg-gray-100/5"
+                                    )}>
+                                        <Globe className={cn(
+                                            "w-4 h-4",
+                                            uni.onlineLearningAvailable ? "text-blue-500" : "text-gray-500"
+                                        )} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">Online Learning</p>
+                                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest">
+                                            {uni.onlineLearningAvailable ? "Neural Support Active" : "Traditional Only"}
+                                        </p>
+                                    </div>
                                 </div>
                                 {uni.programmeSummary && (
-                                    <div className="rounded-xl bg-secondary/30 p-3">
-                                        <p className="text-muted-foreground uppercase tracking-tight mb-0.5 text-[10px] font-bold">Programme Summary</p>
-                                        <p className="font-medium">{uni.programmeSummary}</p>
+                                    <div className="rounded-xl bg-secondary/30 p-3 border border-white/5">
+                                        <p className="text-muted-foreground uppercase tracking-tight mb-1 text-[9px] font-bold">Neural Summary</p>
+                                        <p className="text-[11px] font-medium leading-relaxed">{uni.programmeSummary}</p>
                                     </div>
-<<<<<<< Updated upstream
                                 )}
-=======
-                                    <div>
-                                        <p className="text-xs font-medium text-foreground">Online Learning</p>
-                                        <p className="text-[10px] text-muted-foreground">
-                                            {uni.onlineLearningAvailable ? "Supported" : "Not available"}
-                                        </p>
-                                    </div>
-                                </div>
->>>>>>> Stashed changes
                             </div>
 
                             <div className="pt-3 border-t border-border/50 flex items-center justify-between">
                                 <div>
-<<<<<<< Updated upstream
-                                    <p className="text-[10px] font-bold text-muted-foreground mb-1">Min Fees</p>
-                                    <p className="text-sm font-bold text-teal-600">${(uni.feeMinUSD || 0).toLocaleString()}</p>
-=======
-                                    <p className="text-[10px] font-medium text-muted-foreground mb-1">Annual Fees</p>
-                                    <p className="text-sm font-medium text-teal-600">${uni.annualFees.toLocaleString()}</p>
->>>>>>> Stashed changes
+                                    <p className="text-[9px] font-bold text-muted-foreground mb-1 uppercase tracking-widest">Entry Fee</p>
+                                    <p className="text-sm font-bold text-teal-600 tabular-nums">${(uni.annualFees || uni.feeMinUSD || 0).toLocaleString()}/yr</p>
                                 </div>
                                 <button
                                     onClick={(e) => {

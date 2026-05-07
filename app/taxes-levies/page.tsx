@@ -8,6 +8,7 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 import { 
   Table, 
   TableBody, 
@@ -28,10 +29,14 @@ import {
   Building2,
   User2,
   Globe2,
-  Landmark
+  Landmark,
+  Fuel,
+  Droplets,
+  BarChart4,
+  ArrowUpRight
 } from "lucide-react"
 import { PageHeader } from "@/components/page-header"
-
+import { fuelTaxBreakdown } from "@/lib/mock/fuel-taxes"
 
 const taxItems = [
   { 
@@ -78,15 +83,16 @@ const taxItems = [
 
 const levies = [
   { id: 1, name: "AIDS Levy", rate: "3% of Income Tax", category: "Social Finance", authority: "ZIMRA" },
-  { id: 2, name: "Carbon Tax", rate: "Variable", category: "Energy", authority: "ZIMRA/ZERA" },
   { id: 3, name: "Tobacco Levy", rate: "0.75%", category: "Agriculture", authority: "TRB" },
   { id: 4, name: "Intermediary Tax", rate: "2%", category: "Financial", authority: "RBZ/ZIMRA" },
   { id: 5, name: "Capital Gains Tax", rate: "20% (Base)", category: "Investment", authority: "ZIMRA" },
-  { id: 6, name: "Youth Development Levy", rate: "TBD", category: "Social", authority: "Ministry of Finance" },
+  { id: 11, name: "Rural Electrification Fund", rate: "6%", category: "Utilities", authority: "ZESA" },
+  { id: 12, name: "City Council Service Charge", rate: "Variable", category: "Utilities", authority: "Local Gov" },
 ]
 
 export default function TaxesLeviesPage() {
   const [search, setSearch] = useState("")
+
 
   const filteredLevies = levies.filter(l => 
     l.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -177,6 +183,71 @@ export default function TaxesLeviesPage() {
                 ))}
               </TableBody>
             </Table>
+          </div>
+
+          {/* Fuel Tax & Levies Section */}
+          <div className="mt-12 space-y-6">
+            <h2 className="text-xl font-display font-medium flex items-center gap-2">
+              <Fuel size={20} className="text-primary" />
+              Fuel Price Composition & Levies
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {fuelTaxBreakdown.map((fuel) => {
+                const totalTaxes = fuel.taxes.reduce((sum, t) => sum + t.amount, 0);
+                const finalPrice = fuel.basePrice + totalTaxes + fuel.serviceCharges;
+                const taxImpact = (totalTaxes / finalPrice) * 100;
+
+                return (
+                  <Card key={fuel.type} className="glass-card border-white/5 hover:border-primary/20 transition-all overflow-hidden">
+                    <div className="bg-primary/5 p-4 border-b border-white/5 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Droplets size={16} className="text-primary" />
+                        <span className="text-sm font-bold uppercase tracking-tight">{fuel.type}</span>
+                      </div>
+                      <Badge className="bg-primary text-primary-foreground text-[8px] font-black uppercase">Statutory Pricing</Badge>
+                    </div>
+                    <CardContent className="p-5 space-y-4">
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Total Pump Price</p>
+                          <p className="text-2xl font-display font-black text-white">${finalPrice.toFixed(2)}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className={`text-[10px] font-bold flex items-center gap-1 ${finalPrice > fuel.historicalPrice ? 'text-red-400' : 'text-emerald-400'}`}>
+                            {finalPrice > fuel.historicalPrice ? <ArrowUpRight size={12} /> : <TrendingDown size={12} />}
+                            {Math.abs(((finalPrice - fuel.historicalPrice) / fuel.historicalPrice) * 100).toFixed(1)}%
+                          </p>
+                          <p className="text-[8px] text-muted-foreground uppercase tracking-tighter">vs Last Month</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-[10px] font-medium">
+                          <span className="text-muted-foreground">Tax Component Impact</span>
+                          <span className="text-primary">{taxImpact.toFixed(1)}%</span>
+                        </div>
+                        <Progress value={taxImpact} className="h-1 bg-white/5" />
+                      </div>
+
+                      <div className="pt-4 space-y-2">
+                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mb-2">Levy Breakdown (per litre)</p>
+                        {fuel.taxes.map((t) => (
+                          <div key={t.name} className="flex justify-between items-center text-[10px] py-1 border-b border-white/5 last:border-0">
+                            <span className="text-foreground/80">{t.name}</span>
+                            <span className="font-sans font-bold text-white">${t.amount.toFixed(3)}</span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between items-center text-[10px] py-2 border-t border-primary/20 mt-2">
+                          <span className="text-primary font-bold">Total Statutory Levies</span>
+                          <span className="font-sans font-black text-primary">${totalTaxes.toFixed(3)}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         </div>
 

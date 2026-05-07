@@ -4,8 +4,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import type { 
   Role, UserPreference, SavedComparison, ChatMessage, Alert, PricingSnapshot,
-  AlertPreference, Transaction, ServiceApplication, PricingUpdate, RegulatedPrice, TaxLevy,
-  NewsItem
+  AlertPreference, Transaction, ServiceApplication, PricingUpdate
 } from "@/lib/types"
 
 interface AppState {
@@ -31,6 +30,7 @@ interface AppState {
   setShowNews: (show: boolean) => void
   lastNewsSeenDate: string | null
   setLastNewsSeen: (date: string) => void
+  news: { id: string; source: string; title: string; link: string; time: string; tag?: string }[]
 
   // Saved comparisons
   savedComparisons: SavedComparison[]
@@ -80,9 +80,6 @@ interface AppState {
   pendingApprovals: PricingUpdate[]
   approveUpdate: (id: string) => void
   rejectUpdate: (id: string) => void
-  regulatedPrices: RegulatedPrice[]
-  updateRegulatedPrice: (id: string, price: number) => void
-  taxLevies: TaxLevy[]
   auditLogs: { id: string; action: string; user: string; timestamp: string; details: string }[]
   addAuditLog: (action: string, user: string, details: string) => void
 
@@ -95,20 +92,6 @@ interface AppState {
   activeSection: string
   setActiveSection: (section: string) => void
 
-  // Social Intelligence
-  socialProfiles: {
-    instagram?: string
-    twitter?: string
-    facebook?: string
-    tiktok?: string
-    linkedin?: string
-  }
-  enableSocialInsights: boolean
-  setSocialData: (data: Partial<AppState["socialProfiles"]>, enable?: boolean) => void
-
-  // News Feed
-  news: NewsItem[]
-  addNews: (n: NewsItem) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -140,6 +123,11 @@ export const useAppStore = create<AppState>()(
       setShowNews: (showNews) => set({ showNews }),
       lastNewsSeenDate: null,
       setLastNewsSeen: (date) => set({ lastNewsSeenDate: date }),
+      news: [
+        { id: "n1", source: "Reserve Bank", title: "New Monetary Policy Framework Announced", link: "#", time: "2h ago", tag: "New" },
+        { id: "n2", source: "TechZim", title: "Econet to expand 5G coverage to 10 more cities", link: "#", time: "5h ago", tag: "Promo" },
+        { id: "n3", source: "Herald", title: "Banking sector stability report released", link: "#", time: "1d ago" },
+      ],
 
       savedComparisons: [],
 
@@ -326,17 +314,6 @@ export const useAppStore = create<AppState>()(
           })
         }
       },
-      regulatedPrices: [
-        { id: "r1", category: "Banking", item: "ZIPIT Fee Cap", regulatedPrice: 2.00, unit: "USD", lastUpdated: new Date().toISOString() },
-        { id: "r2", category: "Telecom", item: "USSD Session Cap", regulatedPrice: 0.20, unit: "USD", lastUpdated: new Date().toISOString() },
-      ],
-      updateRegulatedPrice: (id, price) => set({
-        regulatedPrices: get().regulatedPrices.map(rp => rp.id === id ? { ...rp, regulatedPrice: price, lastUpdated: new Date().toISOString() } : rp)
-      }),
-      taxLevies: [
-        { id: "t1", name: "IMTT", sector: "Financial", rate: 0.02, type: "percentage", appliesTo: "Electronic Transfers" },
-        { id: "t2", name: "AIDS Levy", sector: "General", rate: 0.03, type: "percentage", appliesTo: "Payable Tax" },
-      ],
       auditLogs: [],
       addAuditLog: (action, user, details) => set({
         auditLogs: [{
@@ -363,20 +340,6 @@ export const useAppStore = create<AppState>()(
       activeSection: "chat",
       setActiveSection: (section) => set({ activeSection: section }),
 
-      socialProfiles: {},
-      enableSocialInsights: false,
-      setSocialData: (data, enable) => set({
-        socialProfiles: { ...get().socialProfiles, ...data },
-        enableSocialInsights: enable !== undefined ? enable : get().enableSocialInsights
-      }),
-
-      news: [
-        { id: "n1", title: "RBZ introduces new gold-backed currency tokens", source: "Banking", category: "Banking", time: "2h ago", link: "#", createdAt: new Date().toISOString() },
-        { id: "n2", title: "Econet increases 5G coverage in Bulawayo", source: "Telecom", category: "Telecom", time: "5h ago", link: "#", createdAt: new Date().toISOString() },
-        { id: "n3", title: "CBZ Bank announces zero-fee student accounts", source: "Banking", category: "Banking", time: "1d ago", link: "#", createdAt: new Date().toISOString() },
-        { id: "n4", title: "New curriculum updates for 2026 academic year", source: "Schools", category: "Schools", time: "2d ago", link: "#", createdAt: new Date().toISOString() },
-      ],
-      addNews: (n) => set({ news: [n, ...get().news] }),
     }),
     { name: "fintech-store" }
   )

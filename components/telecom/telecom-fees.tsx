@@ -4,17 +4,11 @@ import { useState } from "react"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-<<<<<<< Updated upstream
-import { X, Plus, CheckCircle2 } from "lucide-react"
-=======
-import { AlertCircle, HelpCircle, X } from "lucide-react"
+import { AlertCircle, HelpCircle, X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
-import type { TelecomProvider } from "@prisma/client"
->>>>>>> Stashed changes
+import type { TelecomProvider } from "@/lib/types"
 import { telecomProviders } from "@/lib/mock/telecoms"
-import { useAppStore } from "@/lib/store"
 import { TelecomCompareBar } from "./telecom-compare-bar"
-import { useI18n } from "@/lib/i18n"
 
 const feeCategories = [
   { key: "activation", label: "Activation & SIM" },

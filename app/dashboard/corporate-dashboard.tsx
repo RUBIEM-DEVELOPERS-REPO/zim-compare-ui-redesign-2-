@@ -10,7 +10,6 @@ import {
 } from "lucide-react"
 import { NavArrows } from "@/components/nav-arrows"
 import { validatePrice, validateRequired } from "@/lib/validation"
-import { AddNewsModal } from "@/components/dashboard/add-news-modal"
 
 export function CorporateDashboard() {
   const { applications, updateApplication, addAuditLog, userName } = useAppStore()
@@ -18,7 +17,6 @@ export function CorporateDashboard() {
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null)
   const [newPrice, setNewPrice] = useState("")
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const [isAdsModalOpen, setIsAdsModalOpen] = useState(false)
 
   const stats = [
     { label: "Total Applications", value: applications.length, icon: FileText, color: "text-blue-500", trend: "+12%" },
@@ -59,8 +57,8 @@ export function CorporateDashboard() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 pb-20">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-8 animate-in fade-in duration-700 pt-12 px-10 pb-20 overflow-x-hidden">
+      <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col">
           <NavArrows />
           <h1 className="text-5xl font-display font-medium text-foreground tracking-tight mb-2">Corporate Intelligence</h1>
@@ -69,13 +67,6 @@ export function CorporateDashboard() {
         <div className="flex items-center gap-4">
             <button className="px-5 py-2.5 rounded-[1.25rem] bg-white/5 border border-white/10 text-white text-[11px] font-medium uppercase tracking-widest hover:bg-white/10 transition-all floating-hover">
                 Export Insights
-            </button>
-            <button 
-                onClick={() => setIsAdsModalOpen(true)}
-                className="flex items-center gap-2 px-6 py-3 rounded-[1.25rem] bg-white/5 border border-white/10 text-white text-[11px] font-medium uppercase tracking-[0.15em] hover:bg-white/10 transition-all floating-hover"
-            >
-                <Plus className="w-4 h-4" />
-                Add New Ads
             </button>
             <button className="flex items-center gap-2 px-6 py-3 rounded-[1.25rem] bg-primary text-primary-foreground text-[11px] font-medium uppercase tracking-[0.15em] hover:bg-primary/90 transition-all shadow-2xl teal-glow floating-hover">
                 <Plus className="w-4 h-4" />
@@ -363,10 +354,6 @@ export function CorporateDashboard() {
         )}
       </div>
 
-      <AddNewsModal 
-        isOpen={isAdsModalOpen} 
-        onClose={() => setIsAdsModalOpen(false)} 
-      />
     </div>
   )
 }

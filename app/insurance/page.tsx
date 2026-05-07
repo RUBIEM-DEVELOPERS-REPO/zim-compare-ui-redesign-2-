@@ -14,16 +14,21 @@ import { PropertyQuoteWizard } from "@/app/insurance/property-quote/wizard"
 import { PageHeader } from "@/components/page-header"
 
 
+import { analyzeInput, AnalysisResult } from "@/lib/neural-engine"
+import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
+
 const tabs = [
   { key: "overview", label: "Overview" },
   { key: "policies", label: "Policies" },
   { key: "claims", label: "Claims & Process" },
   { key: "quote", label: "Property Quote" },
+  { key: "analysis", label: "Insurance Compare" },
 ] as const
 
 export default function InsurancePage() {
   const [tab, setTab] = useState<string>("overview")
   const [location, setLocation] = useState<string>("All Locations")
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
   const { compareTray, clearCompareTray } = useAppStore()
 
   // Clear stale comparison state if not insurance
@@ -33,6 +38,13 @@ export default function InsurancePage() {
     }
   }, [compareTray.category, compareTray.ids.length, clearCompareTray])
 
+  const handleAnalysis = (result: AnalysisResult | null) => {
+    setAnalysisResult(result)
+    if (result && tab !== "analysis") {
+      setTab("analysis")
+    }
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -41,11 +53,14 @@ export default function InsurancePage() {
       />
 
 
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <CategorySelector
           value={tab}
           onValueChange={setTab}
           categories={tabs}
+          mainCategory="insurance"
+          onAnalysis={handleAnalysis}
         />
 
         <LocationFilterPill
@@ -56,10 +71,25 @@ export default function InsurancePage() {
 
       <InsuranceCompareBar />
 
-      {tab === "overview" && <InsuranceOverview onTabChange={setTab} location={location} />}
-      {tab === "policies" && <InsurancePolicies location={location} />}
-      {tab === "claims" && <InsuranceClaims location={location} />}
-      {tab === "quote" && <PropertyQuoteWizard />}
+      <div className="animate-in fade-in duration-500">
+        {tab === "overview" && <InsuranceOverview onTabChange={setTab} location={location} />}
+        {tab === "policies" && <InsurancePolicies location={location} />}
+        {tab === "claims" && <InsuranceClaims location={location} />}
+        {tab === "quote" && <PropertyQuoteWizard />}
+        {tab === "analysis" && (
+          <div className="space-y-6">
+            {analysisResult ? (
+              <NeuralAnalysisPanel result={analysisResult} />
+            ) : (
+              <div className="glass-panel p-12 text-center">
+                <p className="text-muted-foreground font-playfair italic">
+                  Enter your sum assured or coverage requirements in the input above for neural insurance analysis.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

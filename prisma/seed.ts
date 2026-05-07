@@ -151,12 +151,16 @@ async function main() {
       update: {},
       create: {
         id: v.id,
-        providerId: v.providerId,
-        providerName: v.providerName,
-        type: v.type,
-        ratePerMin: v.ratePerMin,
-        smsRate: v.smsRate,
-      },
+        operator: v.providerId,
+        offer_type: v.type,
+        bundle_group: "general",
+        bundle_name: "Standard Rate",
+        price: v.ratePerMin,
+        validity_type: "rolling",
+        validity_value: 0,
+        validity_unit: "none",
+        sms_count: v.smsRate,
+      } as any,
     })
   }
 

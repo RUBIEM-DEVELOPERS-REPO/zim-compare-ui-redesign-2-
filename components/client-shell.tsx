@@ -18,8 +18,10 @@ const dashboardRoutes = [
   "/dashboard", "/banking", "/telecom", "/schools", 
   "/universities", "/insurance", "/stayscape", 
   "/chat", "/mobility", "/utilities", "/gen-z", "/saved",
-  "/admin", "/regulated", "/taxes", "/alerts", 
-  "/applications", "/summaries", "/social-insights"
+  "/admin", "/taxes", "/alerts", 
+  "/applications", "/food", "/clinics", "/hotels",
+  "/solar", "/transport", "/regulated", "/taxes-levies",
+  "/regulator", "/corporate"
 ]
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
@@ -55,7 +57,8 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
       <TopNav />
       <main className={cn(
         "flex-grow overflow-y-auto h-full",
-        pathname === "/" ? "w-full m-0 p-0" : "mx-auto max-w-7xl px-4 py-2"
+        pathname === "/" ? "w-full m-0 p-0" : "mx-auto max-w-7xl px-4 py-2",
+        pathname === "/interface-selection" && "scrollbar-none"
       )}>
         <AuthGuard>
           <PageTransition>
@@ -73,7 +76,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
       </main>
       <CompareBar />
       <ChatWidget />
-      <ScrollNav />
+      {pathname !== "/interface-selection" && <ScrollNav />}
     </>
   )
 }

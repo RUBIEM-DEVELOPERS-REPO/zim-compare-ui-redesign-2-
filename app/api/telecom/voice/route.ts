@@ -6,11 +6,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const providerId = searchParams.get("providerId")
 
-    const where = providerId ? { providerId } : {}
+    const where = providerId ? { operator: providerId } : {}
 
     const voiceRates = await prisma.voiceRate.findMany({
       where,
-      orderBy: { ratePerMin: 'asc' },
+      orderBy: { price: 'asc' },
     })
 
     return NextResponse.json({ voiceRates })
