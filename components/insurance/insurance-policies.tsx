@@ -5,15 +5,26 @@ import { policies } from "@/lib/mock/insurance"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
+import { ScoreBadge } from "@/components/score-badge"
 import { X, ShieldCheck, Clock, ChevronLeft } from "lucide-react"
 import { insuranceProviders } from "@/lib/mock/insurance"
 import { useI18n } from "@/lib/i18n"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 const CATEGORY_SORT_OPTIONS: Record<string, string[]> = {
   motor: ["Full Cover", "Third Party", "Third Party Fire and Theft"],
   medical: ["Individual Cover", "Family Cover", "Corporate Cover", "In-Patient Cover", "Out-Patient Cover"],
   life_funeral: ["Individual Plan", "Family Plan", "Extended Family Plan", "Cash Plan", "Service Plan"],
   property_business: ["Building Cover", "Contents Cover", "Combined Home Cover", "All Risks Cover", "Landlord Cover"],
+  business: ["Business All Risks", "Public Liability", "Professional Indemnity", "Asset All Risks"],
+  agriculture: ["Crop Cover", "Livestock Cover", "Equipment Cover", "Tobacco Hail"],
+  travel: ["International", "Regional", "Student", "Business Travel"],
 }
 
 export function InsurancePolicies({ location = "All Locations" }: { location?: string }) {
@@ -27,6 +38,9 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
     { key: "medical", label: t("insurance.subTabs.medical") },
     { key: "life_funeral", label: t("insurance.subTabs.life_funeral") },
     { key: "property_business", label: t("insurance.subTabs.property_business") },
+    { key: "business", label: t("insurance.subTabs.business") },
+    { key: "agriculture", label: t("insurance.subTabs.agriculture") },
+    { key: "travel", label: t("insurance.subTabs.travel") },
   ]
 
   const handleCatChange = (newCat: string) => {
@@ -54,7 +68,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex flex-col gap-3">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-white/5 p-1 rounded-xl border border-white/10 shadow-inner">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 bg-white/5 p-1 rounded-xl border border-white/10 shadow-inner">
             {categories.map((c) => (
               <button
                 key={c.key}
@@ -71,22 +85,30 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
             ))}
           </div>
 
-          <div className="flex justify-end relative">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="glass-floating text-[9px] font-medium uppercase tracking-[0.2em] text-primary/80 px-4 py-1.5 focus:outline-none cursor-pointer bg-primary/5 border-primary/20 hover:bg-primary/10 transition-all appearance-none outline-none ring-0 shadow-lg teal-glow pr-8"
-              title="Sort Logic"
-            >
-              {CATEGORY_SORT_OPTIONS[cat].map((option) => (
-                <option key={option} value={option} className="bg-[#0A0A0A] text-white">
-                  {option}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-primary/60">
-                <ChevronLeft size={14} className="-rotate-90" />
-            </div>
+          <div className="flex justify-end relative w-full sm:w-[240px]">
+            <Select value={sort} onValueChange={setSort}>
+              <SelectTrigger className="h-12 w-full glass-floating border-primary/30 text-foreground rounded-[1.5rem] shadow-2xl hover:border-primary transition-all duration-500 font-bold text-[10px] uppercase tracking-[0.2em] teal-glow floating-hover">
+                <SelectValue placeholder="Select Plan Type">
+                  {sort}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="rounded-[2rem] border-white/10 bg-background/60 backdrop-blur-3xl shadow-2xl animate-in fade-in zoom-in-95 duration-500 glass-floating teal-glow">
+                {CATEGORY_SORT_OPTIONS[cat].map((option) => (
+                  <SelectItem 
+                    key={option} 
+                    value={option}
+                    className={cn(
+                        "rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 m-2",
+                        sort === option
+                            ? "bg-primary text-primary-foreground focus:bg-primary focus:text-primary-foreground shadow-2xl teal-glow"
+                            : "hover:bg-primary/10 text-foreground focus:bg-primary/10"
+                    )}
+                  >
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
@@ -114,6 +136,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
 
                 <div className="flex items-center justify-between mb-0.5 relative z-10">
                   <p className="text-base font-display font-medium text-white group-hover:text-primary transition-colors uppercase tracking-tight leading-tight">{p.name}</p>
+                  {p.matchScore && <ScoreBadge score={p.matchScore} label="Match" />}
                 </div>
                 <p className="text-[9px] font-medium text-muted-foreground uppercase mt-1 tracking-[0.1em] opacity-60 font-sans mb-3.5 relative z-10">{p.providerName}</p>
 

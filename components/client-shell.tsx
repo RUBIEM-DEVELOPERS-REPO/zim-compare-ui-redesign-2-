@@ -21,7 +21,7 @@ const dashboardRoutes = [
   "/admin", "/taxes", "/alerts", 
   "/applications", "/food", "/clinics", "/hotels",
   "/solar", "/transport", "/regulated", "/taxes-levies",
-  "/regulator", "/corporate"
+  "/regulator", "/corporate", "/tech"
 ]
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
@@ -75,7 +75,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
         </AuthGuard>
       </main>
       <CompareBar />
-      <ChatWidget />
+      {pathname !== "/" && <ChatWidget />}
       {pathname !== "/interface-selection" && <ScrollNav />}
     </>
   )

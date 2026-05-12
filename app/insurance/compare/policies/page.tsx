@@ -12,40 +12,45 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { PaymentModal } from "@/components/payment-modal"
 
+import { policies as mockPolicies, insuranceProviders as mockProviders } from "@/lib/mock/insurance"
+
 function InsuranceCompareContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
-    const ids = searchParams.get("ids")?.split(",") ?? []
+    const ids = searchParams.get("ids")?.split(",").filter(Boolean) ?? []
     const { t } = useI18n()
     const { addSavedComparison, removeFromCompareTray, clearCompareTray } = useAppStore()
 
-    const [policies, setPolicies] = useState<any[]>([])
-    const [insuranceProviders, setInsuranceProviders] = useState<any[]>([])
-    const [loading, setLoading] = useState(true)
+    const [policies, setPolicies] = useState<any[]>(mockPolicies)
+    const [insuranceProviders, setInsuranceProviders] = useState<any[]>(mockProviders)
+    const [loading, setLoading] = useState(false)
     const [isPaymentOpen, setIsPaymentOpen] = useState(false)
     const [paymentItem, setPaymentItem] = useState<{ id: string, name: string, price: number, category: string, provider?: string }>({
         id: "", name: "", price: 0, category: "", provider: ""
     })
 
+    // Still attempt to fetch fresh data but default to mock
     useEffect(() => {
-        clearCompareTray()
+        setLoading(true)
         Promise.all([
             apiGet('/insurance/policies').catch(() => ({ policies: [] })),
             apiGet('/insurance/providers').catch(() => ({ providers: [] }))
         ]).then(([pRes, prRes]) => {
-            setPolicies(pRes.policies || [])
-            setInsuranceProviders(prRes.providers || [])
+            if (pRes.policies?.length > 0) setPolicies(pRes.policies)
+            if (prRes.providers?.length > 0) setInsuranceProviders(prRes.providers)
+            setLoading(false)
+        }).catch(() => {
             setLoading(false)
         })
-    }, [clearCompareTray])
+    }, [])
 
     const selectedPolicies = policies.filter((p) => ids.includes(p.id))
 
-    if (loading) {
-        return <div className="flex items-center justify-center py-20 text-muted-foreground">Loading insurance...</div>
+    if (loading && selectedPolicies.length === 0) {
+        return <div className="flex items-center justify-center py-20 text-muted-foreground animate-pulse font-medium uppercase tracking-widest text-[10px]">Synchronizing Neural Policy Data...</div>
     }
 
-    if (selectedPolicies.length === 0) {
+    if (selectedPolicies.length < 2) {
         return (
             <div className="flex flex-col items-center justify-center py-20 text-center">
                 <div className="p-4 bg-secondary/50 rounded-full mb-6">
@@ -269,14 +274,26 @@ function InsuranceCompareContent() {
 
             {/* AI Recommendations */}
             <div className="space-y-10">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 glass-floating bg-primary/10 text-primary teal-glow">
-                        <Zap size={28} />
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 glass-floating bg-primary/10 text-primary teal-glow">
+                            <Zap size={28} />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-display font-medium text-foreground uppercase tracking-tight">Recommendation Engine</h2>
+                            <p className="text-sm text-muted-foreground font-medium opacity-60">Neural risk/value mapping based on selection fingerprints</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="text-2xl font-display font-medium text-foreground uppercase tracking-tight">Neural Optimization</h2>
-                        <p className="text-sm text-muted-foreground font-medium opacity-60">Cognitive risk/value mapping based on selection fingerprints</p>
-                    </div>
+                    <button 
+                        onClick={() => {
+                            clearCompareTray()
+                            router.push("/insurance")
+                        }}
+                        className="glass-floating px-6 py-2 rounded-xl text-[10px] font-medium uppercase tracking-[0.2em] bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20 transition-all active:scale-95 flex items-center gap-2"
+                    >
+                        <X size={14} />
+                        Clear Comparison
+                    </button>
                 </div>
 
                 <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-5">
@@ -286,18 +303,20 @@ function InsuranceCompareContent() {
                             <Zap size={64} />
                         </div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-primary text-primary-foreground text-[10px] font-medium uppercase tracking-[0.2em] mb-6 shadow-xl">
-                            Best Value
+                            Recommended Provider
                         </div>
                         <h3 className="text-xl font-display font-medium text-white uppercase tracking-tight leading-none mb-1">{bestValue.name}</h3>
                         <p className="text-[10px] font-medium text-primary uppercase tracking-[0.1em] mb-8 opacity-70">{bestValue.providerName}</p>
+                        <div className="mb-6">
+                            <p className="text-[9px] font-bold text-primary uppercase tracking-widest mb-2 opacity-60">Best Value Reason</p>
+                            <p className="text-xs text-foreground/90 font-medium leading-relaxed">
+                                Optimized risk-to-premium ratio. This policy provides the highest coverage threshold (${bestValue.coverLimit.toLocaleString()}) relative to its monthly liquidity requirement of ${bestValue.monthlyPremium}.
+                            </p>
+                        </div>
                         <ul className="space-y-4 mb-8">
                             <li className="text-[11px] font-medium text-foreground/90 flex gap-3">
                                 <ShieldCheck size={14} className="text-primary shrink-0" strokeWidth={3} />
-                                <span>Highest coverage per dollar spent</span>
-                            </li>
-                            <li className="text-[11px] font-medium text-foreground/90 flex gap-3">
-                                <ShieldCheck size={14} className="text-primary shrink-0" strokeWidth={3} />
-                                <span>Includes {bestValue.benefits.length} core benefits</span>
+                                <span>Overall Match Score: {bestValue.matchScore}%</span>
                             </li>
                         </ul>
                         <p className="text-[10px] font-medium text-primary bg-primary/5 px-3 py-1.5 rounded-xl border border-primary/20 uppercase tracking-widest text-center">Neural Logic: High efficiency</p>

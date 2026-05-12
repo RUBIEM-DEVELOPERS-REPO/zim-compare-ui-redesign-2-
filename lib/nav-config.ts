@@ -5,7 +5,8 @@ import {
   Smartphone, School, Coffee, MessageSquare,
   Scale, ReceiptText, BellRing, Play,
   Stethoscope, Utensils, Scale3D, FileText, AlertTriangle,
-  Activity, FileCheck, BarChart3, MessageSquareWarning, RotateCcw, BadgePercent
+  Activity, FileCheck, BarChart3, MessageSquareWarning, RotateCcw, BadgePercent,
+  Cpu
 } from "lucide-react"
 
 export const iconMap = {
@@ -15,7 +16,8 @@ export const iconMap = {
   Smartphone, School, Coffee, MessageSquare,
   Scale, ReceiptText, BellRing, Play,
   Stethoscope, Utensils, Scale3D, FileText, AlertTriangle,
-  Activity, FileCheck, BarChart3, MessageSquareWarning, RotateCcw, BadgePercent
+  Activity, FileCheck, BarChart3, MessageSquareWarning, RotateCcw, BadgePercent,
+  Cpu
 }
 
 export interface NavItem {
@@ -48,6 +50,7 @@ export const primaryNav: readonly NavItem[] = [
 export const secondaryNav: readonly NavItem[] = [
   { id: "mobility", labelKey: "nav.mobility", href: "/mobility", label: "Mobility", icon: "Car" },
   { id: "utilities", labelKey: "nav.utilities", href: "/utilities", label: "Utilities", icon: "Zap" },
+  { id: "tech", labelKey: "nav.tech", href: "/tech", label: "Tech", icon: "Cpu" },
   { id: "gen-z", labelKey: "nav.genz", href: "/gen-z", label: "Gen Z", icon: "Play" },
   { id: "regulated", labelKey: "nav.regulated", href: "/regulated-prices", label: "Prices", icon: "Scale" },
   { id: "taxes", labelKey: "nav.taxes", href: "/taxes-levies", label: "Taxes", icon: "ReceiptText" },

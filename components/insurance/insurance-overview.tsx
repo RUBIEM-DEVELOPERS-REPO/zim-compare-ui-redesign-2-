@@ -42,8 +42,9 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     { key: "medical", label: t("insurance.subTabs.medical") },
     { key: "life_funeral", label: t("insurance.subTabs.life_funeral") },
     { key: "property_business", label: t("insurance.subTabs.property_business") },
+    { key: "business", label: t("insurance.subTabs.business") },
+    { key: "agriculture", label: t("insurance.subTabs.agriculture") },
     { key: "travel", label: t("insurance.subTabs.travel") },
-    { key: "property_business_biz", label: t("insurance.subTabs.property_business_biz") },
   ]
 
   const filteredProviders = insuranceProviders.filter(p => {
@@ -51,10 +52,7 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     if (categoryFilter === "all") return true
     const providerPolicies = policies.filter(pol => pol.providerId === p.id)
     if (categoryFilter === "property_business") {
-      return providerPolicies.some(pol => pol.category === "property_business" && (pol.name.toLowerCase().includes("home") || pol.name.toLowerCase().includes("protect") || pol.name.toLowerCase().includes("property")))
-    }
-    if (categoryFilter === "property_business_biz") {
-      return providerPolicies.some(pol => pol.category === "property_business" && (pol.name.toLowerCase().includes("business") || pol.name.toLowerCase().includes("biz")))
+      return providerPolicies.some(pol => pol.category === "property_business")
     }
     return providerPolicies.some(pol => pol.category === categoryFilter)
   })

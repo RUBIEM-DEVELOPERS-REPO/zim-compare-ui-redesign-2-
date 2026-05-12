@@ -228,7 +228,7 @@ export interface Policy {
   id: string
   providerId: string
   providerName: string
-  category: "motor" | "medical" | "life_funeral" | "property_business"
+  category: "motor" | "medical" | "life_funeral" | "property_business" | "business" | "agriculture" | "travel"
   name: string
   monthlyPremium: number
   annualPremium: number
@@ -238,6 +238,7 @@ export interface Policy {
   benefits: string[]
   exclusions: string[]
   type: string
+  matchScore?: number
 }
 
 // ── Mobility ──

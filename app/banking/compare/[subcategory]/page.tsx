@@ -22,7 +22,10 @@ import {
     Clock,
     ShieldCheck,
     CreditCard,
-    DollarSign
+    DollarSign,
+    Share2,
+    Mail,
+    MessageCircle
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -165,6 +168,26 @@ function BankingCompareContent() {
             name: `${subcategory.charAt(0).toUpperCase() + subcategory.slice(1)} Comparison: ${compareItems.map((item: any) => item.name || item.bankName).join(" vs ")}`
         })
         router.push("/dashboard")
+    }
+
+    const constructShareMessage = () => {
+        const bankName = recommendations.primary.item.bankName || recommendations.primary.item.name
+        const productName = recommendations.primary.item.name
+        const reasoning = recommendations.primary.reasoning.join(", ").toLowerCase()
+        const url = typeof window !== "undefined" ? window.location.href : ""
+        
+        return `I compared savings products on Fintech. Recommended option: ${bankName} ${productName}. Reason: ${reasoning}. View the comparison here: ${url}`
+    }
+
+    const handleWhatsAppShare = () => {
+        const message = constructShareMessage()
+        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank")
+    }
+
+    const handleEmailShare = () => {
+        const message = constructShareMessage()
+        const subject = "Banking Recommendation"
+        window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`
     }
 
     return (
@@ -432,6 +455,35 @@ function BankingCompareContent() {
                                 Pay Processing Fee
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                {/* Share Section */}
+                <div className="mt-12 p-8 glass-floating border-primary/20 bg-primary/5 flex flex-col md:flex-row items-center justify-between gap-6 teal-glow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-primary/20 rounded-xl text-primary">
+                            <Share2 size={24} />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-display font-black text-foreground uppercase tracking-tight">Share Recommendation</h3>
+                            <p className="text-sm text-muted-foreground font-medium opacity-70">Send this analysis to your colleagues or family</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4 w-full md:w-auto">
+                        <button 
+                            onClick={handleWhatsAppShare}
+                            className="flex-1 md:flex-none flex items-center justify-center gap-3 px-6 py-4 bg-[#25D366]/10 border border-[#25D366]/20 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-[#25D366] hover:bg-[#25D366]/20 transition-all active:scale-95"
+                        >
+                            <MessageCircle size={18} strokeWidth={3} />
+                            WhatsApp
+                        </button>
+                        <button 
+                            onClick={handleEmailShare}
+                            className="flex-1 md:flex-none flex items-center justify-center gap-3 px-6 py-4 bg-primary/10 border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:bg-primary/20 transition-all active:scale-95"
+                        >
+                            <Mail size={18} strokeWidth={3} />
+                            Email
+                        </button>
                     </div>
                 </div>
 

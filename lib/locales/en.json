@@ -16,6 +16,7 @@
         "regulated": "Regulated Prices",
         "taxes": "Taxes & Levies",
         "alerts": "Smart Alerts",
+        "tech": "Tech",
         "applications": "Applications",
         "regulator": "Regulator",
         "regulatorInterface": "Regulator Interface",
@@ -335,7 +336,8 @@
             "life_funeral": "Funeral Cover",
             "property_business": "Home Insurance",
             "travel": "Travel Insurance",
-            "property_business_biz": "Business Insurance"
+            "agriculture": "Agriculture Insurance",
+            "business": "Business Insurance"
         },
         "highlight": {
             "policyTypes": {

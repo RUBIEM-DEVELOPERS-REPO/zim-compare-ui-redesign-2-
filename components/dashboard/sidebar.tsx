@@ -111,7 +111,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
 
   const corporateItemsToHide = [
     "banking", "telecom", "schools", "universities", "insurance", 
-    "hospitality", "food", "clinics", "mobility", "utilities", "gen-z"
+    "hospitality", "food", "clinics", "mobility", "utilities", "gen-z", "tech"
   ]
 
   const navItems = React.useMemo(() => {
@@ -120,7 +120,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
     }
     
     // Check if we are specifically on the corporate page to filter out consumer categories
-    const isCorporatePage = pathname === "/corporate"
+    const isCorporatePage = pathname.startsWith("/corporate")
 
     if (isCorporate && isCorporatePage) {
       return { 
