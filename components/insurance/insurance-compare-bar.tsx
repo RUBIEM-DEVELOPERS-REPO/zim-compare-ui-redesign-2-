@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Trash2, ArrowRight } from "lucide-react"
@@ -8,6 +8,7 @@ import { policies } from "@/lib/mock/insurance"
 
 export function InsuranceCompareBar() {
     const router = useRouter()
+    const pathname = usePathname()
     const { compareTray, clearCompareTray } = useAppStore()
 
     // Requirement: Show the bar immediately after 2 or more products are added
@@ -16,9 +17,13 @@ export function InsuranceCompareBar() {
     const handleCompare = () => {
         if (compareTray.ids.length < 2) return
         
-        const sub = compareTray.subcategory || "policies"
-        const base = `/insurance/compare/${sub}`
-        router.push(`${base}?ids=${compareTray.ids.join(",")}`)
+        if (pathname === "/insurance") {
+            router.push("/insurance?tab=analysis")
+        } else {
+            const sub = compareTray.subcategory || "policies"
+            const base = `/insurance/compare/${sub}`
+            router.push(`${base}?ids=${compareTray.ids.join(",")}`)
+        }
     }
 
     return (

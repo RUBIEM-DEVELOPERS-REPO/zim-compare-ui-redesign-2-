@@ -113,30 +113,6 @@ export function TelecomProfiles({ location = "All Locations", providers = [], bu
                 <div className="flex gap-2 flex-wrap items-center">
                   <ScoreBadge score={p.coverageScore} label="Coverage" />
                   <ScoreBadge score={p.transparencyScore} label="Transparency" />
-                  {(() => {
-                    const inTray = compareTray.ids.includes(p.id)
-                    return (
-                      <button
-                        onClick={() => addToCompareTray("telecom", p.id, "profiles")}
-                        className={cn(
-                          "btn-compare-standard ml-2",
-                          inTray && "opacity-60"
-                        )}
-                      >
-                        {inTray ? (
-                          <>
-                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                            {t("common.addedToCompare")}
-                          </>
-                        ) : (
-                          <>
-                            <Plus className="w-3.5 h-3.5 mr-1" />
-                            {t("common.addToCompare")}
-                          </>
-                        )}
-                      </button>
-                    )
-                  })()}
                 </div>
               </div>
 

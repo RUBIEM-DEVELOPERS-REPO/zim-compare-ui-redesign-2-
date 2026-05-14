@@ -233,6 +233,8 @@ export interface Policy {
   monthlyPremium: number
   annualPremium: number
   excess: number
+  coPay?: number
+  outOfPocketLimit?: number
   waitingPeriodDays: number
   coverLimit: number
   benefits: string[]

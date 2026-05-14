@@ -19,19 +19,21 @@ export const policies: Policy[] = [
   { 
     id: "om-motor-protect", providerId: "old-mutual", providerName: "Old Mutual", category: "motor", 
     name: "Old Mutual Motor Protect", monthlyPremium: 32, annualPremium: 350, excess: 150, 
+    coPay: 0, outOfPocketLimit: 500,
     waitingPeriodDays: 0, coverLimit: 25000, 
     benefits: ["Comprehensive cover", "Third-party liability", "Accident assistance"], 
     exclusions: ["Unlicensed driver", "Drunk driving", "Racing"], 
     type: "Full Cover", matchScore: 94 
-  },
+},
   { 
     id: "zimnat-auto-secure", providerId: "zimnat", providerName: "Zimnat", category: "motor", 
     name: "Zimnat Auto Secure", monthlyPremium: 28, annualPremium: 310, excess: 180, 
+    coPay: 5, outOfPocketLimit: 600,
     waitingPeriodDays: 0, coverLimit: 20000, 
     benefits: ["Theft cover", "Third-party cover", "Roadside support"], 
     exclusions: ["Wear and tear", "Drunk driving"], 
     type: "Full Cover", matchScore: 91 
-  },
+},
   { 
     id: "fm-drive-cover", providerId: "first-mutual", providerName: "First Mutual", category: "motor", 
     name: "First Mutual Drive Cover", monthlyPremium: 35, annualPremium: 385, excess: 200, 
@@ -69,19 +71,21 @@ export const policies: Policy[] = [
   { 
     id: "cimas-health-plus", providerId: "cimas", providerName: "Cimas", category: "medical", 
     name: "Cimas Health Plus", monthlyPremium: 55, annualPremium: 605, excess: 10, 
+    coPay: 5, outOfPocketLimit: 2000,
     waitingPeriodDays: 30, coverLimit: 15000, 
     benefits: ["GP visits", "Hospitalization", "Specialist network"], 
     exclusions: ["Cosmetic treatment", "Non-approved procedures"], 
     type: "Individual Cover", matchScore: 95 
-  },
+},
   { 
     id: "psmas-care-secure", providerId: "psmas", providerName: "PSMAS", category: "medical", 
     name: "PSMAS Care Secure", monthlyPremium: 48, annualPremium: 528, excess: 12, 
+    coPay: 10, outOfPocketLimit: 2500,
     waitingPeriodDays: 30, coverLimit: 12000, 
     benefits: ["In-patient care", "Outpatient care", "Chronic medication"], 
     exclusions: ["Cosmetic surgery", "Elective overseas treatment"], 
     type: "Individual Cover", matchScore: 93 
-  },
+},
   { 
     id: "fm-health-cover", providerId: "first-mutual", providerName: "First Mutual", category: "medical", 
     name: "First Mutual Health Cover", monthlyPremium: 50, annualPremium: 550, excess: 15, 
@@ -119,19 +123,21 @@ export const policies: Policy[] = [
   { 
     id: "doves-funeral-plan", providerId: "doves", providerName: "Doves", category: "life_funeral", 
     name: "Doves Funeral Plan", monthlyPremium: 12, annualPremium: 144, excess: 0, 
+    coPay: 0, outOfPocketLimit: 0,
     waitingPeriodDays: 180, coverLimit: 2500, 
     benefits: ["Funeral service", "Coffin", "Transport"], 
     exclusions: ["Waiting period", "Misrepresentation"], 
     type: "Service Plan", matchScore: 96 
-  },
+},
   { 
     id: "nyaradzo-family-cover", providerId: "nyaradzo", providerName: "Nyaradzo", category: "life_funeral", 
     name: "Nyaradzo Family Cover", monthlyPremium: 10, annualPremium: 120, excess: 0, 
+    coPay: 0, outOfPocketLimit: 0,
     waitingPeriodDays: 180, coverLimit: 2000, 
     benefits: ["Full funeral package", "Family extension", "Repatriation"], 
     exclusions: ["Early claims within waiting period"], 
     type: "Family Plan", matchScore: 95 
-  },
+},
   { 
     id: "fm-final-rest", providerId: "first-mutual", providerName: "First Mutual", category: "life_funeral", 
     name: "First Mutual Final Rest Plan", monthlyPremium: 11, annualPremium: 132, excess: 0, 
@@ -169,19 +175,21 @@ export const policies: Policy[] = [
   { 
     id: "om-home-protect-v2", providerId: "old-mutual", providerName: "Old Mutual", category: "property_business", 
     name: "Old Mutual Home Protect", monthlyPremium: 35, annualPremium: 385, excess: 500, 
+    coPay: 0, outOfPocketLimit: 1500,
     waitingPeriodDays: 0, coverLimit: 100000, 
     benefits: ["Building cover", "Contents cover", "Liability"], 
     exclusions: ["Wear and tear", "Poor maintenance"], 
     type: "Building Cover", matchScore: 97 
-  },
+},
   { 
     id: "zimnat-home-shield", providerId: "zimnat", providerName: "Zimnat", category: "property_business", 
     name: "Zimnat Home Shield", monthlyPremium: 30, annualPremium: 330, excess: 450, 
+    coPay: 2, outOfPocketLimit: 1200,
     waitingPeriodDays: 0, coverLimit: 85000, 
     benefits: ["Fire", "Theft", "Storm damage"], 
     exclusions: ["Gradual deterioration"], 
     type: "Combined Home Cover", matchScore: 93 
-  },
+},
   { 
     id: "fm-house-secure", providerId: "first-mutual", providerName: "First Mutual", category: "property_business", 
     name: "First Mutual House Secure", monthlyPremium: 33, annualPremium: 363, excess: 480, 

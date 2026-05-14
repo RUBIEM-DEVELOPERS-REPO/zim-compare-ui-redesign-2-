@@ -26,6 +26,12 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { 
+    getTelecomRecommendations, 
+    normalizeTelecomProduct, 
+    UserNeed, 
+    NormalizedTelecomProduct 
+} from "@/lib/telecom-logic"
 
 function TelecomCompareContent() {
     const searchParams = useSearchParams()
@@ -78,63 +84,54 @@ function TelecomCompareContent() {
         )
     }
 
-    // Recommendation Logic - Highly Resilient
+    // ── Telecom Comparison Logic Framework Integration ──
+    const { preferences } = useAppStore()
+    
+    // Map scenario to UserNeed
+    const userNeed = useMemo((): UserNeed => {
+        const scenario = preferences.scenario || "family"
+        return {
+            type: subcategory === "voice" ? "voice" : subcategory === "internet" ? "home-internet" : "data",
+            usageVolume: scenario === "sme" ? "high" : scenario === "student" ? "medium" : "medium",
+            budget: scenario === "student" ? 5 : 50
+        }
+    }, [preferences.scenario, subcategory])
+
+    const { recommendations: rankedRecs, excluded } = useMemo(() => {
+        return getTelecomRecommendations(compareItems as any, userNeed)
+    }, [compareItems, userNeed])
+
+    // Adapt new recommendations to existing UI structure if needed, 
+    // but better to use the new structured output directly.
     const recommendations = useMemo(() => {
-        const items = compareItems;
-        
-        // Helper to get a safe value for sorting
-        const getScore = (item: any, key: string) => (item[key] || 0);
+        const primary = rankedRecs[0]
+        const secondary = rankedRecs[1]
+        const tertiary = rankedRecs[2]
 
-        // Best Overall (highest average of available scores or lowest price)
-        const bestValue = [...items].sort((a: any, b: any) => {
-            if (a.costPerGB && b.costPerGB) return a.costPerGB - b.costPerGB;
-            if (a.ratePerMin && b.ratePerMin) return a.ratePerMin - b.ratePerMin;
-            const scoreA = getScore(a, 'coverageScore') + getScore(a, 'digitalScore') + getScore(a, 'transparencyScore');
-            const scoreB = getScore(b, 'coverageScore') + getScore(b, 'digitalScore') + getScore(b, 'transparencyScore');
-            return scoreB - scoreA;
-        })[0];
-
-        // Innovation Leader (Digital Score)
-        const techLeader = [...items].sort((a: any, b: any) => getScore(b, 'digitalScore') - getScore(a, 'digitalScore'))[0];
-
-        // Reach Leader (Coverage)
-        const reachLeader = [...items].sort((a: any, b: any) => getScore(b, 'coverageScore') - getScore(a, 'coverageScore'))[0];
-
-        const getName = (item: any) => item.providerName || item.name || "Unknown Node";
+        const formatRec = (rec: any, label: string) => {
+            if (!rec) return null
+            return {
+                label,
+                item: rec.product,
+                score: rec.score,
+                reasoning: [
+                    rec.matchReason,
+                    ...rec.tradeOffs.map((t: string) => `Trade-off: ${t}`),
+                    `Confidence: ${rec.confidenceLevel.toUpperCase()}`
+                ],
+                goodFor: rec.product.validityPeriod + " " + rec.product.productType.replace('-', ' '),
+                confidence: rec.confidenceLevel
+            }
+        }
 
         return {
-            primary: {
-                label: "Neural Leader",
-                item: bestValue,
-                reasoning: [
-                    (bestValue as any).costPerGB ? `Optimized cost: $${(bestValue as any).costPerGB.toFixed(2)}/GB` : `Superior Network Efficiency`,
-                    (bestValue as any).coverageScore ? `Coverage verified at ${(bestValue as any).coverageScore}%` : "Stable connection tier",
-                    "Lowest latency in recent benchmarks"
-                ],
-                goodFor: (bestValue as any).dataGB ? "High Volume Usage" : "Reliable Connectivity"
-            },
-            secondary: {
-                label: "Digital Edge",
-                item: techLeader,
-                reasoning: [
-                    `Digital Score: ${(techLeader as any).digitalScore || 80}%`,
-                    "Best self-service experience",
-                    "Advanced neural app features"
-                ],
-                goodFor: "Tech-Savvy Users"
-            },
-            tertiary: {
-                label: "Network Reach",
-                item: reachLeader,
-                reasoning: [
-                    `Coverage Score: ${(reachLeader as any).coverageScore || 75}%`,
-                    "Wide rural penetration",
-                    "Consistent signal strength"
-                ],
-                goodFor: "Maximum Reliability"
-            }
-        };
-    }, [compareItems])
+            primary: formatRec(primary, "Neural Leader"),
+            secondary: formatRec(secondary, "Digital Edge"),
+            tertiary: formatRec(tertiary, "Network Reach"),
+            all: rankedRecs,
+            excluded
+        }
+    }, [rankedRecs, excluded])
 
     const handleSave = () => {
         addSavedComparison({
@@ -148,18 +145,25 @@ function TelecomCompareContent() {
     }
 
     // Dynamic Row Helper
-    const ComparisonRow = ({ label, attr, formatter }: { label: string, attr: string, formatter?: (val: any) => React.ReactNode }) => {
-        const hasData = compareItems.some((item: any) => item[attr] !== undefined && item[attr] !== null);
+    const ComparisonRow = ({ label, attr, formatter, isNormalized = false }: { label: string, attr: string, formatter?: (val: any) => React.ReactNode, isNormalized?: boolean }) => {
+        const hasData = compareItems.some((item: any) => {
+            const val = isNormalized ? normalizeTelecomProduct(item)[attr as keyof NormalizedTelecomProduct] : item[attr];
+            return val !== undefined && val !== null;
+        });
         if (!hasData) return null;
 
         return (
             <tr className="border-b border-white/5 hover:bg-white/5 transition-colors">
                 <td className="p-6 text-sm font-medium text-muted-foreground bg-white/2">{label}</td>
-                {compareItems.map((item: any) => (
-                    <td key={item.id} className="p-6 text-center text-sm font-bold text-foreground">
-                        {item[attr] !== undefined ? (formatter ? formatter(item[attr]) : item[attr]) : "—"}
-                    </td>
-                ))}
+                {compareItems.map((item: any) => {
+                    const normalized = normalizeTelecomProduct(item);
+                    const val = isNormalized ? normalized[attr as keyof NormalizedTelecomProduct] : item[attr];
+                    return (
+                        <td key={item.id} className="p-6 text-center text-sm font-bold text-foreground">
+                            {val !== undefined ? (formatter ? formatter(val) : val) : "—"}
+                        </td>
+                    );
+                })}
             </tr>
         );
     };
@@ -221,18 +225,46 @@ function TelecomCompareContent() {
                     </thead>
                     <tbody className="divide-y divide-white/5">
                         <ComparisonRow label="Price / Monthly Cost" attr="price" formatter={(v) => `$${v.toFixed(2)}`} />
+                        <ComparisonRow label="Normalized USD Cost" attr="normalizedPriceUSD" isNormalized formatter={(v) => `$${v.toFixed(2)}`} />
                         <ComparisonRow label="Data Volume" attr="dataGB" formatter={(v) => v >= 1 ? `${v}GB` : `${v * 1000}MB`} />
                         <ComparisonRow label="Cost per GB" attr="costPerGB" formatter={(v) => <span className="text-teal-400">${v.toFixed(2)}</span>} />
+                        <ComparisonRow label="Comparison Group" attr="comparisonGroup" isNormalized formatter={(v: string) => <span className="text-[10px] uppercase tracking-widest text-teal-400/80">{v.replace(/-/g, ' ')}</span>} />
+                        <ComparisonRow label="Realistic Unit Cost" attr="normalizedUnitCost" isNormalized formatter={(v: number) => <span className="text-teal-400 font-black">${v.toFixed(3)}</span>} />
                         <ComparisonRow label="Voice Rate (/min)" attr="ratePerMin" formatter={(v) => `$${v.toFixed(3)}`} />
                         <ComparisonRow label="SMS Rate" attr="smsRate" formatter={(v) => `$${v.toFixed(3)}`} />
                         <ComparisonRow label="Network Generation" attr="networkType" />
                         <ComparisonRow label="Coverage Score" attr="coverageScore" formatter={(v) => <span className="text-teal-400 font-black">{v}%</span>} />
+                        <ComparisonRow label="Reliability Index" attr="reliabilityScore" isNormalized formatter={(v) => `${v}%`} />
+                        <ComparisonRow label="Data Confidence" attr="confidenceScore" isNormalized formatter={(v) => `${v}%`} />
                         <ComparisonRow label="Digital Efficiency" attr="digitalScore" formatter={(v) => `${v}%`} />
                         <ComparisonRow label="Neural Transparency" attr="transparencyScore" formatter={(v) => `${v}%`} />
                         <ComparisonRow label="Validity Period" attr="validityDays" formatter={(v) => `${v} Days`} />
                     </tbody>
                 </table>
             </div>
+
+            {/* Comparability Warning & Excluded Items */}
+            {recommendations.excluded.length > 0 && (
+                <div className="p-6 border-2 border-dashed border-red-500/20 bg-red-500/5 rounded-2xl animate-in fade-in slide-in-from-bottom-4">
+                    <div className="flex items-center gap-3 mb-4">
+                        <X className="w-6 h-6 text-red-400" />
+                        <h3 className="text-xl font-display font-black text-white uppercase tracking-tight">Direct Comparison Limited</h3>
+                    </div>
+                    <p className="text-sm text-white/60 mb-6 max-w-2xl font-medium leading-relaxed">
+                        The following items were excluded from the neural ranking because they differ in category, validity, or technology. 
+                        Direct side-by-side ranking requires a normalized comparison group.
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {recommendations.excluded.map(({ product, reason }) => (
+                            <div key={product.id} className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                                <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">{product.providerName}</p>
+                                <p className="text-sm font-bold text-white mb-2">{product.name}</p>
+                                <p className="text-[10px] text-white/40 leading-relaxed font-medium">{reason}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* AI Recommendations Panel */}
             <div className="space-y-8">
@@ -247,7 +279,7 @@ function TelecomCompareContent() {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6">
-                    {[recommendations.primary, recommendations.secondary, recommendations.tertiary].map((rec, i) => (
+                    {([recommendations.primary, recommendations.secondary, recommendations.tertiary].filter((r): r is NonNullable<typeof r> => r !== null)).map((rec, i) => (
                         <div 
                             key={i} 
                             className={cn(
@@ -261,22 +293,26 @@ function TelecomCompareContent() {
                             
                             <div className={cn(
                                 "inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6",
-                                i === 0 ? "bg-teal-500/20 text-teal-400" : "bg-white/5 text-white/50"
+                                rec.confidence === 'high' ? "bg-teal-500/20 text-teal-400" : rec.confidence === 'medium' ? "bg-yellow-500/20 text-yellow-400" : "bg-red-500/20 text-red-400"
                             )}>
-                                {rec.label}
+                                {rec.label} &middot; {rec.confidence.toUpperCase()} CONFIDENCE
                             </div>
                             
                             <h3 className="text-2xl font-display font-black text-white mb-1">
-                                {(rec.item as any).providerName || (rec.item as any).name}
+                                {rec.item.providerName}
                             </h3>
                             <p className="text-[10px] text-teal-400/60 font-black uppercase tracking-widest mb-6">
-                                {(rec.item as any).name || (rec.item as any).type}
+                                {rec.item.name} &middot; Score: {rec.score.toFixed(1)}
                             </p>
                             
                             <ul className="space-y-4 mb-8">
-                                {rec.reasoning.map((r, idx) => (
+                                {rec.reasoning.map((r: string, idx: number) => (
                                     <li key={idx} className="flex items-start gap-3 text-[13px] text-white/70 font-medium">
-                                        <CheckCircle2 size={16} className="text-teal-400 mt-0.5 shrink-0" />
+                                        {r.startsWith('Trade-off') ? (
+                                            <Info size={16} className="text-yellow-400 mt-0.5 shrink-0" />
+                                        ) : (
+                                            <CheckCircle2 size={16} className="text-teal-400 mt-0.5 shrink-0" />
+                                        )}
                                         {r}
                                     </li>
                                 ))}
@@ -284,7 +320,7 @@ function TelecomCompareContent() {
                             
                             <div className="text-[10px] text-teal-400 font-black uppercase tracking-widest flex items-center gap-2 border-t border-white/5 pt-6">
                                 <Zap size={14} className="animate-pulse" />
-                                Optimization: {rec.goodFor}
+                                Optimal for: {rec.goodFor}
                             </div>
                         </div>
                     ))}
@@ -298,7 +334,8 @@ function TelecomCompareContent() {
                         </div>
                         <h3 className="text-3xl font-display font-black text-white uppercase tracking-tight mb-4">Deploy Optimal Configuration</h3>
                         <p className="text-sm text-white/60 font-medium leading-relaxed">
-                            Our neural engine has identified <span className="text-teal-400">{(recommendations.primary.item as any).providerName || (recommendations.primary.item as any).name}</span> as the superior choice for your current requirements. This selection maximizes cost efficiency while maintaining peak network reach.
+                            Our neural engine has identified <span className="text-teal-400">{recommendations.primary?.item.providerName}</span> as the superior choice for your current requirements. 
+                            With a realistic unit cost of <span className="text-teal-400">${recommendations.primary?.item.normalizedUnitCost.toFixed(3)}</span>, this selection maximizes cost efficiency while maintaining peak network reach.
                         </p>
                     </div>
                     

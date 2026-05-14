@@ -93,9 +93,7 @@ export function CategorySelector({
                         onValueChange(val)
                     }}>
                         <SelectTrigger className="h-12 w-full glass-floating border-primary/30 text-foreground rounded-[1.5rem] shadow-2xl hover:border-primary transition-all duration-500 font-bold text-[10px] uppercase tracking-[0.2em] teal-glow floating-hover">
-                            <SelectValue placeholder="Select Category">
-                                {selectedCategory?.label}
-                            </SelectValue>
+                            <SelectValue placeholder="Select Category" />
                         </SelectTrigger>
                         <SelectContent className="rounded-[2rem] border-white/10 bg-background/60 backdrop-blur-3xl shadow-2xl animate-in fade-in zoom-in-95 duration-500 glass-floating teal-glow">
                             {categories.map((category) => (

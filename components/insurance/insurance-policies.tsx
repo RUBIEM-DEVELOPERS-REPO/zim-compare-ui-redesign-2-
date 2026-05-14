@@ -88,9 +88,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
           <div className="flex justify-end relative w-full sm:w-[240px]">
             <Select value={sort} onValueChange={setSort}>
               <SelectTrigger className="h-12 w-full glass-floating border-primary/30 text-foreground rounded-[1.5rem] shadow-2xl hover:border-primary transition-all duration-500 font-bold text-[10px] uppercase tracking-[0.2em] teal-glow floating-hover">
-                <SelectValue placeholder="Select Plan Type">
-                  {sort}
-                </SelectValue>
+                <SelectValue placeholder="Select Plan Type" />
               </SelectTrigger>
               <SelectContent className="rounded-[2rem] border-white/10 bg-background/60 backdrop-blur-3xl shadow-2xl animate-in fade-in zoom-in-95 duration-500 glass-floating teal-glow">
                 {CATEGORY_SORT_OPTIONS[cat].map((option) => (

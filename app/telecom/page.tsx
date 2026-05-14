@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
 import { TelecomOverview } from "@/components/telecom/telecom-overview"
 import { TelecomData } from "@/components/telecom/telecom-data"
 import { TelecomVoice } from "@/components/telecom/telecom-voice"
@@ -17,9 +16,9 @@ import { useAppStore } from "@/lib/store"
 import { PageHeader } from "@/components/page-header"
 import type { TelecomProvider, DataBundle, VoiceRate } from "@/lib/types"
 
-import { analyzeInput, AnalysisResult } from "@/lib/neural-engine"
-import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
+import { AnalysisResult } from "@/lib/neural-engine"
 import { TelecomPaymentOptimizer } from "@/components/telecom/telecom-payment-optimizer"
+import { telecomProviders, dataBundles, voiceRates as mockVoiceRates } from "@/lib/mock/telecoms"
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -30,7 +29,6 @@ const tabs = [
   { key: "coverage", label: "Coverage & Quality" },
   { key: "fees", label: "Fees & Hidden Costs" },
   { key: "profiles", label: "Provider Profiles" },
-  { key: "analysis", label: "Payment Optimizer" },
 ] as const
 
 export default function TelecomPage() {
@@ -40,12 +38,9 @@ export default function TelecomPage() {
   
   const { compareTray, clearCompareTray } = useAppStore()
   
-  const [providers, setProviders] = useState<TelecomProvider[]>([])
-  const [bundles, setBundles] = useState<DataBundle[]>([])
-  const [voiceRates, setVoiceRates] = useState<VoiceRate[]>([])
-  
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [providers] = useState<TelecomProvider[]>(telecomProviders)
+  const [bundles] = useState<DataBundle[]>(dataBundles)
+  const [voiceRates] = useState<VoiceRate[]>(mockVoiceRates)
 
   // Clear stale comparison state if not telecom
   useEffect(() => {
@@ -59,48 +54,6 @@ export default function TelecomPage() {
     if (result && tab !== "analysis") {
       setTab("analysis")
     }
-  }
-
-  useEffect(() => {
-    async function fetchTelecom() {
-      try {
-        setLoading(true)
-        const res = await fetch("/api/telecom")
-        if (!res.ok) throw new Error(`API error: ${res.status}`)
-        const json = await res.json()
-        setProviders(json.providers || [])
-        setBundles(json.bundles || [])
-        setVoiceRates(json.voiceRates || [])
-      } catch (e: any) {
-        console.error("Failed to fetch telecom data:", e)
-        setError(e.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchTelecom()
-  }, [])
-
-  if (loading) {
-      return (
-          <div className="min-h-[50vh] flex items-center justify-center">
-              <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                  <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
-                  <p className="text-sm">Loading telecom data...</p>
-              </div>
-          </div>
-      )
-  }
-
-  if (error) {
-      return (
-          <div className="min-h-[50vh] flex items-center justify-center">
-              <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-red-600 max-w-md">
-                  <p className="font-semibold mb-2">Failed to load data</p>
-                  <p className="text-sm opacity-90">{error}</p>
-              </div>
-          </div>
-      )
   }
 
   return (

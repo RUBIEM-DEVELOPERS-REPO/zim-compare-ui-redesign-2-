@@ -473,7 +473,7 @@ export default function TechPage() {
               handleClear()
             }}>
               <SelectTrigger className="h-14 w-full glass-floating border-primary/30 text-foreground rounded-[1.75rem] shadow-2xl hover:border-primary transition-all duration-500 font-bold text-[11px] uppercase tracking-[0.2em] teal-glow">
-                <SelectValue>{selectedCategory}</SelectValue>
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="rounded-[2rem] border-white/10 bg-background/80 backdrop-blur-3xl shadow-2xl glass-floating">
                 {categories.map(cat => (

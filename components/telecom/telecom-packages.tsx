@@ -9,6 +9,7 @@ import { PaymentModal } from "@/components/payment-modal"
 import { useState } from "react"
 import type { TelecomProvider, DataBundle } from "@/lib/types"
 import { TelecomCompareBar } from "./telecom-compare-bar"
+import { getTelecomRecommendations, UserNeed } from "@/lib/telecom-logic"
 
 const promos = [
   { providerId: "econet", provider: "Econet Wireless", name: "Weekend Data Blast", detail: "Double data on all bundles purchased Friday-Sunday", validUntil: "2026-03-31" },
@@ -37,10 +38,21 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
     ? providers
     : providers.filter(p => p.coverageCities.includes(location))
 
-  // Best value: cheapest bundle per provider by cost-per-MB
+  const { preferences } = useAppStore()
+  
+  // Best value: use neural logic per provider
   const bestValue = filteredProviders.map((p) => {
-    const providerBundles = bundles.filter((b) => (b.operator === p.id || b.providerId === p.id) && ((b.total_data_mb || 0) > 0 || b.dataGB > 0))
-    const best = providerBundles.sort((a, b) => (a.price / (a.total_data_mb || 1)) - (b.price / (b.total_data_mb || 1)))[0]
+    const providerBundles = bundles.filter((b) => (b.operator === p.id || b.providerId === p.id))
+    if (providerBundles.length === 0) return null
+    
+    const userNeed: UserNeed = {
+        type: "data",
+        usageVolume: preferences.scenario === "sme" ? "high" : "medium",
+        budget: preferences.scenario === "student" ? 5 : 20
+    }
+    
+    const { recommendations } = getTelecomRecommendations(providerBundles as any, userNeed)
+    const best = recommendations[0]?.product
     return best ? { provider: p.name, bundle: best } : null
   }).filter(Boolean)
 
@@ -116,14 +128,14 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
                   </div>
                   <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">{item.provider}</p>
                   <p className="text-sm font-bold text-foreground mt-1 group-hover:text-teal-600 transition-colors uppercase tracking-tight leading-tight relative z-10">
-                    {item.bundle.bundle_name || (item.bundle as any).name}
+                    {item.bundle.name}
                   </p>
                   
                   <div className="grid grid-cols-2 gap-4 mt-6 mb-6 relative z-10">
                     <div className="glass-floating bg-white/5 p-3 border-white/10 shadow-inner group-hover:bg-primary/5 transition-colors duration-500 rounded-xl">
                       <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60 mb-1 block">{t("telecom.data")}</span>
                       <span className="text-sm font-black text-foreground tabular-nums">
-                        {formatData(item.bundle.total_data_mb || ((item.bundle as any).dataGB * 1024))}
+                        {item.bundle.dataAmountGB >= 1 ? `${item.bundle.dataAmountGB}GB` : `${item.bundle.dataAmountGB * 1024}MB`}
                       </span>
                     </div>
                     <div className="glass-floating bg-primary/5 p-3 border-primary/20 shadow-inner group-hover:bg-primary/10 transition-colors duration-500 teal-glow rounded-xl">
@@ -154,7 +166,7 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
                         onClick={() => {
                           setPaymentItem({
                             id: item.bundle.id,
-                            name: item.bundle.bundle_name || (item.bundle as any).name,
+                            name: item.bundle.name,
                             price: item.bundle.price,
                             category: "Telecom",
                             provider: item.provider
@@ -166,12 +178,10 @@ export function TelecomPackages({ location = "All Locations", bundles = [], prov
                         Buy Now
                       </button>
                     </div>
-                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60 italic tabular-nums">${item.bundle.costPerGB.toFixed(2)} / GB Signal</p>
+                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60 italic tabular-nums">${item.bundle.normalizedUnitCost.toFixed(2)} / GB Signal</p>
                   </div>
                   <p className="text-[10px] font-bold text-muted-foreground mt-2 italic opacity-60">
-                    {(item.bundle.total_data_mb || 0) > 0
-                      ? `$${(item.bundle.price / ((item.bundle.total_data_mb || 1) / 1024)).toFixed(2)} / GB Neural`
-                      : "Neural optimized"}
+                    Confidence: {item.bundle.confidenceScore}% &middot; {item.bundle.validityPeriod}
                   </p>
                 </div>
               )

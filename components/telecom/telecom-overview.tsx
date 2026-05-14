@@ -85,15 +85,6 @@ export function TelecomOverview({ location = "All Locations", providers = [] }: 
                   )}>
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <p className="text-sm font-display font-medium text-foreground group-hover:text-primary transition-colors tracking-tight uppercase leading-snug">{p.name}</p>
-                      <button
-                        onClick={() => addToCompareTray("telecom", p.id, "overview")}
-                        className={cn(
-                          "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-medium uppercase tracking-[0.2em] transition-all duration-500 shadow-lg",
-                          inTray ? "bg-primary text-primary-foreground shadow-primary/30 teal-glow" : "bg-white/5 text-foreground border border-white/10 hover:bg-white/10"
-                        )}
-                      >
-                        {inTray ? <CheckCircle2 size={12} strokeWidth={4} /> : <Plus size={12} strokeWidth={4} />}
-                      </button>
                     </div>
                     <div className="flex gap-1.5 flex-wrap mb-3">
                       <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />

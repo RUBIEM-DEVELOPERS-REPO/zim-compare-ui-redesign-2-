@@ -79,21 +79,6 @@ export function TelecomCoverage({ location = "All Locations", providers = [] }: 
                     <p className="text-xl font-display font-medium text-white group-hover:text-primary transition-colors tracking-tight uppercase leading-tight">{p.name}</p>
                     <p className="text-[10px] font-medium text-muted-foreground uppercase mt-2 tracking-[0.2em] opacity-60 font-sans">{p.networkType}</p>
                   </div>
-                  {(() => {
-                    const inTray = compareTray.ids.includes(p.id)
-                    return (
-                      <button
-                        onClick={() => addToCompareTray("telecom", p.id, "coverage")}
-                        className={cn(
-                          "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xl teal-glow",
-                          inTray ? "bg-primary text-primary-foreground scale-110" : "bg-white/5 border border-white/10 text-muted-foreground hover:bg-primary/20 hover:text-primary"
-                        ) }
-                        title={inTray ? t("common.addedToCompare") : t("common.addToCompare")}
-                      >
-                        {inTray ? <CheckCircle2 className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
-                      </button>
-                    )
-                  })()}
                 </div>
                 <div className="flex gap-4 flex-wrap mt-auto relative z-10">
                   <ScoreBadge score={p.coverageScore} label={t("telecom.coverage")} />
