@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { filterVerifiedRecords } from "@/lib/data-quality"
 
 export async function GET(request: Request) {
   try {
@@ -11,14 +12,16 @@ export async function GET(request: Request) {
     if (providerId) where.providerId = providerId
     if (category) where.category = category
 
-    const policies = await prisma.policy.findMany({
+    const rawPolicies = await prisma.policy.findMany({
       where,
       orderBy: { monthlyPremium: 'asc' },
     })
 
+    const policies = filterVerifiedRecords(rawPolicies, "insurance")
+
     return NextResponse.json({ policies })
   } catch (error: any) {
     console.error("Insurance Policies Error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to load policies" }, { status: 500 })
   }
 }

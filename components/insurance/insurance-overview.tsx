@@ -1,14 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { insuranceProviders, policies } from "@/lib/mock/insurance"
 import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
 import { X } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
-export function InsuranceOverview({ onTabChange, location = "All Locations" }: { onTabChange: (tab: string) => void, location?: string }) {
+interface InsuranceOverviewProps {
+  onTabChange: (tab: string) => void
+  location?: string
+  providers?: any[]
+  policies?: any[]
+}
+
+export function InsuranceOverview({ onTabChange, location = "All Locations", providers = [], policies = [] }: InsuranceOverviewProps) {
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const { t } = useI18n()
 
@@ -21,14 +27,6 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     { key: "quote", labelKey: "insurance.highlight.propertyQuote.label", subtitleKey: "insurance.highlight.propertyQuote.subtitle" },
   ]
 
-  const summaryCards = [
-    { labelKey: "insurance.summary.cheapestPremium", value: "Cell Funeral Cover", detailKey: "insurance.perMonth", detailVars: { amount: "10" } },
-    { labelKey: "insurance.summary.bestCoverage", value: "Old Mutual Business", detail: "$250k cover limit" }, // Hardcoded values usually come from mock data, but labels need localization
-    { labelKey: "insurance.summary.bestClaimReliability", value: "CIMAS", detailVars: { rate: "85" }, detailKey: "insurance.claimsScoreDetail" },
-    { labelKey: "insurance.summary.bestValuePolicy", value: "FEMAS Silver", detail: "$45/mo for medical" },
-  ]
-
-  // I'll update summaryCards to be more translation friendly if possible, but for now I'll localize labels
   const localizedSummaryCards = [
     { label: t("insurance.summary.cheapestPremium"), value: "Cell Funeral Cover", detail: `$10/${t("insurance.monthly").toLowerCase()}` },
     { label: t("insurance.summary.bestCoverage"), value: "Old Mutual Business", detail: "$250k cover limit" },
@@ -47,8 +45,10 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     { key: "travel", label: t("insurance.subTabs.travel") },
   ]
 
-  const filteredProviders = insuranceProviders.filter(p => {
-    if (location !== "All Locations" && !p.serviceAreas.includes(location)) return false
+  const filteredProviders = providers.filter(p => {
+    const serviceAreas = typeof p.serviceAreas === 'string' ? JSON.parse(p.serviceAreas) : p.serviceAreas
+    if (location !== "All Locations" && Array.isArray(serviceAreas) && !serviceAreas.includes(location)) return false
+    
     if (categoryFilter === "all") return true
     const providerPolicies = policies.filter(pol => pol.providerId === p.id)
     if (categoryFilter === "property_business") {
@@ -165,4 +165,3 @@ export function InsuranceOverview({ onTabChange, location = "All Locations" }: {
     </div>
   )
 }
-

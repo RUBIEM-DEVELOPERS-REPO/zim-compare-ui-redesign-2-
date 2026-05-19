@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { policies } from "@/lib/mock/insurance"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
 import { ScoreBadge } from "@/components/score-badge"
 import { X, ShieldCheck, Clock, ChevronLeft } from "lucide-react"
-import { insuranceProviders } from "@/lib/mock/insurance"
 import { useI18n } from "@/lib/i18n"
 import {
     Select,
@@ -19,15 +17,21 @@ import {
 
 const CATEGORY_SORT_OPTIONS: Record<string, string[]> = {
   motor: ["Full Cover", "Third Party", "Third Party Fire and Theft"],
-  medical: ["Individual Cover", "Family Cover", "Corporate Cover", "In-Patient Cover", "Out-Patient Cover"],
-  life_funeral: ["Individual Plan", "Family Plan", "Extended Family Plan", "Cash Plan", "Service Plan"],
+  medical: ["Individual Cover", "Registered Cover", "Corporate Cover", "In-Patient Cover", "Out-Patient Cover"],
+  life_funeral: ["Individual Plan", "Registered Plan", "Extended Plan", "Cash Plan", "Service Plan"],
   property_business: ["Building Cover", "Contents Cover", "Combined Home Cover", "All Risks Cover", "Landlord Cover"],
   business: ["Business All Risks", "Public Liability", "Professional Indemnity", "Asset All Risks"],
   agriculture: ["Crop Cover", "Livestock Cover", "Equipment Cover", "Tobacco Hail"],
   travel: ["International", "Regional", "Student", "Business Travel"],
 }
 
-export function InsurancePolicies({ location = "All Locations" }: { location?: string }) {
+interface InsurancePoliciesProps {
+  location?: string
+  providers?: any[]
+  policies?: any[]
+}
+
+export function InsurancePolicies({ location = "All Locations", providers = [], policies = [] }: InsurancePoliciesProps) {
   const [cat, setCat] = useState<string>("motor")
   const [sort, setSort] = useState<string>(CATEGORY_SORT_OPTIONS["motor"][0])
   const { addToCompareTray, compareTray } = useAppStore()
@@ -57,8 +61,9 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
       if (!typeMatch) return false
 
       if (location === "All Locations") return true
-      const provider = insuranceProviders.find(ip => ip.id === p.providerId)
-      return provider?.serviceAreas.includes(location)
+      const provider = providers.find(ip => ip.id === p.providerId)
+      const serviceAreas = typeof provider?.serviceAreas === 'string' ? JSON.parse(provider.serviceAreas) : provider?.serviceAreas
+      return Array.isArray(serviceAreas) && serviceAreas.includes(location)
     })
     .sort((a, b) => a.monthlyPremium - b.monthlyPremium)
 
@@ -123,6 +128,9 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => {
             const inTray = compareTray.ids.includes(p.id)
+            const benefits = typeof p.benefits === 'string' ? JSON.parse(p.benefits) : p.benefits
+            const exclusions = typeof p.exclusions === 'string' ? JSON.parse(p.exclusions) : p.exclusions
+            
             return (
               <div
                 key={p.id}
@@ -149,7 +157,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
                   </div>
                   <div className="glass-floating bg-white/5 p-2 border-white/10 shadow-inner group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500 col-span-2 rounded-lg">
                     <p className="text-[8px] font-medium text-muted-foreground uppercase tracking-[0.15em] mb-0.5 opacity-60">{t("insurance.coverLimit")}</p>
-                    <p className="text-base font-display font-medium text-white tabular-nums">${p.coverLimit.toLocaleString()}</p>
+                    <p className="text-base font-display font-medium text-white tabular-nums">${p.coverLimit?.toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -163,7 +171,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
                 <div className="mb-3.5 relative z-10">
                   <p className="text-[8px] font-medium text-muted-foreground mb-1.5 uppercase tracking-[0.2em] opacity-70">{t("insurance.coreBenefits")}</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {p.benefits.slice(0, 3).map((b) => (
+                    {Array.isArray(benefits) && benefits.slice(0, 3).map((b) => (
                       <span key={b} className="text-[8px] font-medium uppercase tracking-widest bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20 shadow-inner">{b}</span>
                     ))}
                   </div>
@@ -172,7 +180,7 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
                 <div className="mb-4 relative z-10">
                   <p className="text-[8px] font-medium text-muted-foreground mb-1.5 uppercase tracking-[0.2em] opacity-70">{t("insurance.keyExclusions")}</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {p.exclusions.slice(0, 2).map((e) => (
+                    {Array.isArray(exclusions) && exclusions.slice(0, 2).map((e) => (
                       <span key={e} className="text-[8px] font-medium uppercase tracking-widest bg-red-500/10 text-red-400 px-2 py-0.5 rounded-md border border-red-500/20 shadow-inner">{e}</span>
                     ))}
                   </div>
@@ -202,4 +210,3 @@ export function InsurancePolicies({ location = "All Locations" }: { location?: s
     </div>
   )
 }
-

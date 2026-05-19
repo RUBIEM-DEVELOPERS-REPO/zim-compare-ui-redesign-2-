@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { filterVerifiedRecords } from "@/lib/data-quality"
 
 export async function GET(request: Request) {
   try {
@@ -8,14 +9,16 @@ export async function GET(request: Request) {
 
     const where = dealershipId ? { dealershipId } : {}
 
-    const vehicles = await prisma.vehicle.findMany({
+    const rawVehicles = await prisma.vehicle.findMany({
       where,
       orderBy: { price: 'asc' },
     })
 
+    const vehicles = filterVerifiedRecords(rawVehicles, "mobility")
+
     return NextResponse.json({ vehicles })
   } catch (error: any) {
     console.error("Vehicles Error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to load vehicles data. Please try again later." }, { status: 500 })
   }
 }

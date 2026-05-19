@@ -1,11 +1,10 @@
 "use client"
 
 import { useSearchParams, useRouter, useParams } from "next/navigation"
-import { dataBundles, voiceRates, telecomProviders } from "@/lib/mock/telecoms"
 import type { DataBundle, VoiceRate, TelecomProvider } from "@/lib/types"
 import { useAppStore } from "@/lib/store"
 import { Disclaimer } from "@/components/disclaimer"
-import { Suspense, useMemo, useEffect } from "react"
+import { Suspense, useMemo, useEffect, useState } from "react"
 import {
     ArrowLeft,
     CheckCircle2,
@@ -41,37 +40,116 @@ function TelecomCompareContent() {
     const subcategory = (params.subcategory as string) || "data"
     const { addSavedComparison, clearCompareTray } = useAppStore()
 
+    const [providers, setProviders] = useState<TelecomProvider[]>([])
+    const [bundles, setBundles] = useState<DataBundle[]>([])
+    const [voiceRates, setVoiceRates] = useState<VoiceRate[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
     useEffect(() => {
         clearCompareTray()
     }, [clearCompareTray])
 
+    useEffect(() => {
+        async function fetchCompareData() {
+            try {
+                const res = await fetch("/api/telecom")
+                if (!res.ok) {
+                    throw new Error("Failed to load telecom data")
+                }
+                const data = await res.json()
+                setProviders(data.providers || [])
+                setBundles(data.bundles || [])
+                setVoiceRates(data.voiceRates || [])
+            } catch (err: any) {
+                console.error(err)
+                setError(err.message || "Failed to fetch comparison data.")
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchCompareData()
+    }, [])
+
     const compareItems = useMemo(() => {
         const cleanIds = ids.map(id => id.trim()).filter(Boolean);
         
-        // Always search all sources to be safe, especially for 'overview' or 'internet'
+        // Map database records back to the UI shape
+        const mappedBundles = bundles.map((b: any) => ({
+            id: b.id,
+            providerId: b.operator,
+            providerName: b.operator === "tel-econet" ? "Econet" : b.operator === "tel-netone" ? "NetOne" : b.operator === "tel-telecel" ? "Telecel" : "MNO",
+            name: b.bundle_name,
+            price: b.price,
+            dataGB: (b.total_data_mb || 0) / 1024,
+            validityDays: b.validity_value || 30,
+            category: b.bundle_group,
+            unlimited: false
+        }))
+
+        const mappedVoiceRates = voiceRates.map((v: any) => ({
+            id: v.id,
+            providerId: v.operator,
+            providerName: v.operator === "tel-econet" ? "Econet" : v.operator === "tel-netone" ? "NetOne" : v.operator === "tel-telecel" ? "Telecel" : "MNO",
+            type: v.offer_type || "prepaid",
+            ratePerMin: v.price || 0,
+            smsRate: v.sms_count || 0,
+            validityDays: 30
+        }))
+
+        const mappedProviders = providers.map((p: any) => ({
+            ...p,
+            providerId: p.id,
+            providerName: p.name
+        }))
+
         const allItems = [
-            ...dataBundles,
-            ...voiceRates,
-            ...telecomProviders
+            ...mappedBundles,
+            ...mappedVoiceRates,
+            ...mappedProviders
         ];
         
         const filtered = allItems.filter(item => cleanIds.includes(item.id));
         return filtered;
-    }, [ids])
+    }, [ids, providers, bundles, voiceRates])
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-background min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+                <p className="text-muted-foreground font-sans">Retrieving verified comparison nodes...</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-background min-h-screen">
+                <div className="p-4 bg-red-500/10 rounded-full mb-6 text-red-500">
+                    <Info size={48} />
+                </div>
+                <h2 className="text-xl font-bold text-foreground mb-2">Failed to load comparison data. Please try again later.</h2>
+                <p className="text-muted-foreground mb-8 max-w-md">{error}</p>
+                <Link
+                    href="/telecom"
+                    className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2"
+                >
+                    <ArrowLeft size={16} />
+                    Go back to Telecoms
+                </Link>
+            </div>
+        )
+    }
 
     if (compareItems.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-background min-h-screen">
                 <div className="p-4 bg-secondary/50 rounded-full mb-6">
                     <Wifi size={48} className="text-muted-foreground" />
                 </div>
-                <h2 className="text-xl font-bold text-foreground mb-2">
-                    {ids.length > 0 ? "Telecom nodes not found" : "No items selected to compare"}
-                </h2>
+                <h2 className="text-xl font-bold text-foreground mb-2">No verified data available yet for this category.</h2>
                 <p className="text-muted-foreground mb-8 max-w-xs">
-                    {ids.length > 0 
-                        ? "The specific items selected could not be found. They may have been updated in the neural cache."
-                        : "Please select at least 2 items to see a side-by-side comparison and AI insights."}
+                    Please select at least 2 items to see a side-by-side comparison and AI insights.
                 </p>
                 <Link
                     href="/telecom"
@@ -89,10 +167,10 @@ function TelecomCompareContent() {
     
     // Map scenario to UserNeed
     const userNeed = useMemo((): UserNeed => {
-        const scenario = preferences.scenario || "family"
+        const scenario = preferences.scenario || "student"
         return {
             type: subcategory === "voice" ? "voice" : subcategory === "internet" ? "home-internet" : "data",
-            usageVolume: scenario === "sme" ? "high" : scenario === "student" ? "medium" : "medium",
+            usageVolume: scenario === "sme" ? "high" : "medium",
             budget: scenario === "student" ? 5 : 50
         }
     }, [preferences.scenario, subcategory])
@@ -101,8 +179,7 @@ function TelecomCompareContent() {
         return getTelecomRecommendations(compareItems as any, userNeed)
     }, [compareItems, userNeed])
 
-    // Adapt new recommendations to existing UI structure if needed, 
-    // but better to use the new structured output directly.
+    // Adapt new recommendations to existing UI structure
     const recommendations = useMemo(() => {
         const primary = rankedRecs[0]
         const secondary = rankedRecs[1]
@@ -119,7 +196,7 @@ function TelecomCompareContent() {
                     ...rec.tradeOffs.map((t: string) => `Trade-off: ${t}`),
                     `Confidence: ${rec.confidenceLevel.toUpperCase()}`
                 ],
-                goodFor: rec.product.validityPeriod + " " + rec.product.productType.replace('-', ' '),
+                goodFor: (rec.product.validityDays || rec.product.validityPeriod || "30") + " Days " + (rec.product.productType || "data").replace('-', ' '),
                 confidence: rec.confidenceLevel
             }
         }
@@ -335,7 +412,7 @@ function TelecomCompareContent() {
                         <h3 className="text-3xl font-display font-black text-white uppercase tracking-tight mb-4">Deploy Optimal Configuration</h3>
                         <p className="text-sm text-white/60 font-medium leading-relaxed">
                             Our neural engine has identified <span className="text-teal-400">{recommendations.primary?.item.providerName}</span> as the superior choice for your current requirements. 
-                            With a realistic unit cost of <span className="text-teal-400">${recommendations.primary?.item.normalizedUnitCost.toFixed(3)}</span>, this selection maximizes cost efficiency while maintaining peak network reach.
+                            With a realistic unit cost of <span className="text-teal-400">${recommendations.primary?.item.price !== undefined ? (recommendations.primary.item.price / (recommendations.primary.item.dataGB || 1)).toFixed(3) : "0.000"}</span>, this selection maximizes cost efficiency while maintaining peak network reach.
                         </p>
                     </div>
                     

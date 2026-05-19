@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { telecomProviders, dataBundles, voiceRates as mockVoiceRates } from "@/lib/mock/telecoms"
+import { filterVerifiedRecords } from "@/lib/data-quality"
 
 export async function GET(request: Request) {
   try {
@@ -10,47 +10,30 @@ export async function GET(request: Request) {
     const where: any = {}
     if (providerId) where.id = providerId
 
-    let providers = await prisma.telecomProvider.findMany({
+    const dbProviders = await prisma.telecomProvider.findMany({
       where,
       orderBy: { name: 'asc' },
     })
 
-    let bundles = await prisma.dataBundle.findMany({
+    const dbBundles = await prisma.dataBundle.findMany({
       orderBy: { price: 'asc' },
     })
 
     const voiceRateWhere = providerId ? { operator: providerId } : {}
 
-    let voiceRates = await prisma.voiceRate.findMany({
+    const dbVoiceRates = await prisma.voiceRate.findMany({
       where: voiceRateWhere,
       orderBy: { price: 'asc' },
     })
 
-    // Fallback to mock data if DB is empty
-    if (providers.length === 0) {
-      providers = providerId 
-        ? telecomProviders.filter(p => p.id === providerId) as any
-        : telecomProviders as any
-    }
-    if (bundles.length === 0) bundles = dataBundles as any
-    if (voiceRates.length === 0) voiceRates = mockVoiceRates as any
+    // Filter using our dynamic Data Quality Verification Engine
+    const providers = filterVerifiedRecords(dbProviders, "telecom")
+    const bundles = filterVerifiedRecords(dbBundles, "telecom")
+    const voiceRates = filterVerifiedRecords(dbVoiceRates, "telecom")
 
     return NextResponse.json({ providers, bundles, voiceRates })
   } catch (error: any) {
-    console.error("Telecom API Error, falling back to mocks:", error)
-    
-    // Total fallback in case of connection failure
-    const { searchParams } = new URL(request.url)
-    const providerId = searchParams.get("providerId")
-    
-    const fallbackProviders = providerId 
-      ? telecomProviders.filter(p => p.id === providerId) 
-      : telecomProviders
-
-    return NextResponse.json({ 
-      providers: fallbackProviders, 
-      bundles: dataBundles, 
-      voiceRates: mockVoiceRates 
-    })
+    console.error("Telecom API Error:", error)
+    return NextResponse.json({ error: "Failed to load comparison data. Please try again later." }, { status: 500 })
   }
 }

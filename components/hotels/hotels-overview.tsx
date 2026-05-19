@@ -1,12 +1,12 @@
 "use client"
 
-import { hotels } from "@/lib/mock/hotels"
 import { Disclaimer } from "@/components/disclaimer"
 import { Star, MapPin, Wifi, Car, Coffee, Dumbbell, Waves, Sparkles } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
 interface HotelsOverviewProps {
     location?: string
+    hotels?: any[]
 }
 
 function StarRating({ stars }: { stars: number }) {
@@ -19,12 +19,12 @@ function StarRating({ stars }: { stars: number }) {
     )
 }
 
-export function HotelsOverview({ location = "All Locations" }: HotelsOverviewProps) {
+export function HotelsOverview({ location = "All Locations", hotels = [] }: HotelsOverviewProps) {
     const { t } = useI18n()
-    const filtered = location === "All Locations" ? hotels : hotels.filter(h => h.city === location)
-    const featured = filtered.filter(h => h.recommended).slice(0, 3)
-    const bestValue = filtered.filter(h => h.bestValue).slice(0, 2)
-    const avgPrice = filtered.length > 0 ? Math.round(filtered.reduce((s, h) => s + h.pricePerNight, 0) / filtered.length) : 0
+    const filtered = location === "All Locations" ? hotels : hotels.filter((h: any) => h.city === location || h.location === location)
+    const featured = filtered.filter((h: any) => h.recommended).slice(0, 3)
+    const bestValue = filtered.filter((h: any) => h.bestValue).slice(0, 2)
+    const avgPrice = filtered.length > 0 ? Math.round(filtered.reduce((s: number, h: any) => s + (h.pricePerNight || 0), 0) / filtered.length) : 0
 
     const amenityIcons: Record<string, React.ReactNode> = {
         WiFi: <Wifi className="w-3 h-3" />,

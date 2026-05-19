@@ -1,31 +1,33 @@
 "use client"
 
 import { useState } from "react"
-import { dataBundles, telecomProviders } from "@/lib/mock/telecoms"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
 import { X, Wifi, ShieldCheck, Zap, Globe } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import type { DataBundle, TelecomProvider } from "@/lib/types"
 import { TelecomCompareBar } from "./telecom-compare-bar"
 
 type SortKey = "price" | "costPerGB" | "dataGB" | "speed"
 
 interface TelecomInternetProps {
   location?: string
+  bundles?: DataBundle[]
+  providers?: TelecomProvider[]
 }
 
-export function TelecomInternet({ location = "All Locations" }: TelecomInternetProps) {
+export function TelecomInternet({ location = "All Locations", bundles = [], providers = [] }: TelecomInternetProps) {
   const [sort, setSort] = useState<SortKey>("price")
   const { addToCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
 
-  const filtered = dataBundles
-    .filter((b) => b.category === "internet")
+  const filtered = bundles
+    .filter((b) => b.category === "internet" || b.bundle_group === "internet")
     .filter((b) => {
       if (location === "All Locations") return true
-      const provider = telecomProviders.find(p => p.id === b.providerId)
-      return provider?.coverageCities.includes(location)
+      const provider = providers.find(p => p.id === b.providerId || p.id === b.operator)
+      return (provider?.coverageCities || "").includes(location)
     })
     .sort((a, b) => {
       if (sort === "speed") {

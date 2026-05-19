@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { vehicles } from "@/lib/mock/transport"
 import { cn } from "@/lib/utils"
 import { Car, Fuel, Settings, DollarSign, Check, Plus, AlertCircle, Sparkles, ChevronLeft } from "lucide-react"
 import { useAppStore } from "@/lib/store"
@@ -9,6 +8,8 @@ import { useI18n } from "@/lib/i18n"
 
 interface TransportVehiclesProps {
     location?: string
+    vehicles?: any[]
+    dealerships?: any[]
 }
 
 const fuelFilters = ["All", "Petrol", "Diesel", "Hybrid", "Electric"]
@@ -22,7 +23,7 @@ const fuelColors: Record<string, string> = {
     electric: "bg-primary/10 text-primary",
 }
 
-export function TransportVehicles({ location = "All Locations" }: TransportVehiclesProps) {
+export function TransportVehicles({ location = "All Locations", vehicles = [], dealerships = [] }: TransportVehiclesProps) {
     const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
     const { t } = useI18n()
     const [fuelFilter, setFuelFilter] = useState("All")
@@ -31,8 +32,8 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
     const [error, setError] = useState<string | null>(null)
 
     const filtered = vehicles
-        .filter(v => fuelFilter === "All" || v.fuelType === fuelFilter.toLowerCase())
-        .filter(v => conditionFilter === "All" || v.condition === conditionFilter.toLowerCase())
+        .filter(v => fuelFilter === "All" || v.fuelType?.toLowerCase() === fuelFilter.toLowerCase())
+        .filter(v => conditionFilter === "All" || v.condition?.toLowerCase() === conditionFilter.toLowerCase())
         .filter(v => location === "All Locations" || v.location === location)
 
     const sorted = [...filtered].sort((a, b) => {
@@ -60,7 +61,7 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
     // Recommendation logic: Similar cars based on price/fuel
     const recommendations = sorted.length > 0 ? vehicles
         .filter(v => !compareTray.ids.includes(v.id)) // Not currently selected
-        .filter(v => v.fuelType === fuelFilter.toLowerCase() || fuelFilter === "All")
+        .filter(v => v.fuelType?.toLowerCase() === fuelFilter.toLowerCase() || fuelFilter === "All")
         .filter(v => Math.abs(v.price - (sorted[0]?.price || 0)) < 15000)
         .slice(0, 3) : []
 
@@ -169,7 +170,7 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
                                     <Fuel className="w-2 h-2 text-muted-foreground" />
                                     <p className="text-[8px] font-medium text-muted-foreground uppercase tracking-widest">Fuel</p>
                                 </div>
-                                <p className={`text-[8px] font-medium px-2 py-0.5 rounded-md inline-block uppercase tracking-widest ${fuelColors[v.fuelType]}`}>{v.fuelType}</p>
+                                <p className={`text-[8px] font-medium px-2 py-0.5 rounded-md inline-block uppercase tracking-widest ${fuelColors[v.fuelType?.toLowerCase()] || ""}`}>{v.fuelType}</p>
                             </div>
                             <div className="glass-floating bg-white/5 p-2 rounded-lg border-white/10 shadow-inner group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500">
                                 <div className="flex items-center gap-1 mb-1 opacity-60">
@@ -180,7 +181,7 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
                             </div>
                             <div className="glass-floating bg-white/5 p-2 rounded-lg border-white/10 shadow-inner group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500">
                                 <p className="text-[8px] font-medium text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Mileage</p>
-                                <p className="text-xs font-display font-medium text-white">{v.mileage === 0 ? "New" : `${v.mileage.toLocaleString()}km`}</p>
+                                <p className="text-xs font-display font-medium text-white">{v.mileage === 0 ? "New" : `${v.mileage?.toLocaleString()}km`}</p>
                             </div>
                         </div>
 
@@ -188,7 +189,7 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
                             <span className="text-[8px] font-medium uppercase tracking-widest bg-white/5 text-muted-foreground px-2 py-0.5 rounded-md border border-white/10">{v.transmission}</span>
                             <span className="text-[8px] font-medium uppercase tracking-widest bg-white/5 text-muted-foreground px-2 py-0.5 rounded-md border border-white/10">{v.color}</span>
                             {v.financingAvailable && <span className="text-[8px] font-medium uppercase tracking-widest bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20">Financing</span>}
-                            <span className={`text-[8px] font-medium uppercase tracking-widest px-2 py-0.5 rounded-md ${v.condition === "new" ? "bg-primary text-primary-foreground teal-glow" : "bg-white/5 text-muted-foreground border border-white/10"}`}>{v.condition}</span>
+                            <span className={`text-[8px] font-medium uppercase tracking-widest px-2 py-0.5 rounded-md ${v.condition?.toLowerCase() === "new" ? "bg-primary text-primary-foreground teal-glow" : "bg-white/5 text-muted-foreground border border-white/10"}`}>{v.condition}</span>
                         </div>
 
                         {/* Compare Button Toggle */}
@@ -241,7 +242,7 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-display font-medium text-white group-hover/rec:text-primary transition-colors truncate">{r.make} {r.model}</p>
-                                    <p className="text-[10px] text-primary font-medium tracking-widest mt-1 uppercase">${r.price.toLocaleString()}</p>
+                                    <p className="text-[10px] text-primary font-medium tracking-widest mt-1 uppercase">${r.price?.toLocaleString()}</p>
                                 </div>
                                 <div className={cn("w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 shadow-xl",
                                     compareTray.ids.includes(r.id) ? "bg-primary text-white scale-110" : "bg-primary/10 text-primary group-hover/rec:bg-primary/20"
@@ -256,4 +257,3 @@ export function TransportVehicles({ location = "All Locations" }: TransportVehic
         </div>
     )
 }
-

@@ -17,7 +17,7 @@ export function ClinicsOverview({ location = "All Locations" }: { location?: str
     ? "Comprehensive maternity and pediatric facilities with 24/7 emergency support."
     : "Elite medical services with broad corporate insurance acceptance and specialist access."
 
-  const tagline = preferences.scenario === "student" ? "Best balance of cost and speed" : preferences.scenario === "family" ? "Superior Care for Families" : "Premium Institutional Healthcare"
+  const tagline = preferences.scenario === "student" ? "Best balance of cost and speed" : preferences.scenario === "personal" ? "Superior Care for You" : "Premium Institutional Healthcare"
 
   const summaryCards = [
     { label: "Lowest Consultation Fee", value: "Parirenyatwa Hospital", detail: "$10.00 Entry Fee", icon: <DollarSign className="w-3 h-3" /> },

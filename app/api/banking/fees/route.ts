@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { filterVerifiedRecords } from "@/lib/data-quality"
 
 export async function GET(request: Request) {
   try {
@@ -11,14 +12,16 @@ export async function GET(request: Request) {
     if (bankId) where.bankId = bankId
     if (category) where.category = category
 
-    const fees = await prisma.bankFee.findMany({
+    const rawFees = await prisma.bankFee.findMany({
       where,
       orderBy: { amount: 'asc' },
     })
 
+    const fees = filterVerifiedRecords(rawFees, "banking")
+
     return NextResponse.json({ fees })
   } catch (error: any) {
     console.error("Banking Fees Error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to load banking fees. Please try again later." }, { status: 500 })
   }
 }

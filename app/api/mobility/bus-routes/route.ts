@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { filterVerifiedRecords } from "@/lib/data-quality"
 
 export async function GET(request: Request) {
   try {
@@ -11,14 +12,16 @@ export async function GET(request: Request) {
     if (origin) where.origin = origin
     if (destination) where.destination = destination
 
-    const routes = await prisma.busRoute.findMany({
+    const rawRoutes = await prisma.busRoute.findMany({
       where,
       orderBy: { price: 'asc' },
     })
 
-    return NextResponse.json({ routes })
+    const routes = filterVerifiedRecords(rawRoutes, "mobility")
+
+    return NextResponse.json({ routes, busRoutes: routes })
   } catch (error: any) {
     console.error("Bus Routes Error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to load bus routes. Please try again later." }, { status: 500 })
   }
 }

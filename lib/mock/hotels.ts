@@ -151,9 +151,9 @@ export const hotels: Hotel[] = [
         pricePerNight: 210,
         amenities: ["WiFi", "Pool", "Breakfast", "Parking", "Restaurant"],
         hasWifi: true, hasPool: true, hasBreakfast: true, hasGym: false, hasSpa: false, hasParking: true,
-        roomTypes: ["Family", "Standard", "King"],
+        roomTypes: ["Group", "Standard", "King"],
         bestValue: false, recommended: false, rating: 4.1, reviewCount: 1500,
-        description: "A fun, family-oriented hotel themed after Great Zimbabwe.",
+        description: "A fun, guest-oriented hotel themed after Great Zimbabwe.",
         imageHint: "themed hotel", imageUrl: "https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?q=80&w=400&auto=format&fit=crop"
     },
     {
@@ -271,7 +271,7 @@ export const hotels: Hotel[] = [
         pricePerNight: 230,
         amenities: ["WiFi", "Pool", "Breakfast", "Parking", "Restaurant"],
         hasWifi: true, hasPool: true, hasBreakfast: true, hasGym: false, hasSpa: false, hasParking: true,
-        roomTypes: ["Standard River View", "Family"],
+        roomTypes: ["Standard River View", "Group"],
         bestValue: false, recommended: true, rating: 4.5, reviewCount: 950,
         description: "The only hotel in Victoria Falls with a river frontage.",
         imageHint: "riverfront hotel", imageUrl: "https://images.unsplash.com/photo-1521478413844-0bb79d80c35c?q=80&w=400&auto=format&fit=crop"
@@ -316,7 +316,7 @@ export const hotels: Hotel[] = [
         pricePerNight: 105,
         amenities: ["WiFi", "Pool", "Breakfast", "Parking", "Restaurant"],
         hasWifi: true, hasPool: true, hasBreakfast: true, hasGym: false, hasSpa: false, hasParking: true,
-        roomTypes: ["Standard", "Family"],
+        roomTypes: ["Standard", "Group"],
         bestValue: false, recommended: true, rating: 4.0, reviewCount: 240,
         description: "Located within walking distance of the historic Great Zimbabwe ruins.",
         imageHint: "stone hotel", imageUrl: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=400&auto=format&fit=crop"

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { schools } from "@/lib/mock/schools"
 import { cn } from "@/lib/utils"
 import { ScoreBadge } from "@/components/score-badge"
 import { Disclaimer } from "@/components/disclaimer"
@@ -34,9 +33,10 @@ const schoolTypes = [
 interface SchoolsOverviewProps {
   onTabChange: (tab: string) => void
   location?: string
+  schools?: any[]
 }
 
-export function SchoolsOverview({ onTabChange, location = "All Locations" }: SchoolsOverviewProps) {
+export function SchoolsOverview({ onTabChange, location = "All Locations", schools = [] }: SchoolsOverviewProps) {
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const { compareTray, addToCompareTray, removeFromCompareTray } = useAppStore()
   const { t } = useI18n()
@@ -199,4 +199,3 @@ export function SchoolsOverview({ onTabChange, location = "All Locations" }: Sch
     </div>
   )
 }
-

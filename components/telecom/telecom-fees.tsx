@@ -7,7 +7,6 @@ import { Disclaimer } from "@/components/disclaimer"
 import { AlertCircle, HelpCircle, X, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 import type { TelecomProvider } from "@/lib/types"
-import { telecomProviders } from "@/lib/mock/telecoms"
 import { TelecomCompareBar } from "./telecom-compare-bar"
 
 const feeCategories = [
@@ -107,7 +106,7 @@ export function TelecomFees({ location = "All Locations", providers = [] }: Tele
             </thead>
             <tbody>
               {filtered.map((f, i) => {
-                const providerId = telecomProviders.find(p => p.name === f.provider)?.id || f.provider
+                const providerId = providers.find(p => p.name === f.provider)?.id || f.provider
                 const inTray = compareTray.ids.includes(providerId)
                 return (
                   <tr key={`${f.provider}-${f.name}`} className="border-b border-white/5 hover:bg-white/5 transition-colors group/row">

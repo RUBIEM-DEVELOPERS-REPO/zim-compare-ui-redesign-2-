@@ -16,11 +16,11 @@ export function UtilitiesSubscriptions() {
     const { t } = useI18n()
     const [categoryFilter, setCategoryFilter] = useState<SubCategory>("All")
     const [pricingMode, setPricingMode] = useState<PricingMode>("monthly")
-    const [familyOnly, setFamilyOnly] = useState(false)
+    const [sharedPlanOnly, setSharedPlanOnly] = useState(false)
 
     const filtered = subscriptionServices.filter((s) => {
         if (categoryFilter !== "All" && s.category !== categoryFilter) return false
-        if (familyOnly && !s.familySharing) return false
+        if (sharedPlanOnly && !s.familySharing) return false
         return true
     })
 
@@ -95,16 +95,16 @@ export function UtilitiesSubscriptions() {
                 </div>
 
                 <button
-                    onClick={() => setFamilyOnly(!familyOnly)}
+                    onClick={() => setSharedPlanOnly(!sharedPlanOnly)}
                     className={cn(
                         "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors border",
-                        familyOnly
+                        sharedPlanOnly
                             ? "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800"
                             : "border-border text-muted-foreground hover:bg-secondary"
                     )}
                 >
                     <Users className="h-3.5 w-3.5" />
-                    Family Sharing
+                    Shared Plan
                 </button>
             </div>
 
@@ -146,7 +146,7 @@ export function UtilitiesSubscriptions() {
                                     {s.familySharing && (
                                         <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800 flex items-center gap-1">
                                             <Users className="h-2.5 w-2.5" />
-                                            Family {s.maxUsers ? `(${s.maxUsers} users)` : ""}
+                                            Shared {s.maxUsers ? `(${s.maxUsers} users)` : ""}
                                         </span>
                                     )}
                                     {s.contractMonths === 0 && (

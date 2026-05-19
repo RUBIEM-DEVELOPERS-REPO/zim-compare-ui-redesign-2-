@@ -5,16 +5,68 @@ import { cn } from "@/lib/utils"
 import { Bus, Clock, DollarSign, Globe, MapPin } from "lucide-react"
 import { useState } from "react"
 
+const fallbackBusRoutes = [
+  {
+    id: "br-intercape-byo",
+    origin: "Harare",
+    destination: "Bulawayo",
+    providerName: "Intercape Pathfinder",
+    busType: "Luxury Coach",
+    crossBorder: false,
+    borderCrossing: null,
+    price: 25,
+    durationHours: 6,
+    departureTimes: ["06:00 AM", "02:00 PM"],
+    amenities: ["WiFi", "AC", "Charging", "Refreshments"]
+  },
+  {
+    id: "br-tenda-mutare",
+    origin: "Harare",
+    destination: "Mutare",
+    providerName: "Tenda Bus Service",
+    busType: "Standard Coach",
+    crossBorder: false,
+    borderCrossing: null,
+    price: 15,
+    durationHours: 4,
+    departureTimes: ["07:00 AM", "11:00 AM", "03:00 PM"],
+    amenities: ["AC", "Refreshments"]
+  },
+  {
+    id: "br-greyhound-joburg",
+    origin: "Harare",
+    destination: "Johannesburg",
+    providerName: "Greyhound Zimbabwe",
+    busType: "Super Luxury",
+    crossBorder: true,
+    borderCrossing: "Beitbridge",
+    price: 50,
+    durationHours: 16,
+    departureTimes: ["08:00 AM", "05:00 PM"],
+    amenities: ["WiFi", "AC", "Reclining Seats", "Charging", "Meals"]
+  }
+]
+
 interface TransportBusRoutesProps {
     location?: string
+    routes?: any[]
 }
 
 const routeFilters = ["All Routes", "Local", "Cross-Border"]
 
-export function TransportBusRoutes({ location = "All Locations" }: TransportBusRoutesProps) {
+export function TransportBusRoutes({ location = "All Locations", routes = [] }: TransportBusRoutesProps) {
     const [routeFilter, setRouteFilter] = useState("All Routes")
 
-    const filtered = busRoutes
+    const rawRoutes = routes.length > 0 ? routes : fallbackBusRoutes
+    
+    // Parse departureTimes and amenities if they are JSON strings from the database
+    const activeRoutes = rawRoutes.map(r => ({
+      ...r,
+      departureTimes: typeof r.departureTimes === 'string' ? JSON.parse(r.departureTimes) : r.departureTimes,
+      amenities: typeof r.amenities === 'string' ? JSON.parse(r.amenities) : r.amenities
+    }))
+
+    const filtered = activeRoutes
         .filter(r => {
             if (location !== "All Locations") return r.origin === location || r.destination === location
             return true

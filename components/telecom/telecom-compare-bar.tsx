@@ -5,7 +5,6 @@ import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Trash2, ArrowRight } from "lucide-react"
-import { telecomProviders, dataBundles, voiceRates } from "@/lib/mock/telecoms"
 
 export function TelecomCompareBar() {
     const { t } = useI18n()
@@ -22,20 +21,12 @@ export function TelecomCompareBar() {
         router.push(`${base}?ids=${compareTray.ids.join(",")}`)
     }
 
-    // Get item info for avatars
-    const allProviders = telecomProviders
-    const allBundles = dataBundles
-    
     return (
         <div className="rounded-2xl border-2 border-teal-500/30 bg-teal-500/5 px-6 py-4 flex items-center justify-between animate-in fade-in slide-in-from-top-4 backdrop-blur-md sticky top-20 z-40 shadow-xl shadow-teal-500/10 my-4">
             <div className="flex items-center gap-4">
                 <div className="flex -space-x-3">
                     {compareTray.ids.map(id => {
-                        const allTelecomItems = [...telecomProviders, ...dataBundles, ...voiceRates];
-                        const item = allTelecomItems.find(x => x.id === id);
-                        
-                        const name = (item as any)?.name || (item as any)?.providerName || id;
-                        const initials = name.substring(0, 2).toUpperCase();
+                        const initials = id.substring(0, 2).toUpperCase();
                         
                         return (
                             <div key={id} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-teal-500/10 flex items-center justify-center font-bold text-teal-400 text-[10px] uppercase shadow-xl backdrop-blur-md border-white/10">
@@ -72,4 +63,3 @@ export function TelecomCompareBar() {
         </div>
     )
 }
-

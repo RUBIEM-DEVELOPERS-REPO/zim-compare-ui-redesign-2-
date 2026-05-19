@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { NavArrows } from "@/components/nav-arrows"
@@ -16,10 +16,35 @@ export function AdminDashboard() {
   } = useAppStore()
   
   const [activeTab, setActiveTab] = useState("validation")
+  const [activeInstCount, setActiveInstCount] = useState<number | string>("...")
+
+  useEffect(() => {
+    async function fetchCounts() {
+      try {
+        const res = await fetch("/api/all-data")
+        if (!res.ok) throw new Error()
+        const data = await res.json()
+        const count = 
+          (data.data?.telecoms?.length || 0) +
+          (data.data?.banking?.length || 0) +
+          (data.data?.education?.schools?.length || 0) +
+          (data.data?.education?.universities?.length || 0) +
+          (data.data?.insurance?.length || 0) +
+          (data.data?.energy?.solar?.length || 0) +
+          (data.data?.energy?.utilities?.length || 0)
+        
+        setActiveInstCount(count)
+      } catch (err) {
+        console.error("Dashboard count error:", err)
+        setActiveInstCount(0)
+      }
+    }
+    fetchCounts()
+  }, [])
 
   const stats = [
     { label: "Pending Approvals", value: pendingApprovals.length, icon: Clock, color: "text-amber-500" },
-    { label: "Active Institutions", value: "48", icon: Database, color: "text-blue-500" },
+    { label: "Active Institutions", value: activeInstCount, icon: Database, color: "text-blue-500" },
     { label: "System Uptime", value: "99.98%", icon: Activity, color: "text-emerald-500" },
   ]
 

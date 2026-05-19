@@ -28,6 +28,25 @@ export default function SolarPage() {
     const [location, setLocation] = useState<string>("All Locations")
     const { compareTray, clearCompareTray } = useAppStore()
 
+    const [solarProviders, setSolarProviders] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchSolar() {
+            setLoading(true)
+            try {
+                const res = await fetch('/api/solar')
+                const data = await res.json()
+                setSolarProviders(data.solarProviders || [])
+            } catch (err) {
+                console.error("Failed to fetch solar data:", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchSolar()
+    }, [])
+
     // Clear stale comparison state if not solar or boreholes
     useEffect(() => {
         if (compareTray.ids.length > 0 && !["solar", "boreholes"].includes(compareTray.category)) {
@@ -62,13 +81,21 @@ export default function SolarPage() {
                 <LocationFilterPill selectedLocation={location} onLocationChange={setLocation} />
             </div>
 
-            {tab === "overview" && <SolarOverview location={location} />}
-            {tab === "solar" && <SolarPackages location={location} />}
-            {tab === "borehole" && <BoreholePackages location={location} />}
-            {tab === "providers" && <SolarProviders location={location} />}
-            {tab === "roi" && <SolarRoiCalculator />}
-            {tab === "charts" && <SolarRoiCharts />}
-            {tab === "maintenance" && <SolarMaintenance />}
+            {loading ? (
+                <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+            ) : (
+                <>
+                    {tab === "overview" && <SolarOverview location={location} providers={solarProviders} />}
+                    {tab === "solar" && <SolarPackages location={location} providers={solarProviders} />}
+                    {tab === "borehole" && <BoreholePackages location={location} providers={solarProviders} />}
+                    {tab === "providers" && <SolarProviders location={location} providers={solarProviders} />}
+                    {tab === "roi" && <SolarRoiCalculator />}
+                    {tab === "charts" && <SolarRoiCharts />}
+                    {tab === "maintenance" && <SolarMaintenance />}
+                </>
+            )}
         </div>
     )
 }

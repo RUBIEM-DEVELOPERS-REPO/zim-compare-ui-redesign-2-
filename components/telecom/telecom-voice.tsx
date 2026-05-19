@@ -28,15 +28,21 @@ export function TelecomVoice({ location = "All Locations", voiceRates = [], prov
   const providerData = filteredProviders
     .filter((p) => p.type === "MNO")
     .map((p) => {
-      const onNet = voiceRates.find((v) => (v.operator === p.id || v.providerId === p.id) && v.type === "on_net")
-      const offNet = voiceRates.find((v) => (v.operator === p.id || v.providerId === p.id) && v.type === "off_net")
+      const onNet = voiceRates.find((v) => 
+        (v.operator === p.id || v.providerId === p.id) && 
+        (v.type === "on_net" || v.offer_type === "on_net" || v.bundle_name?.toLowerCase().includes("on-net"))
+      )
+      const offNet = voiceRates.find((v) => 
+        (v.operator === p.id || v.providerId === p.id) && 
+        (v.type === "off_net" || v.offer_type === "off_net" || v.bundle_name?.toLowerCase().includes("off-net"))
+      )
       return {
         id: p.id,
         name: p.name,
-        onNetRate: onNet?.ratePerMin ?? 0,
-        offNetRate: offNet?.ratePerMin ?? 0,
-        onNetSms: onNet?.smsRate ?? 0,
-        offNetSms: offNet?.smsRate ?? 0,
+        onNetRate: onNet?.price ?? onNet?.ratePerMin ?? 0,
+        offNetRate: offNet?.price ?? offNet?.ratePerMin ?? 0,
+        onNetSms: onNet?.sms_count ?? onNet?.smsRate ?? 0,
+        offNetSms: offNet?.sms_count ?? offNet?.smsRate ?? 0,
       }
     })
     .sort((a, b) => a.name.localeCompare(b.name))

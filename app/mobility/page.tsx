@@ -31,6 +31,41 @@ export default function MobilityPage() {
     const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
     const { compareTray, clearCompareTray } = useAppStore()
 
+    const [vehicles, setVehicles] = useState<any[]>([])
+    const [dealerships, setDealerships] = useState<any[]>([])
+    const [busRoutes, setBusRoutes] = useState<any[]>([])
+    const [drivingSchools, setDrivingSchools] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true)
+            try {
+                const [vehRes, dealRes, busRes, drvRes] = await Promise.all([
+                    fetch('/api/mobility/vehicles'),
+                    fetch('/api/mobility/dealerships'),
+                    fetch('/api/mobility/bus-routes'),
+                    fetch('/api/mobility/driving-schools')
+                ])
+                const [vehData, dealData, busData, drvData] = await Promise.all([
+                    vehRes.json(),
+                    dealRes.json(),
+                    busRes.json(),
+                    drvRes.json()
+                ])
+                setVehicles(vehData.vehicles || [])
+                setDealerships(dealData.dealerships || [])
+                setBusRoutes(busData.busRoutes || [])
+                setDrivingSchools(drvData.drivingSchools || [])
+            } catch (err) {
+                console.error("Failed to fetch mobility data:", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [])
+
     // Clear stale comparison state if not mobility
     useEffect(() => {
         if (compareTray.ids.length > 0 && compareTray.category !== "mobility") {
@@ -75,10 +110,18 @@ export default function MobilityPage() {
 
             {/* Tab Content */}
             <div className="mt-6 animate-in fade-in duration-500">
-                {tab === "overview" && <TransportOverview location={location} />}
-                {tab === "cars" && <TransportVehicles location={location} />}
-                {tab === "schools" && <TransportDrivingSchools location={location} />}
-                {tab === "bus" && <TransportBusSection location={location} />}
+                {loading ? (
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    </div>
+                ) : (
+                    <>
+                        {tab === "overview" && <TransportOverview location={location} dealerships={dealerships} />}
+                        {tab === "cars" && <TransportVehicles location={location} vehicles={vehicles} dealerships={dealerships} />}
+                        {tab === "schools" && <TransportDrivingSchools location={location} schools={drivingSchools} />}
+                        {tab === "bus" && <TransportBusSection location={location} routes={busRoutes} />}
+                    </>
+                )}
                 {tab === "analysis" && (
                     <div className="space-y-6">
                         {analysisResult ? (

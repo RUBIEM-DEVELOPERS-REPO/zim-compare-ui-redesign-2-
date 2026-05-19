@@ -1,18 +1,18 @@
 "use client"
 
-import { drivingSchools } from "@/lib/mock/transport"
 import { cn } from "@/lib/utils"
 import { GraduationCap, Phone, CheckCircle, TrendingUp } from "lucide-react"
 import { DynamicBar } from "@/components/ui/dynamic-bar"
 
 interface TransportDrivingSchoolsProps {
     location?: string
+    schools?: any[]
 }
 
-export function TransportDrivingSchools({ location = "All Locations" }: TransportDrivingSchoolsProps) {
+export function TransportDrivingSchools({ location = "All Locations", schools: drivingSchools = [] }: TransportDrivingSchoolsProps) {
     const filtered = location === "All Locations"
         ? drivingSchools
-        : drivingSchools.filter(s => s.city === location)
+        : drivingSchools.filter((s: any) => s.city === location)
 
     const sorted = [...filtered].sort((a, b) => b.passRate - a.passRate)
 

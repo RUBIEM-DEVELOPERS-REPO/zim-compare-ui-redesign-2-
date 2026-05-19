@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { hotels } from "@/lib/mock/hotels"
 import { cn } from "@/lib/utils"
 import { Star, MapPin, Waves, Sparkles, Coffee, Dumbbell, Wifi, Car, UtensilsCrossed, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
 interface LodgesListProps {
     location?: string
+    hotels?: any[]
 }
 
 function StarRating({ stars }: { stars: number }) {
@@ -21,7 +21,7 @@ function StarRating({ stars }: { stars: number }) {
     )
 }
 
-export function LodgesList({ location = "All Locations" }: LodgesListProps) {
+export function LodgesList({ location = "All Locations", hotels = [] }: LodgesListProps) {
     const { t } = useI18n()
     const router = useRouter()
     const [selected, setSelected] = useState<string[]>([])
@@ -37,8 +37,8 @@ export function LodgesList({ location = "All Locations" }: LodgesListProps) {
     }
 
     const filtered = hotels
-        .filter(h => h.type === "lodge")
-        .filter(h => location === "All Locations" || h.city === location)
+        .filter((h: any) => h.type === "lodge")
+        .filter((h: any) => location === "All Locations" || h.city === location || h.location === location)
 
     const toggleSelect = (id: string, e: React.MouseEvent) => {
         e.stopPropagation()

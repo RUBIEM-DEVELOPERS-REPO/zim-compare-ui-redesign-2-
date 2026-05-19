@@ -30,6 +30,25 @@ export function SchoolsSection() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
   const { compareTray, clearCompareTray } = useAppStore()
 
+  const [schools, setSchools] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchSchools() {
+      setLoading(true)
+      try {
+        const res = await fetch('/api/schools')
+        const data = await res.json()
+        setSchools(data.schools || [])
+      } catch (err) {
+        console.error("Failed to fetch schools:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchSchools()
+  }, [])
+
   // Clear stale comparison state if not schools
   useEffect(() => {
     if (compareTray.ids.length > 0 && compareTray.category !== "schools") {
@@ -69,12 +88,20 @@ export function SchoolsSection() {
       </div>
 
       <div className="flex-1 pb-10">
-        {tab === "overview" && <SchoolsOverview onTabChange={setTab} location={location} />}
-        {tab === "fees" && <SchoolsFees location={location} />}
-        {tab === "academics" && <SchoolsFees location={location} />}
-        {tab === "facilities" && <SchoolsProfiles location={location} />}
-        {tab === "profiles" && <SchoolsProfiles location={location} />}
-        {tab === "results" && <AcademicResultsAnalyzer />}
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : (
+          <>
+            {tab === "overview" && <SchoolsOverview onTabChange={setTab} location={location} schools={schools} />}
+            {tab === "fees" && <SchoolsFees location={location} schools={schools} />}
+            {tab === "academics" && <SchoolsFees location={location} schools={schools} />}
+            {tab === "facilities" && <SchoolsProfiles location={location} schools={schools} />}
+            {tab === "profiles" && <SchoolsProfiles location={location} schools={schools} />}
+            {tab === "results" && <AcademicResultsAnalyzer />}
+          </>
+        )}
       </div>
     </div>
   )

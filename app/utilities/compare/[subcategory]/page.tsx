@@ -1,16 +1,10 @@
 "use client"
 
 import { useSearchParams, useRouter, useParams } from "next/navigation"
-import { 
-    electricityProviders, 
-    waterProviders, 
-    internetProviders, 
-    subscriptionServices 
-} from "@/lib/mock/utilities"
 import { useAppStore } from "@/lib/store"
 import { useI18n } from "@/lib/i18n"
 import { Disclaimer } from "@/components/disclaimer"
-import { Suspense, useMemo, useEffect } from "react"
+import { Suspense, useMemo, useEffect, useState } from "react"
 import {
     ArrowLeft,
     CheckCircle2,
@@ -24,7 +18,6 @@ import {
     CreditCard
 } from "lucide-react"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
 
 function UtilitiesCompareContent() {
     const searchParams = useSearchParams()
@@ -35,23 +28,38 @@ function UtilitiesCompareContent() {
     const { addSavedComparison, clearCompareTray } = useAppStore()
     const { t } = useI18n()
 
+    const [utilities, setUtilities] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
     useEffect(() => {
         clearCompareTray()
     }, [clearCompareTray])
 
-    const compareItems = useMemo(() => {
-        if (subcategory === "electricity") {
-            return electricityProviders.filter((p) => ids.includes(p.id))
-        } else if (subcategory === "water") {
-            return waterProviders.filter((w) => ids.includes(w.id))
-        } else if (subcategory === "internet") {
-            return internetProviders.filter((i) => ids.includes(i.id))
-        } else if (subcategory === "subscriptions") {
-            return subscriptionServices.filter((s) => ids.includes(s.id))
-        } else {
-            return []
+    useEffect(() => {
+        async function fetchUtilities() {
+            try {
+                const res = await fetch("/api/utilities")
+                if (!res.ok) {
+                    throw new Error("Failed to load utilities data")
+                }
+                const data = await res.json()
+                setUtilities(data.utilities || [])
+            } catch (err: any) {
+                console.error(err)
+                setError(err.message || "Failed to fetch utilities comparison data.")
+            } finally {
+                setLoading(false)
+            }
         }
-    }, [ids, subcategory])
+        fetchUtilities()
+    }, [])
+
+    const compareItems = useMemo(() => {
+        const cleanIds = ids.map(id => id.trim()).filter(Boolean);
+        // Filter by matching subcategory / type and ids
+        return utilities.filter((p) => cleanIds.includes(p.id) && (p.type || "electricity").toLowerCase() === subcategory.toLowerCase())
+    }, [ids, utilities, subcategory])
 
     const Icon = useMemo(() => {
         switch (subcategory) {
@@ -63,13 +71,41 @@ function UtilitiesCompareContent() {
         }
     }, [subcategory])
 
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-background min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+                <p className="text-muted-foreground font-sans">Retrieving verified telemetry data...</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-background min-h-screen">
+                <div className="p-4 bg-red-500/10 rounded-full mb-6 text-red-500">
+                    <Icon size={48} />
+                </div>
+                <h2 className="text-xl font-bold text-foreground mb-2">Failed to load comparison data. Please try again later.</h2>
+                <p className="text-muted-foreground mb-8 max-w-md">{error}</p>
+                <Link
+                    href="/utilities"
+                    className="bg-amber-500 text-white px-6 py-2.5 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2"
+                >
+                    <ArrowLeft size={16} />
+                    Go back to Utilities
+                </Link>
+            </div>
+        )
+    }
+
     if (compareItems.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-background min-h-screen">
                 <div className="p-4 bg-amber-500/10 rounded-full mb-6">
                     <Icon size={48} className="text-amber-600" />
                 </div>
-                <h2 className="text-xl font-bold text-foreground mb-2">No items selected to compare</h2>
+                <h2 className="text-xl font-bold text-foreground mb-2">No verified data available yet for this category.</h2>
                 <p className="text-muted-foreground mb-8 max-w-xs">
                     Please select at least 2 items to see a side-by-side comparison.
                 </p>
@@ -156,19 +192,19 @@ function UtilitiesCompareContent() {
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Tariff per kWh</td>
                                     {compareItems.map((p: any) => (
-                                        <td key={p.id} className="p-6 text-center text-sm font-bold text-foreground">${p.tariffPerKwh}</td>
+                                        <td key={p.id} className="p-6 text-center text-sm font-bold text-foreground">${p.tariffPerKwh || p.pricePerUnit || 0}</td>
                                     ))}
                                 </tr>
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Monthly Fixed Charge</td>
                                     {compareItems.map((p: any) => (
-                                        <td key={p.id} className="p-6 text-center text-sm font-bold text-amber-600">${p.fixedMonthlyCharge}</td>
+                                        <td key={p.id} className="p-6 text-center text-sm font-bold text-amber-600">${p.fixedMonthlyCharge || p.monthlyFee || 0}</td>
                                     ))}
                                 </tr>
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Reliability Score</td>
                                     {compareItems.map((p: any) => (
-                                        <td key={p.id} className="p-6 text-center text-sm text-foreground">{p.reliabilityScore}/100</td>
+                                        <td key={p.id} className="p-6 text-center text-sm text-foreground">{p.reliabilityScore || p.rating * 20 || 80}/100</td>
                                     ))}
                                 </tr>
                             </>
@@ -177,13 +213,13 @@ function UtilitiesCompareContent() {
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Cost per m³</td>
                                     {compareItems.map((w: any) => (
-                                        <td key={w.id} className="p-6 text-center text-sm font-bold text-foreground">${w.costPerCubicMeter}</td>
+                                        <td key={w.id} className="p-6 text-center text-sm font-bold text-foreground">${w.costPerCubicMeter || w.pricePerUnit || 0}</td>
                                     ))}
                                 </tr>
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Fixed Charge</td>
                                     {compareItems.map((w: any) => (
-                                        <td key={w.id} className="p-6 text-center text-sm font-bold text-amber-600">${w.monthlyFixedCharge}</td>
+                                        <td key={w.id} className="p-6 text-center text-sm font-bold text-amber-600">${w.monthlyFixedCharge || w.monthlyFee || 0}</td>
                                     ))}
                                 </tr>
                             </>
@@ -192,19 +228,19 @@ function UtilitiesCompareContent() {
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Monthly Price</td>
                                     {compareItems.map((i: any) => (
-                                        <td key={i.id} className="p-6 text-center text-sm font-bold text-amber-600">${i.monthlyPrice}</td>
+                                        <td key={i.id} className="p-6 text-center text-sm font-bold text-amber-600">${i.monthlyPrice || i.price || 0}</td>
                                     ))}
                                 </tr>
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Speed</td>
                                     {compareItems.map((i: any) => (
-                                        <td key={i.id} className="p-6 text-center text-sm font-bold text-foreground">{i.speedMbps}Mbps</td>
+                                        <td key={i.id} className="p-6 text-center text-sm font-bold text-foreground">{i.speedMbps || 50}Mbps</td>
                                     ))}
                                 </tr>
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Installation Fee</td>
                                     {compareItems.map((i: any) => (
-                                        <td key={i.id} className="p-6 text-center text-sm text-foreground">${i.installationFee}</td>
+                                        <td key={i.id} className="p-6 text-center text-sm text-foreground">${i.installationFee || 0}</td>
                                     ))}
                                 </tr>
                             </>
@@ -213,37 +249,44 @@ function UtilitiesCompareContent() {
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Monthly Price</td>
                                     {compareItems.map((s: any) => (
-                                        <td key={s.id} className="p-6 text-center text-sm font-bold text-amber-600">${s.monthlyPrice}</td>
+                                        <td key={s.id} className="p-6 text-center text-sm font-bold text-amber-600">${s.monthlyPrice || s.price || 0}</td>
                                     ))}
                                 </tr>
                                 <tr>
                                     <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Annual Total</td>
                                     {compareItems.map((s: any) => (
-                                        <td key={s.id} className="p-6 text-center text-sm text-foreground">${s.annualPrice}</td>
+                                        <td key={s.id} className="p-6 text-center text-sm text-foreground">${s.annualPrice || (s.monthlyPrice || s.price || 0) * 12}</td>
                                     ))}
                                 </tr>
                             </>
                         )}
                         <tr>
                             <td className="p-6 text-sm font-medium text-muted-foreground bg-muted/5">Key Features</td>
-                            {compareItems.map((item: any) => (
-                                <td key={item.id} className="p-6">
-                                    <ul className="space-y-1">
-                                        {item.features.slice(0, 3).map((f: string, idx: number) => (
-                                            <li key={idx} className="text-[10px] flex items-center gap-1.5 text-foreground/70">
-                                                <CheckCircle2 size={10} className="text-amber-500" />
-                                                {f}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </td>
-                            ))}
+                            {compareItems.map((item: any) => {
+                                const features = Array.isArray(item.features)
+                                    ? item.features
+                                    : typeof item.features === 'string'
+                                        ? JSON.parse(item.features)
+                                        : ["Stable supply", "Digital billing"]
+                                return (
+                                    <td key={item.id} className="p-6">
+                                        <ul className="space-y-1">
+                                            {features.slice(0, 3).map((f: string, idx: number) => (
+                                                <li key={idx} className="text-[10px] flex items-center gap-1.5 text-foreground/70">
+                                                    <CheckCircle2 size={10} className="text-amber-500" />
+                                                    {f}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </td>
+                                )
+                            })}
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            {/* AI Insights placeholder matching Banking style */}
+            {/* AI Insights Panel */}
             <div className="glass-floating p-10 bg-primary/5 border-primary/20 shadow-2xl teal-glow relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-12 text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
                     <TrendingUp size={160} />
@@ -265,7 +308,7 @@ function UtilitiesCompareContent() {
                                 Optimal Fiscal Logic
                             </h3>
                             <p className="text-xs text-foreground/70 font-medium font-sans leading-relaxed">
-                                Based on current {subcategory} rates, <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (a.monthlyPrice || a.tariffPerKwh) - (b.monthlyPrice || b.tariffPerKwh))[0]?.name}</strong> optimizes fiscal liquidity for basic consumption tiers.
+                                Based on current {subcategory} rates, <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (a.monthlyPrice || a.tariffPerKwh || a.price || 0) - (b.monthlyPrice || b.tariffPerKwh || b.price || 0))[0]?.name}</strong> optimizes fiscal liquidity for basic consumption tiers.
                             </p>
                         </div>
                     </div>
@@ -276,7 +319,7 @@ function UtilitiesCompareContent() {
                                 Signal Reliability
                             </h3>
                             <p className="text-xs text-foreground/70 font-medium font-sans leading-relaxed">
-                                <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (b.reliabilityScore || 0) - (a.reliabilityScore || 0))[0]?.name}</strong> leads the network in supply integrity metrics according to recent diagnostic data.
+                                <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (b.reliabilityScore || b.rating || 0) - (a.reliabilityScore || a.rating || 0))[0]?.name}</strong> leads the network in supply integrity metrics according to recent diagnostic data.
                             </p>
                         </div>
                     </div>
@@ -288,7 +331,7 @@ function UtilitiesCompareContent() {
                             Supply Integrity
                         </h3>
                         <p className="text-xs text-foreground/70 font-medium font-sans leading-relaxed">
-                            Cross-referencing network nodes reveals <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (b.reliabilityScore || 0) - (a.reliabilityScore || 0))[0]?.name}</strong> maintains the most stable supply vector for the current geopolitical quadrant.
+                            Cross-referencing network nodes reveals <strong className="text-white font-black">{compareItems.sort((a:any, b:any) => (b.reliabilityScore || b.rating || 0) - (a.reliabilityScore || a.rating || 0))[0]?.name}</strong> maintains the most stable supply vector for the current geopolitical quadrant.
                         </p>
                     </div>
 
@@ -302,7 +345,7 @@ function UtilitiesCompareContent() {
                         </div>
                         <h3 className="text-lg font-display font-black text-foreground uppercase tracking-tight leading-none mb-1">Subscription</h3>
                         {(() => {
-                            const optimal = compareItems.sort((a:any, b:any) => (a.monthlyPrice || a.tariffPerKwh) - (b.monthlyPrice || b.tariffPerKwh))[0]
+                            const optimal = compareItems.sort((a:any, b:any) => (a.monthlyPrice || a.tariffPerKwh || a.price || 0) - (b.monthlyPrice || b.tariffPerKwh || b.price || 0))[0]
                             return (
                                 <>
                                     <p className="text-[10px] font-black text-primary uppercase tracking-[0.1em] mb-6 opacity-80">

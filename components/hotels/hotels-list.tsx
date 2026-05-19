@@ -2,15 +2,14 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { hotels } from "@/lib/mock/hotels"
 import { cn } from "@/lib/utils"
 import { Star, MapPin, Wifi, Car, Coffee, Dumbbell, Waves, Sparkles, UtensilsCrossed, Plus, CheckCircle2 } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
-
 import { StayAnalysisPanel } from "./stay-analysis-panel"
 
 interface HotelsListProps {
     location?: string
+    hotels?: any[]
 }
 
 function StarRating({ stars }: { stars: number }) {
@@ -23,7 +22,7 @@ function StarRating({ stars }: { stars: number }) {
     )
 }
 
-export function HotelsList({ location = "All Locations" }: HotelsListProps) {
+export function HotelsList({ location = "All Locations", hotels = [] }: HotelsListProps) {
     const { t } = useI18n()
     const router = useRouter()
 
@@ -52,10 +51,10 @@ export function HotelsList({ location = "All Locations" }: HotelsListProps) {
     }
 
     const filtered = hotels
-        .filter(h => h.type === "hotel")
-        .filter(h => location === "All Locations" || h.city === location)
-        .filter(h => starFilter === t("stays.allStars") || h.stars === parseInt(starFilter))
-        .filter(h => amenityFilter.every(a => h.amenities.includes(a)))
+        .filter((h: any) => h.type === "hotel" || !h.type)
+        .filter((h: any) => location === "All Locations" || h.city === location || h.location === location)
+        .filter((h: any) => starFilter === t("stays.allStars") || h.stars === parseInt(starFilter))
+        .filter((h: any) => amenityFilter.every((a: string) => (h.amenities || []).includes(a)))
 
     const sorted = [...filtered].sort((a, b) => {
         if (sortBy === "Price: Low to High") return a.pricePerNight - b.pricePerNight

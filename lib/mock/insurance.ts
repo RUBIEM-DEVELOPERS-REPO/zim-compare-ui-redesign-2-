@@ -92,7 +92,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 14000, 
     benefits: ["Hospital cover", "Lab tests", "Maternity support"], 
     exclusions: ["Experimental treatment"], 
-    type: "Family Cover", matchScore: 91 
+    type: "User Cover", matchScore: 91 
   },
   { 
     id: "alliance-health-protect", providerId: "alliance", providerName: "Alliance", category: "medical", 
@@ -106,9 +106,9 @@ export const policies: Policy[] = [
     id: "zimnat-medisure", providerId: "zimnat", providerName: "Zimnat", category: "medical", 
     name: "Zimnat Medisure", monthlyPremium: 52, annualPremium: 572, excess: 14, 
     waitingPeriodDays: 30, coverLimit: 13500, 
-    benefits: ["Family cover", "Emergency care", "Pharmacy support"], 
+    benefits: ["User cover", "Emergency care", "Pharmacy support"], 
     exclusions: ["Cosmetic care", "Non-network providers"], 
-    type: "Family Cover", matchScore: 90 
+    type: "User Cover", matchScore: 90 
   },
   { 
     id: "cellmed-prime-care", providerId: "cellmed", providerName: "CellMed", category: "medical", 
@@ -130,27 +130,27 @@ export const policies: Policy[] = [
     type: "Service Plan", matchScore: 96 
 },
   { 
-    id: "nyaradzo-family-cover", providerId: "nyaradzo", providerName: "Nyaradzo", category: "life_funeral", 
-    name: "Nyaradzo Family Cover", monthlyPremium: 10, annualPremium: 120, excess: 0, 
+    id: "nyaradzo-user-cover", providerId: "nyaradzo", providerName: "Nyaradzo", category: "life_funeral", 
+    name: "Nyaradzo User Cover", monthlyPremium: 10, annualPremium: 120, excess: 0, 
     coPay: 0, outOfPocketLimit: 0,
     waitingPeriodDays: 180, coverLimit: 2000, 
-    benefits: ["Full funeral package", "Family extension", "Repatriation"], 
+    benefits: ["Full funeral package", "User extension", "Repatriation"], 
     exclusions: ["Early claims within waiting period"], 
-    type: "Family Plan", matchScore: 95 
+    type: "User Plan", matchScore: 95 
 },
   { 
     id: "fm-final-rest", providerId: "first-mutual", providerName: "First Mutual", category: "life_funeral", 
     name: "First Mutual Final Rest Plan", monthlyPremium: 11, annualPremium: 132, excess: 0, 
     waitingPeriodDays: 180, coverLimit: 2200, 
-    benefits: ["Funeral support", "Immediate family cover", "Transport"], 
+    benefits: ["Funeral support", "User cover", "Transport"], 
     exclusions: ["Fraudulent claims"], 
-    type: "Family Plan", matchScore: 90 
+    type: "User Plan", matchScore: 90 
   },
   { 
     id: "om-funeral-assist", providerId: "old-mutual", providerName: "Old Mutual", category: "life_funeral", 
     name: "Old Mutual Funeral Assist", monthlyPremium: 13, annualPremium: 156, excess: 0, 
     waitingPeriodDays: 180, coverLimit: 2700, 
-    benefits: ["Funeral assistance", "Grocery support", "Family coverage"], 
+    benefits: ["Funeral assistance", "Grocery support", "User coverage"], 
     exclusions: ["Waiting period restrictions"], 
     type: "Cash Plan", matchScore: 91 
   },
@@ -166,7 +166,7 @@ export const policies: Policy[] = [
     id: "alliance-memorial-plan", providerId: "alliance", providerName: "Alliance", category: "life_funeral", 
     name: "Alliance Memorial Plan", monthlyPremium: 10.5, annualPremium: 126, excess: 0, 
     waitingPeriodDays: 180, coverLimit: 2100, 
-    benefits: ["Funeral payout", "Family package", "Mortuary support"], 
+    benefits: ["Funeral payout", "User package", "Mortuary support"], 
     exclusions: ["Pre-existing claim fraud"], 
     type: "Service Plan", matchScore: 89 
   },
@@ -194,7 +194,7 @@ export const policies: Policy[] = [
     id: "fm-house-secure", providerId: "first-mutual", providerName: "First Mutual", category: "property_business", 
     name: "First Mutual House Secure", monthlyPremium: 33, annualPremium: 363, excess: 480, 
     waitingPeriodDays: 0, coverLimit: 95000, 
-    benefits: ["Structure cover", "Household goods", "Burglary cover"], 
+    benefits: ["Structure cover", "Personal goods", "Burglary cover"], 
     exclusions: ["Negligence", "Intentional damage"], 
     type: "Building Cover", matchScore: 92 
   },

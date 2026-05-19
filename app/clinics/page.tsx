@@ -12,7 +12,7 @@ import { NeuralAnalysisPanel } from "@/components/neural-analysis-panel"
 import { ClinicsOverview } from "@/components/clinics/clinics-overview"
 import { LocationFilterPill } from "@/components/location-filter-pill"
 import { ClinicsAnalysisPanel } from "@/components/clinics/clinics-analysis-panel"
-import { Trash2, Plus } from "lucide-react"
+import { Trash2, Plus, CheckCircle2 } from "lucide-react"
 
 const categories = [
     { key: "all", label: "Overview" },

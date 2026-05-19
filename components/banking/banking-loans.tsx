@@ -1,15 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { banks, bankLoans } from "@/lib/mock/banks"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { Plus, Check, AlertCircle, X } from "lucide-react"
+import { Plus, Check, AlertCircle, X, Sparkles } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 import { BankingCompareBar } from "./banking-compare-bar"
 import { ScoreBadge } from "@/components/score-badge"
-import { Sparkles } from "lucide-react"
 
 const subTabs = [
   { key: "personal", label: "Personal" },
@@ -21,22 +19,23 @@ const subTabs = [
 
 interface BankingLoansProps {
   location?: string
+  banks?: any[]
+  loans?: any[]
 }
 
-export function BankingLoans({ location = "All Locations" }: BankingLoansProps) {
+export function BankingLoans({ location = "All Locations", banks = [], loans = [] }: BankingLoansProps) {
   const [sub, setSub] = useState<string>("personal")
   const { addToCompareTray, removeFromCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
 
-  const [loanAmount, setLoanAmount] = useState<number>(0)
-
-  const filtered = bankLoans.filter((l) => {
+  const filtered = loans.filter((l) => {
     const categoryMatch = l.category === sub
     if (!categoryMatch) return false
 
     // Location filter
     const bank = banks.find(b => b.id === l.bankId)
-    if (location !== "All Locations" && bank && !bank.locations.includes(location)) {
+    const locations = bank ? (typeof bank.locations === 'string' ? JSON.parse(bank.locations) : bank.locations) : []
+    if (location !== "All Locations" && bank && !locations.includes(location)) {
       return false
     }
 
@@ -71,6 +70,11 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
           const totalCost12 = (1000 * (l.apr / 100)) + l.initiationFee
           const totalCost24 = (1000 * (l.apr / 100) * 2) + l.initiationFee
 
+          const bank = banks.find(b => b.id === l.bankId)
+          const recScore = bank?.recommendationScore || 85
+          const isRecommended = recScore > 90
+          const requirements = typeof l.requirements === 'string' ? JSON.parse(l.requirements) : l.requirements
+
           return (
             <div
               key={l.id}
@@ -85,25 +89,20 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
                 </div>
               )}
 
-              {(() => {
-                const bank = banks.find(b => b.id === l.bankId)
-                const recScore = bank?.recommendationScore || 85
-                const isRecommended = recScore > 90
-                return isRecommended && (
-                  <div className="absolute -top-2.5 left-4 z-10">
-                    <span className="flex items-center gap-1 text-[8px] font-bold text-amber-400 bg-black/80 px-2 py-1 rounded-full border border-amber-500/30 uppercase tracking-widest shadow-lg">
-                      <Sparkles size={8} /> Neural Recommended
-                    </span>
-                  </div>
-                )
-              })()}
+              {isRecommended && (
+                <div className="absolute -top-2.5 left-4 z-10">
+                  <span className="flex items-center gap-1 text-[8px] font-bold text-amber-400 bg-black/80 px-2 py-1 rounded-full border border-amber-500/30 uppercase tracking-widest shadow-lg">
+                    <Sparkles size={8} /> Neural Recommended
+                  </span>
+                </div>
+              )}
 
               <div className="flex items-center justify-between mb-1">
                 <div className="flex flex-col">
                   <p className="text-base font-display font-medium text-foreground tracking-tight uppercase">{l.name}</p>
                   <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">{l.bankName}</p>
                 </div>
-                <ScoreBadge score={banks.find(b => b.id === l.bankId)?.recommendationScore || 85} label="AI Score" />
+                <ScoreBadge score={recScore} label="AI Score" />
               </div>
 
               <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
@@ -143,7 +142,7 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
               <div className="mb-4">
                 <p className="text-xs text-muted-foreground mb-1">Requirements</p>
                 <div className="flex flex-wrap gap-1">
-                  {l.requirements.map((r) => (
+                  {Array.isArray(requirements) && requirements.map((r: string) => (
                     <span key={r} className="text-[10px] bg-secondary text-muted-foreground px-2 py-0.5 rounded-full">
                       {r}
                     </span>
@@ -184,4 +183,3 @@ export function BankingLoans({ location = "All Locations" }: BankingLoansProps) 
     </div>
   )
 }
-

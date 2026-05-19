@@ -1,14 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { banks, bankingProducts } from "@/lib/mock/banks"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { Disclaimer } from "@/components/disclaimer"
-import { X } from "lucide-react"
+import { X, Plus, CheckCircle2, Zap, ArrowRight, CreditCard, Sparkles } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 import { BankingCompareBar } from "./banking-compare-bar"
-import { Plus, CheckCircle2, Zap, ArrowRight, CreditCard, Sparkles } from "lucide-react"
 import { ScoreBadge } from "@/components/score-badge"
 
 const subTabs = [
@@ -21,22 +19,25 @@ const subTabs = [
 
 interface BankingAccountsProps {
   location?: string
+  banks?: any[]
+  products?: any[]
 }
 
-export function BankingAccounts({ location = "All Locations" }: BankingAccountsProps) {
+export function BankingAccounts({ location = "All Locations", banks = [], products = [] }: BankingAccountsProps) {
   const [sub, setSub] = useState<string>("savings")
   const { addToCompareTray, removeFromCompareTray, compareTray } = useAppStore()
   const { t } = useI18n()
 
   const [amount, setAmount] = useState<number>(0)
 
-  const filtered = bankingProducts.filter((p) => {
+  const filtered = products.filter((p) => {
     const categoryMatch = p.category === sub
     if (!categoryMatch) return false
 
     // Location filter
     const bank = banks.find(b => b.id === p.bankId)
-    if (location !== "All Locations" && bank && !bank.locations.includes(location)) {
+    const locations = bank ? (typeof bank.locations === 'string' ? JSON.parse(bank.locations) : bank.locations) : []
+    if (location !== "All Locations" && bank && !locations.includes(location)) {
       return false
     }
 
@@ -93,6 +94,9 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
             const recScore = p.aiScore || bank?.recommendationScore || 85
             const isRecommended = recScore >= 90
             
+            // Handle perks parsing if it's a string
+            const perks = typeof p.perks === 'string' ? JSON.parse(p.perks) : p.perks
+            
             return (
               <div
                 key={p.id}
@@ -130,7 +134,7 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 mb-6">
-                  {p.perks.map((perk) => (
+                  {Array.isArray(perks) && perks.map((perk: string) => (
                     <span key={perk} className="text-[8px] font-medium uppercase tracking-wider bg-primary/10 text-primary px-2 py-1 rounded-lg border border-primary/20">
                       {perk}
                     </span>
@@ -162,4 +166,3 @@ export function BankingAccounts({ location = "All Locations" }: BankingAccountsP
     </div>
   )
 }
-

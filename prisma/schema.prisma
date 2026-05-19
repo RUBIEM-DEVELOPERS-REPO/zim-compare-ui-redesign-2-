@@ -351,20 +351,29 @@ model BusRoute {
 }
 
 model Hotel {
-  id            String @id
+  id            String  @id
   name          String
   location      String
+  city          String  @default("")
   stars         Int
   pricePerNight Float
-  amenities     String // JSON string
+  amenities     String  // JSON string
   rating        Float
+  reviewCount   Int     @default(0)
+  type          String  @default("hotel") // "hotel", "lodge"
+  recommended   Boolean @default(false)
+  bestValue     Boolean @default(false)
+  description   String  @default("")
 }
 
 model SolarProvider {
-  id       String @id
-  name     String
-  rating   Float
-  packages String // JSON string
+  id                String @id
+  name              String
+  type              String @default("residential")
+  rating            Float
+  installationCount Int    @default(0)
+  warrantyYears     Int    @default(5)
+  packages          String // JSON string
 }
 
 model UtilityProvider {

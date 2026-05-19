@@ -33,7 +33,7 @@ export function AssetSelector({ onSelect }: AssetSelectorProps) {
           
           <div className="relative z-10 text-center space-y-2">
             <h3 className="text-2xl font-display font-medium">Residential Property</h3>
-            <p className="text-xs text-muted-foreground max-w-[180px]">Houses, apartments, and household contents</p>
+            <p className="text-xs text-muted-foreground max-w-[180px]">Houses, apartments, and your contents</p>
           </div>
 
           <div className="mt-8 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all">

@@ -1,8 +1,7 @@
 "use client"
 
-import { carDealerships, vehicles, drivingSchools, busRoutes } from "@/lib/mock/transport"
 import { Disclaimer } from "@/components/disclaimer"
-import { Car, GraduationCap, Bus, Calculator, MapPin, Star } from "lucide-react"
+import { Car, GraduationCap, Bus, MapPin, Star } from "lucide-react"
 
 const summaryCards = [
     { label: "Best Car Deal", value: "Toyota Hilux", detail: "$42,000 - Brand New", icon: Car, color: "text-blue-500" },
@@ -13,16 +12,16 @@ const summaryCards = [
 
 interface TransportOverviewProps {
     location?: string
+    dealerships?: any[]
+    busRoutes?: any[]
+    vehicles?: any[]
+    drivingSchools?: any[]
 }
 
-export function TransportOverview({ location = "All Locations" }: TransportOverviewProps) {
+export function TransportOverview({ location = "All Locations", dealerships = [], busRoutes: routes = [] }: TransportOverviewProps) {
     const filteredDealers = location === "All Locations"
-        ? carDealerships
-        : carDealerships.filter(d => d.city === location)
-
-    const filteredSchools = location === "All Locations"
-        ? drivingSchools
-        : drivingSchools.filter(s => s.city === location)
+        ? dealerships
+        : dealerships.filter((d: any) => d.city === location)
 
     return (
         <div className="space-y-6">
@@ -94,7 +93,7 @@ export function TransportOverview({ location = "All Locations" }: TransportOverv
                         </h3>
                     </div>
                     <div className="space-y-2.5">
-                        {busRoutes.slice(0, 3).map((r) => (
+                        {routes.slice(0, 3).map((r: any) => (
                             <div key={r.id} className="glass-floating flex items-center justify-between p-3.5 floating-hover border-white/5 rounded-xl">
                                 <div>
                                     <p className="text-xs font-display font-medium text-white uppercase leading-tight">{r.origin} → {r.destination}</p>

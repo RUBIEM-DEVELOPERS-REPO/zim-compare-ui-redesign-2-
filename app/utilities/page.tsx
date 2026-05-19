@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { UtilitiesOverview } from "@/components/utilities/utilities-overview"
 import { UtilitiesElectricity } from "@/components/utilities/utilities-electricity"
@@ -28,6 +28,25 @@ export default function UtilitiesPage() {
     const [tab, setTab] = useState<string>("overview")
     const [location, setLocation] = useState<string>("All Locations")
     const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
+
+    const [utilities, setUtilities] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchUtilities() {
+            setLoading(true)
+            try {
+                const res = await fetch('/api/utilities')
+                const data = await res.json()
+                setUtilities(data.utilities || [])
+            } catch (err) {
+                console.error("Failed to fetch utilities:", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchUtilities()
+    }, [])
 
     const handleAnalysis = (result: AnalysisResult | null) => {
         setAnalysisResult(result)
@@ -61,10 +80,18 @@ export default function UtilitiesPage() {
             </div>
 
             <div className="animate-in fade-in duration-500 mt-6">
-                {tab === "overview" && <UtilitiesOverview />}
-                {tab === "electricity" && <UtilitiesElectricity location={location} />}
-                {tab === "water" && <UtilitiesWater location={location} />}
-                {tab === "subscriptions" && <UtilitiesSubscriptions />}
+                {loading ? (
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    </div>
+                ) : (
+                    <>
+                        {tab === "overview" && <UtilitiesOverview utilities={utilities} />}
+                        {tab === "electricity" && <UtilitiesElectricity location={location} utilities={utilities} />}
+                        {tab === "water" && <UtilitiesWater location={location} utilities={utilities} />}
+                        {tab === "subscriptions" && <UtilitiesSubscriptions utilities={utilities} />}
+                    </>
+                )}
                 {tab === "analysis" && (
                     <div className="space-y-6">
                         {analysisResult ? (

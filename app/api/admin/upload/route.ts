@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+export async function GET() {
+    return NextResponse.json({
+        message: "Admin upload backend is working",
+        route: "/api/admin/upload",
+        allowedMethod: "POST for real uploads"
+    })
+}
+
 export async function POST(request: Request) {
     try {
         const { category } = await request.json()
@@ -19,7 +27,7 @@ export async function POST(request: Request) {
         else if (category === "telecom") {
             const { telecomProviders, dataBundles, voiceRates } = await import("@/lib/mock/telecoms")
             await prisma.telecomProvider.createMany({ data: telecomProviders.map(t => ({ ...t, coverageCities: JSON.stringify(t.coverageCities) })) })
-            await prisma.dataBundle.createMany({ 
+            await prisma.dataBundle.createMany({
                 data: dataBundles.map(b => ({
                     ...b,
                     operator: b.operator || b.providerId || "unknown",
@@ -30,9 +38,9 @@ export async function POST(request: Request) {
                     validity_type: b.validity_type || b.category || "daily",
                     validity_value: b.validity_value || b.validityDays || 1,
                     validity_unit: b.validity_unit || "days"
-                })) 
+                }))
             })
-            await prisma.voiceRate.createMany({ 
+            await prisma.voiceRate.createMany({
                 data: voiceRates.map(v => ({
                     ...v,
                     operator: v.operator || v.providerId || "unknown",
@@ -44,7 +52,7 @@ export async function POST(request: Request) {
                     validity_type: v.validity_type || "unlimited",
                     validity_value: v.validity_value || 0,
                     validity_unit: v.validity_unit || "none"
-                })) 
+                }))
             })
             recordCount = telecomProviders.length + dataBundles.length + voiceRates.length
         }

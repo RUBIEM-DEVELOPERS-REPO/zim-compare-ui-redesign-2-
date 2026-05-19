@@ -1,7 +1,6 @@
 "use client"
 
 import { X } from "lucide-react"
-import { banks } from "@/lib/mock/banks"
 import { useAppStore } from "@/lib/store"
 import { Disclaimer } from "@/components/disclaimer"
 import { useI18n } from "@/lib/i18n"
@@ -15,15 +14,16 @@ const summaryCards = [
 
 interface BankingOverviewProps {
   location?: string
+  banks?: any[]
+  products?: any[]
 }
 
-export function BankingOverview({ location = "All Locations" }: BankingOverviewProps) {
+export function BankingOverview({ location = "All Locations", banks = [], products = [] }: BankingOverviewProps) {
   const { preferences } = useAppStore()
   const { t } = useI18n()
   const bestBank = preferences.scenario === "student" ? "Steward Bank" : preferences.scenario === "sme" ? "Stanbic Bank" : "CBZ Bank"
 
-  const filteredBanks = banks // All licensed banks have national scope
-
+  const filteredBanks = banks
 
   return (
     <div className="space-y-4 pb-10">
@@ -89,4 +89,3 @@ export function BankingOverview({ location = "All Locations" }: BankingOverviewP
     </div>
   )
 }
-

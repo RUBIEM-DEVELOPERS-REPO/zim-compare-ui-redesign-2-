@@ -9,6 +9,7 @@ import { TransportCrossBorder } from "./transport-crossborder"
 
 interface TransportBusSectionProps {
     location?: string
+    routes?: any[]
 }
 
 const subTabs = [
@@ -16,7 +17,7 @@ const subTabs = [
     { key: "crossborder", label: "Cross-Border" },
 ]
 
-export function TransportBusSection({ location = "All Locations" }: TransportBusSectionProps) {
+export function TransportBusSection({ location = "All Locations", routes = [] }: TransportBusSectionProps) {
     const [activeSubTab, setActiveSubTab] = useState("routes")
 
     return (
@@ -41,7 +42,7 @@ export function TransportBusSection({ location = "All Locations" }: TransportBus
 
             {/* Sub-tab Content */}
             <div className="pt-2">
-                {activeSubTab === "routes" && <TransportBusRoutes location={location} />}
+                {activeSubTab === "routes" && <TransportBusRoutes location={location} routes={routes} />}
                 {activeSubTab === "crossborder" && <TransportCrossBorder />}
             </div>
         </div>

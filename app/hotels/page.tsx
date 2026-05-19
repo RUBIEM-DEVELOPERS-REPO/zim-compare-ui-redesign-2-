@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { HotelsOverview } from "@/components/hotels/hotels-overview"
 import { HotelsList } from "@/components/hotels/hotels-list"
@@ -29,6 +29,25 @@ export default function HotelsPage() {
     const [location, setLocation] = useState<string>("All Locations")
     const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
 
+    const [hotels, setHotels] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchHotels() {
+            setLoading(true)
+            try {
+                const res = await fetch('/api/hotels')
+                const data = await res.json()
+                setHotels(data.hotels || [])
+            } catch (err) {
+                console.error("Failed to fetch hotels:", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchHotels()
+    }, [])
+
     const handleAnalysis = (result: AnalysisResult | null) => {
         setAnalysisResult(result)
         if (result && tab !== "analysis") {
@@ -55,12 +74,20 @@ export default function HotelsPage() {
             </div>
 
             <div className="animate-in fade-in duration-500">
-                {tab === "overview" && <HotelsOverview location={location} />}
-                {tab === "hotels" && <HotelsList location={location} />}
-                {tab === "lodges" && <LodgesList location={location} />}
-                {tab === "deals" && <HotelsDeals location={location} />}
-                {tab === "seasonal" && <HotelsSeasonal />}
-                {tab === "reviews" && <HotelsReviews location={location} />}
+                {loading ? (
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    </div>
+                ) : (
+                    <>
+                        {tab === "overview" && <HotelsOverview location={location} hotels={hotels} />}
+                        {tab === "hotels" && <HotelsList location={location} hotels={hotels} />}
+                        {tab === "lodges" && <LodgesList location={location} hotels={hotels} />}
+                        {tab === "deals" && <HotelsDeals location={location} hotels={hotels} />}
+                        {tab === "seasonal" && <HotelsSeasonal hotels={hotels} />}
+                        {tab === "reviews" && <HotelsReviews location={location} hotels={hotels} />}
+                    </>
+                )}
                 {tab === "analysis" && (
                     <div className="space-y-6">
                         {analysisResult ? (

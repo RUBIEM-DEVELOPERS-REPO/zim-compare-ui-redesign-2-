@@ -18,7 +18,6 @@ import type { TelecomProvider, DataBundle, VoiceRate } from "@/lib/types"
 
 import { AnalysisResult } from "@/lib/neural-engine"
 import { TelecomPaymentOptimizer } from "@/components/telecom/telecom-payment-optimizer"
-import { telecomProviders, dataBundles, voiceRates as mockVoiceRates } from "@/lib/mock/telecoms"
 
 const tabs = [
   { key: "overview", label: "Overview" },
@@ -38,9 +37,27 @@ export default function TelecomPage() {
   
   const { compareTray, clearCompareTray } = useAppStore()
   
-  const [providers] = useState<TelecomProvider[]>(telecomProviders)
-  const [bundles] = useState<DataBundle[]>(dataBundles)
-  const [voiceRates] = useState<VoiceRate[]>(mockVoiceRates)
+  const [providers, setProviders] = useState<TelecomProvider[]>([])
+  const [bundles, setBundles] = useState<DataBundle[]>([])
+  const [voiceRates, setVoiceRates] = useState<VoiceRate[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch("/api/telecom")
+        const data = await res.json()
+        setProviders(data.providers || [])
+        setBundles(data.bundles || [])
+        setVoiceRates(data.voiceRates || [])
+      } catch (err) {
+        console.error("Failed to fetch telecom data:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
 
   // Clear stale comparison state if not telecom
   useEffect(() => {
@@ -82,7 +99,7 @@ export default function TelecomPage() {
       <div className="animate-in fade-in duration-500">
         {tab === "overview" && <TelecomOverview location={location} providers={providers} />}
         {tab === "data" && <TelecomData location={location} bundles={bundles} providers={providers} />}
-        {tab === "internet" && <TelecomInternet location={location} />}
+        {tab === "internet" && <TelecomInternet location={location} bundles={bundles} providers={providers} />}
         {tab === "voice" && <TelecomVoice location={location} voiceRates={voiceRates} providers={providers} />}
         {tab === "packages" && <TelecomPackages location={location} bundles={bundles} providers={providers} />}
         {tab === "coverage" && <TelecomCoverage location={location} providers={providers} />}

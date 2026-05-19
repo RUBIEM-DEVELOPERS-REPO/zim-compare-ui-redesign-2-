@@ -311,7 +311,7 @@ export interface BusRoute {
 // ── App State ──
 
 export interface UserPreference {
-  scenario: "student" | "family" | "sme"
+  scenario: "student" | "personal" | "sme"
   priceVsQuality: number
   convenienceVsReputation: number
   shortTermVsLongTerm: number

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { schools as mockSchools } from "@/lib/mock/schools"
+import { filterVerifiedRecords } from "@/lib/data-quality"
 
 export async function GET(request: Request) {
   try {
@@ -14,21 +14,16 @@ export async function GET(request: Request) {
     if (province) where.province = province
     if (city) where.city = city
 
-    let schools = await prisma.school.findMany({
+    const rawSchools = await prisma.school.findMany({
       where,
       orderBy: { transparencyScore: 'desc' },
     })
 
-    if (schools.length === 0) {
-      schools = mockSchools as any
-      if (type) schools = schools.filter((s: any) => s.type === type) as any
-      if (province) schools = schools.filter((s: any) => s.province === province) as any
-      if (city) schools = schools.filter((s: any) => s.city === city) as any
-    }
+    const schools = filterVerifiedRecords(rawSchools, "education")
 
     return NextResponse.json({ schools })
   } catch (error: any) {
-    console.error("Schools API Error, falling back to mocks:", error)
-    return NextResponse.json({ schools: mockSchools })
+    console.error("Schools API Error:", error)
+    return NextResponse.json({ schools: [] }, { status: 500 })
   }
 }

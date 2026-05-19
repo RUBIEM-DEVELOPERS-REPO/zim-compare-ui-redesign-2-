@@ -106,7 +106,7 @@ export const useAppStore = create<AppState>()(
       logout: () => set({ role: "guest", userName: "", userEmail: "", isAuthenticated: false }),
 
       preferences: {
-        scenario: "family",
+        scenario: "personal",
         priceVsQuality: 50,
         convenienceVsReputation: 50,
         shortTermVsLongTerm: 50,
