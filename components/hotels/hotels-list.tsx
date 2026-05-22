@@ -22,6 +22,19 @@ function StarRating({ stars }: { stars: number }) {
     )
 }
 
+function parseAmenities(amenitiesInput: any): string[] {
+    if (Array.isArray(amenitiesInput)) return amenitiesInput
+    if (typeof amenitiesInput === 'string') {
+        try {
+            const parsed = JSON.parse(amenitiesInput)
+            if (Array.isArray(parsed)) return parsed
+        } catch {
+            // Safe fallback
+        }
+    }
+    return []
+}
+
 export function HotelsList({ location = "All Locations", hotels = [] }: HotelsListProps) {
     const { t } = useI18n()
     const router = useRouter()
@@ -54,7 +67,7 @@ export function HotelsList({ location = "All Locations", hotels = [] }: HotelsLi
         .filter((h: any) => h.type === "hotel" || !h.type)
         .filter((h: any) => location === "All Locations" || h.city === location || h.location === location)
         .filter((h: any) => starFilter === t("stays.allStars") || h.stars === parseInt(starFilter))
-        .filter((h: any) => amenityFilter.every((a: string) => (h.amenities || []).includes(a)))
+        .filter((h: any) => amenityFilter.every((a: string) => parseAmenities(h.amenities).includes(a)))
 
     const sorted = [...filtered].sort((a, b) => {
         if (sortBy === "Price: Low to High") return a.pricePerNight - b.pricePerNight
@@ -224,15 +237,22 @@ export function HotelsList({ location = "All Locations", hotels = [] }: HotelsLi
 
                                 {/* Amenities Row */}
                                 <div className="flex flex-wrap gap-1.5 mt-3">
-                                    {h.amenities.slice(0, 4).map(a => (
-                                        <div key={a} className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded-xl border border-white/5 shadow-inner group/amenity">
-                                            <span className="text-primary scale-75 transition-transform group-hover/amenity:scale-90">{amenityIcons[a] ?? null}</span>
-                                            <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
-                                        </div>
-                                    ))}
-                                    {h.amenities.length > 4 && (
-                                        <span className="text-[8px] font-medium text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{h.amenities.length - 4}</span>
-                                    )}
+                                    {(() => {
+                                        const amenities = parseAmenities(h.amenities);
+                                        return (
+                                            <>
+                                                {amenities.slice(0, 4).map(a => (
+                                                    <div key={a} className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded-xl border border-white/5 shadow-inner group/amenity">
+                                                        <span className="text-primary scale-75 transition-transform group-hover/amenity:scale-90">{amenityIcons[a] ?? null}</span>
+                                                        <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
+                                                    </div>
+                                                ))}
+                                                {amenities.length > 4 && (
+                                                    <span className="text-[8px] font-medium text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{amenities.length - 4}</span>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             </div>
 

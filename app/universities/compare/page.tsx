@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { apiGet } from "@/lib/api"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
@@ -10,7 +10,7 @@ import Link from "next/link"
 import { University } from "@/lib/types"
 import { PaymentModal } from "@/components/payment-modal"
 
-export default function UniversitiesComparePage() {
+function UniversitiesCompareContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const { clearCompareTray } = useAppStore()
@@ -403,6 +403,14 @@ export default function UniversitiesComparePage() {
                 item={paymentItem}
             />
         </div>
+    )
+}
+
+export default function UniversitiesComparePage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh] text-muted-foreground">Loading university comparison...</div>}>
+            <UniversitiesCompareContent />
+        </Suspense>
     )
 }
 

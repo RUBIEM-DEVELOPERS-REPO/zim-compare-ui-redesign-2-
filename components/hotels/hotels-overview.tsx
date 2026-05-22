@@ -19,6 +19,19 @@ function StarRating({ stars }: { stars: number }) {
     )
 }
 
+function parseAmenities(amenitiesInput: any): string[] {
+    if (Array.isArray(amenitiesInput)) return amenitiesInput
+    if (typeof amenitiesInput === 'string') {
+        try {
+            const parsed = JSON.parse(amenitiesInput)
+            if (Array.isArray(parsed)) return parsed
+        } catch {
+            // Safe fallback
+        }
+    }
+    return []
+}
+
 export function HotelsOverview({ location = "All Locations", hotels = [] }: HotelsOverviewProps) {
     const { t } = useI18n()
     const filtered = location === "All Locations" ? hotels : hotels.filter((h: any) => h.city === location || h.location === location)
@@ -91,7 +104,7 @@ export function HotelsOverview({ location = "All Locations", hotels = [] }: Hote
                                     <StarRating stars={h.stars} />
                                 </div>
                                 <div className="flex flex-wrap gap-1 mb-3">
-                                    {h.amenities.slice(0, 4).map(a => (
+                                    {parseAmenities(h.amenities).slice(0, 4).map(a => (
                                         <span key={a} className="flex items-center gap-1 text-[8px] bg-muted px-2 py-0.5 rounded-full text-foreground/70 font-medium uppercase tracking-tighter border border-border/40">
                                             <span className="scale-75">{amenityIcons[a]}</span> {t(`stays.amenities.${a}`)}
                                         </span>

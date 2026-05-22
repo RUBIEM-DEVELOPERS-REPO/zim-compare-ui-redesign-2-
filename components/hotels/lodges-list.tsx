@@ -21,6 +21,19 @@ function StarRating({ stars }: { stars: number }) {
     )
 }
 
+function parseAmenities(amenitiesInput: any): string[] {
+    if (Array.isArray(amenitiesInput)) return amenitiesInput
+    if (typeof amenitiesInput === 'string') {
+        try {
+            const parsed = JSON.parse(amenitiesInput)
+            if (Array.isArray(parsed)) return parsed
+        } catch {
+            // Safe fallback
+        }
+    }
+    return []
+}
+
 export function LodgesList({ location = "All Locations", hotels = [] }: LodgesListProps) {
     const { t } = useI18n()
     const router = useRouter()
@@ -94,7 +107,6 @@ export function LodgesList({ location = "All Locations", hotels = [] }: LodgesLi
                     </button>
                 </div>
             )}
- biographical description of this person.
 
             {/* Grid */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -156,15 +168,22 @@ export function LodgesList({ location = "All Locations", hotels = [] }: LodgesLi
 
                                 {/* Amenities Row */}
                                 <div className="flex flex-wrap gap-1.5 mt-3">
-                                    {h.amenities.slice(0, 4).map(a => (
-                                        <div key={a} className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded-xl border border-white/5 shadow-inner group/amenity">
-                                            <span className="text-primary scale-75 transition-transform group-hover/amenity:scale-90">{amenityIcons[a] ?? null}</span>
-                                            <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
-                                        </div>
-                                    ))}
-                                    {h.amenities.length > 4 && (
-                                        <span className="text-[8px] font-medium text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{h.amenities.length - 4}</span>
-                                    )}
+                                    {(() => {
+                                        const amenities = parseAmenities(h.amenities);
+                                        return (
+                                            <>
+                                                {amenities.slice(0, 4).map(a => (
+                                                    <div key={a} className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded-xl border border-white/5 shadow-inner group/amenity">
+                                                        <span className="text-primary scale-75 transition-transform group-hover/amenity:scale-90">{amenityIcons[a] ?? null}</span>
+                                                        <span className="text-[8px] font-medium text-muted-foreground uppercase tracking-tight">{t(`stays.amenities.${a}`)}</span>
+                                                    </div>
+                                                ))}
+                                                {amenities.length > 4 && (
+                                                    <span className="text-[8px] font-medium text-primary/60 self-center ml-1.5 uppercase tracking-tighter">+{amenities.length - 4}</span>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             </div>
 
@@ -203,9 +222,7 @@ export function LodgesList({ location = "All Locations", hotels = [] }: LodgesLi
                         </div>
                     </div>
                 ))}
- biographical description of this person.
             </div>
         </div>
     )
 }
-

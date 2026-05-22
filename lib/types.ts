@@ -41,7 +41,7 @@ export interface BankingProduct {
   id: string
   bankId: string
   bankName: string
-  category: "savings" | "current" | "student" | "salary" | "sme"
+  category: "savings" | "current" | "student" | "sme"
   name: string
   interestRate: number
   minBalance: number
@@ -311,7 +311,7 @@ export interface BusRoute {
 // ── App State ──
 
 export interface UserPreference {
-  scenario: "student" | "personal" | "sme"
+  scenario: "student" | "personal" | "sme" | "family"
   priceVsQuality: number
   convenienceVsReputation: number
   shortTermVsLongTerm: number
@@ -360,8 +360,8 @@ export interface Alert {
   message: string
   createdAt: string
   read: boolean
-  channel?: "email" | "sms" | "app" | "push"
-  status?: "active" | "resolved" | "dismissed"
+  channel?: "email" | "sms" | "app" | "push" | "whatsapp"
+  status?: "active" | "resolved" | "dismissed" | "failed"
 }
 
 export interface AlertPreference {

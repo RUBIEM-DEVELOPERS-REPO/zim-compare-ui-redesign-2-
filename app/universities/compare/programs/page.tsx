@@ -6,7 +6,7 @@ import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { ArrowLeft, Sparkles, GraduationCap } from "lucide-react"
 import Link from "next/link"
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { University } from "@/lib/types"
 
 interface SelectedProgram {
@@ -15,7 +15,7 @@ interface SelectedProgram {
     programName?: string
 }
 
-export default function UniversityProgramsComparePage() {
+function UniversityProgramsCompareContent() {
     const searchParams = useSearchParams()
     const { clearCompareTray } = useAppStore()
     const ids = searchParams.get("ids")?.split(",") || []
@@ -219,6 +219,14 @@ export default function UniversityProgramsComparePage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function UniversityProgramsComparePage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh] text-muted-foreground">Loading programme comparison...</div>}>
+            <UniversityProgramsCompareContent />
+        </Suspense>
     )
 }
 

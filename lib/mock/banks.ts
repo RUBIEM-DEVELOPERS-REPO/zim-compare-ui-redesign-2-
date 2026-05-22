@@ -217,12 +217,6 @@ export const bankingProducts: BankingProduct[] = [
   { id: "stanbic-stu", bankId: "stanbic", bankName: "Stanbic Bank", category: "student", name: "Student Banking", interestRate: 1.0, minBalance: 10, monthlyFee: 1, aiScore: 85, perks: ["International Debit Card", "Online Payments", "Goal Savings", "STEM Support"] },
   { id: "nmb-youth", bankId: "nmb", bankName: "NMB Bank", category: "student", name: "Youth Account", interestRate: 1.3, minBalance: 5, monthlyFee: 0, aiScore: 88, perks: ["Tap-to-Pay", "Zero POS Fees", "App Access", "Educational Perks"] },
 
-  // Salary
-  { id: "cbz-salary", bankId: "cbz", bankName: "CBZ Bank", category: "salary", name: "Salary Access", interestRate: 2.5, minBalance: 0, monthlyFee: 3, aiScore: 92, perks: ["Advance Facility", "Free Internal Transfers", "Funeral Cover", "Cash Back"] },
-  { id: "fbc-payroll", bankId: "fbc", bankName: "FBC Bank", category: "salary", name: "Payroll Plus", interestRate: 2.1, minBalance: 0, monthlyFee: 4, aiScore: 87, perks: ["Overdraft Support", "Digital Banking", "Hospital Cash Back", "Low Fees"] },
-  { id: "stanbic-salary", bankId: "stanbic", bankName: "Stanbic Bank", category: "salary", name: "Salary Banking", interestRate: 2.8, minBalance: 0, monthlyFee: 5, aiScore: 90, perks: ["Priority Lane", "Private Banker", "Travel Insurance", "Global Card"] },
-  { id: "steward-sal-link", bankId: "steward", bankName: "Steward Bank", category: "salary", name: "Salary Link", interestRate: 2.3, minBalance: 0, monthlyFee: 2, aiScore: 89, perks: ["EcoCash Integration", "Instant Loans", "Square App", "Low Monthly Fee"] },
-
   // SME
   { id: "nmb-sme-growth", bankId: "nmb", bankName: "NMB Bank", category: "sme", name: "SME Growth", interestRate: 1.8, minBalance: 50, monthlyFee: 7, aiScore: 91, perks: ["Trade Finance", "Merchant Services", "Low Transaction Tax", "Dedicated Manager"] },
   { id: "cbz-business", bankId: "cbz", bankName: "CBZ Bank", category: "sme", name: "Business Builder", interestRate: 2.0, minBalance: 100, monthlyFee: 10, aiScore: 88, perks: ["Corporate Suite", "SME Loans", "Free USSD", "Business Support"] },

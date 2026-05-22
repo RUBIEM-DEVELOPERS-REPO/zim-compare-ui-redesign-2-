@@ -1,27 +1,47 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
+import { useTheme } from "next-themes"
 
 export default function LandingPage() {
   const { t } = useI18n()
+  const { resolvedTheme } = useTheme()
+  const [videoSrc, setVideoSrc] = useState<string>("")
+
+  useEffect(() => {
+    if (resolvedTheme === "dark") {
+      setVideoSrc("/particle-background-dark.mov?v=2")
+    } else {
+      setVideoSrc("/particle-background-light.mov?v=2")
+    }
+  }, [resolvedTheme])
 
   return (
     <main className="h-screen w-full overflow-hidden bg-background relative flex flex-col items-center justify-center pt-[80px] pb-[80px]">
-      {/* Background Layer: Full Bleed Teal Glass & Glows */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Top Center Glow */}
-        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-[rgba(19,145,135,0.08)] rounded-full blur-[80px]" />
+      {/* Background Video Layer */}
+      {videoSrc && (
+        <video
+          key={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center z-0"
+        >
+          <source src={videoSrc} type="video/quicktime" />
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
 
-        {/* Bottom Right Glow */}
-        <div className="absolute bottom-[-100px] right-[-100px] w-[360px] h-[360px] bg-[rgba(19,145,135,0.10)] rounded-full blur-[60px]" />
-
-        {/* Glass Overlay Layer */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[rgba(19,145,135,0.06)] to-[rgba(19,145,135,0.10)] backdrop-blur-[10px]" />
-      </div>
+      {/* Semi-transparent Overlay (above video, below content) */}
+      <div 
+        className="absolute inset-0 z-10 pointer-events-none backdrop-blur-[16px] bg-gradient-to-b from-[rgba(234,248,246,0.15)] to-[rgba(234,248,246,0.40)] dark:backdrop-blur-[24px] dark:from-[rgba(3,19,22,0.20)] dark:to-[rgba(3,19,22,0.65)]" 
+      />
 
       {/* Content Container: Centered Column */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto flex flex-col items-center justify-center gap-[28px] px-10">
+      <div className="relative z-20 w-full max-w-[1200px] mx-auto flex flex-col items-center justify-center gap-[28px] px-10">
 
         {/* Badge */}
         <div className="mb-[20px] px-[14px] py-[6px] rounded-[20px] bg-primary/10 border border-primary/20 text-primary text-[14px] font-medium tracking-tight">

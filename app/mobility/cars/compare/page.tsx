@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { apiGet } from "@/lib/api"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
@@ -9,7 +9,7 @@ import { ArrowLeft, Check, X, Sparkles, Car, Fuel, Settings, Zap, Shield, Wallet
 import Link from "next/link"
 import { Vehicle } from "@/lib/types"
 
-export default function CarComparePage() {
+function CarCompareContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const { clearCompareTray } = useAppStore()
@@ -242,6 +242,14 @@ export default function CarComparePage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function CarComparePage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh] text-muted-foreground">Loading vehicle comparison...</div>}>
+            <CarCompareContent />
+        </Suspense>
     )
 }
 

@@ -13,6 +13,18 @@ interface StayAnalysisPanelProps {
 export function StayAnalysisPanel({ selectedHotels, onClear }: StayAnalysisPanelProps) {
   if (selectedHotels.length < 2) return null
 
+  const getAmenitiesCount = (h: any): number => {
+    if (!h) return 0
+    if (Array.isArray(h.amenities)) return h.amenities.length
+    if (typeof h.amenities === 'string') {
+      try {
+        const parsed = JSON.parse(h.amenities)
+        if (Array.isArray(parsed)) return parsed.length
+      } catch {}
+    }
+    return 0
+  }
+
   // Recommendation logic: mix of rating and price (value for money)
   const recommended = [...selectedHotels].sort((a, b) => {
     const scoreA = (a.rating * 20) - (a.pricePerNight / 10)
@@ -56,7 +68,7 @@ export function StayAnalysisPanel({ selectedHotels, onClear }: StayAnalysisPanel
                 </div>
                 <h3 className="text-3xl font-display font-black text-primary uppercase tracking-tighter mb-4">{recommended.name}</h3>
                 <p className="text-sm text-slate-300 leading-relaxed font-medium italic">
-                  Recommended based on its exceptional {recommended.rating} rating and superior value proposition at ${recommended.pricePerNight}/night. This property offers {recommended.amenities.length} premium amenities and is currently flagged as a top-tier neural match for your profile.
+                  Recommended based on its exceptional {recommended.rating} rating and superior value proposition at ${recommended.pricePerNight}/night. This property offers {getAmenitiesCount(recommended)} premium amenities and is currently flagged as a top-tier neural match for your profile.
                 </p>
               </div>
 
@@ -78,7 +90,7 @@ export function StayAnalysisPanel({ selectedHotels, onClear }: StayAnalysisPanel
                 {[
                   { label: "Price Efficiency", score: Math.max(20, 100 - (recommended.pricePerNight / 5)), color: "bg-emerald-500", icon: DollarSign },
                   { label: "Rating Performance", score: recommended.rating * 20, color: "bg-amber-500", icon: Star },
-                  { label: "Amenity Density", score: (recommended.amenities.length / 10) * 100, color: "bg-blue-500", icon: Zap },
+                  { label: "Amenity Density", score: (getAmenitiesCount(recommended) / 10) * 100, color: "bg-blue-500", icon: Zap },
                   { label: "Service Standards", score: 92, color: "bg-purple-500", icon: ShieldCheck },
                   { label: "Neural Match", score: 98, color: "bg-primary", icon: Sparkles },
                 ].map((factor, i) => (

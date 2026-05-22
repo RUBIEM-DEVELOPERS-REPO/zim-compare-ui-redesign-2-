@@ -14,7 +14,23 @@ export async function GET(request: Request) {
       orderBy: { rating: 'desc' },
     })
 
-    const hotels = filterVerifiedRecords(rawHotels, "hospitality")
+    const verifiedHotels = filterVerifiedRecords(rawHotels, "hospitality")
+    const hotels = verifiedHotels.map(h => {
+      let parsedAmenities: string[] = []
+      if (typeof h.amenities === 'string') {
+        try {
+          parsedAmenities = JSON.parse(h.amenities)
+        } catch (e) {
+          console.error("Failed to parse amenities for hotel:", h.id, e)
+        }
+      } else if (Array.isArray(h.amenities)) {
+        parsedAmenities = h.amenities
+      }
+      return {
+        ...h,
+        amenities: parsedAmenities
+      }
+    })
 
     return NextResponse.json({ hotels })
   } catch (error: any) {

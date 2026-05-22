@@ -57,7 +57,23 @@ export async function GET() {
     const dbVehicles = filterVerifiedRecords(rawVehicles, "mobility")
 
     const rawHotels = await prisma.hotel.findMany()
-    const dbHotels = filterVerifiedRecords(rawHotels, "hospitality")
+    const dbHotelsRaw = filterVerifiedRecords(rawHotels, "hospitality")
+    const dbHotels = dbHotelsRaw.map(h => {
+      let parsedAmenities: string[] = []
+      if (typeof h.amenities === 'string') {
+        try {
+          parsedAmenities = JSON.parse(h.amenities)
+        } catch (e) {
+          console.error("Failed to parse amenities for hotel in all-data:", h.id, e)
+        }
+      } else if (Array.isArray(h.amenities)) {
+        parsedAmenities = h.amenities
+      }
+      return {
+        ...h,
+        amenities: parsedAmenities
+      }
+    })
 
     const rawSolar = await prisma.solarProvider.findMany()
     const dbSolar = filterVerifiedRecords(rawSolar, "energy")

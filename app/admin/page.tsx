@@ -208,7 +208,10 @@ export default function AdminPage() {
           { label: "Universities", value: universities.length, color: "text-primary" },
           { label: "Insurance", value: insuranceProviders.length, color: "text-purple-400" },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 group hover:border-primary/20 transition-all">
+          <div
+            key={stat.label}
+            className="bg-white dark:bg-white/[0.02] border border-[#dfe3e8] dark:border-white/5 rounded-[14px] py-[22px] px-[24px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none group hover:border-[#cfd6dd] dark:hover:border-primary/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] dark:hover:shadow-none transition-all duration-300"
+          >
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
             <p className={cn("text-2xl font-display font-medium", stat.color)}>{stat.value}</p>
           </div>
