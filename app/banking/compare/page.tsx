@@ -1,0 +1,265 @@
+"use client"
+
+import { useSearchParams } from "next/navigation"
+import { apiGet } from "@/lib/api"
+import { useAppStore } from "@/lib/store"
+import { useI18n } from "@/lib/i18n"
+import { ScoreBadge } from "@/components/score-badge"
+import { Disclaimer } from "@/components/disclaimer"
+import { Suspense, useEffect, useState, useMemo } from "react"
+
+function CompareContent() {
+  const searchParams = useSearchParams()
+  const ids = searchParams.get("ids")?.split(",") ?? []
+  const { addSavedComparison, clearCompareTray } = useAppStore()
+  const { t } = useI18n()
+
+  const [banks, setBanks] = useState<any[]>([])
+  const [bankingProducts, setBankingProducts] = useState<any[]>([])
+  const [bankFees, setBankFees] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    clearCompareTray()
+    
+    Promise.all([
+      apiGet('/banking/banks').catch(() => ({ banks: [] })),
+      apiGet('/banking/products').catch(() => ({ products: [] })),
+      apiGet('/banking/fees').catch(() => ({ fees: [] }))
+    ]).then(([bRes, pRes, fRes]) => {
+      setBanks(bRes.banks || [])
+      setBankingProducts(pRes.products || [])
+      setBankFees(fRes.fees || [])
+      setLoading(false)
+    })
+  }, [clearCompareTray])
+
+  if (loading) {
+    return <div className="text-center py-12 text-muted-foreground">Loading comparison...</div>
+  }
+
+  const compareBanks = banks.filter((b) => ids.includes(b.id))
+  const compareProducts = bankingProducts.filter((p) => ids.includes(p.id))
+
+  // Determine what we're comparing: banks or products
+  const isProducts = compareProducts.length > 0
+  const items = isProducts ? compareProducts : compareBanks
+
+  // Determine winner for simulator
+  const winner = useMemo(() => {
+    if (!isProducts) return null;
+    const products = compareProducts;
+    let best = products[0];
+    products.forEach(p => {
+      let score = 0;
+      if (p.interestRate > best.interestRate) score += 2;
+      if (p.monthlyFee < best.monthlyFee) score += 1;
+      if (p.minBalance < best.minBalance) score += 1;
+      if (p.perks.length > best.perks.length) score += 1;
+      if (score >= 2) best = p;
+    });
+    return best;
+  }, [compareProducts, isProducts]);
+
+  if (items.length < 2) {
+    return (
+      <div className="text-center py-12">
+        <h1 className="text-lg font-medium text-foreground mb-2">Banking Comparison</h1>
+        <p className="text-sm text-muted-foreground">Select at least 2 items to compare. Go to the Banking page and add items to your compare tray.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-medium text-foreground">Banking Comparison</h1>
+        <button
+          onClick={() => {
+            addSavedComparison({
+              id: Date.now().toString(),
+              category: "banking",
+              itemIds: ids,
+              createdAt: new Date().toISOString(),
+              name: `Banking: ${items.map((i) => "name" in i ? i.name : "").join(" vs ")}`,
+            })
+          }}
+          className="rounded-lg bg-primary/10 text-primary px-4 py-2 text-sm font-medium hover:bg-primary/20 transition-colors"
+        >
+          Save Comparison
+        </button>
+      </div>
+
+      {/* Side-by-side */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs border border-border rounded-xl overflow-hidden">
+          <thead>
+            <tr className="bg-secondary/30 border-b border-border">
+              <th className="text-left px-3 py-2 text-muted-foreground font-medium">Attribute</th>
+              {items.map((item) => (
+                <th key={item.id} className="text-center px-3 py-2 text-foreground font-medium">
+                  {item.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {isProducts ? (
+              <>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Bank</td>
+                  {compareProducts.map((p) => (
+                    <td key={p.id} className="px-3 py-2 text-center text-foreground">{p.bankName}</td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Interest Rate</td>
+                  {compareProducts.map((p) => (
+                    <td key={p.id} className="px-3 py-2 text-center text-foreground font-medium">{p.interestRate}%</td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Monthly Fee</td>
+                  {compareProducts.map((p) => (
+                    <td key={p.id} className="px-3 py-2 text-center text-foreground font-medium">${p.monthlyFee}</td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Min Balance</td>
+                  {compareProducts.map((p) => (
+                    <td key={p.id} className="px-3 py-2 text-center text-foreground">${p.minBalance}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 text-muted-foreground">Perks</td>
+                  {compareProducts.map((p) => (
+                    <td key={p.id} className="px-3 py-2 text-center text-foreground">{p.perks.join(", ")}</td>
+                  ))}
+                </tr>
+              </>
+            ) : (
+              <>
+                {compareBanks.map((_, __, arr) => null)}
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Type</td>
+                  {compareBanks.map((b) => (
+                    <td key={b.id} className="px-3 py-2 text-center text-foreground capitalize">{b.type.replace("_", " ")}</td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Branches</td>
+                  {compareBanks.map((b) => (
+                    <td key={b.id} className="px-3 py-2 text-center text-foreground">{b.branches}</td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Transparency</td>
+                  {compareBanks.map((b) => (
+                    <td key={b.id} className="px-3 py-2 text-center"><ScoreBadge score={b.transparencyScore} label="" /></td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">Digital Score</td>
+                  {compareBanks.map((b) => (
+                    <td key={b.id} className="px-3 py-2 text-center"><ScoreBadge score={b.digitalScore ?? 0} label="" /></td>
+                  ))}
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="px-3 py-2 text-muted-foreground">ZIPIT Fee</td>
+                  {compareBanks.map((b) => {
+                    const fee = bankFees.find((f) => f.bankId === b.id && f.name.includes("ZIPIT"))
+                    return (
+                      <td key={b.id} className="px-3 py-2 text-center text-foreground">
+                        {fee ? `$${fee.amount.toFixed(2)}` : "-"}
+                      </td>
+                    )
+                  })}
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 text-muted-foreground">Digital Features</td>
+                  {compareBanks.map((b) => (
+                    <td key={b.id} className="px-3 py-2 text-center text-foreground text-[10px]">
+                      {b.digitalFeatures.join(", ")}
+                    </td>
+                  ))}
+                </tr>
+              </>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {isProducts && (
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
+                <span className="text-sm font-medium">★</span>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-foreground">
+                  {t("banking.winner")}: <span className="text-primary italic">
+                    {winner?.bankName} {winner?.name}
+                  </span>
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("banking.recommended")}</p>
+              </div>
+            </div>
+
+            <ul className="space-y-2 mb-4">
+              {winner && [
+                `${t("banking.reasoning.higherRate")} (${winner.interestRate}% APY)`,
+                `${t("banking.reasoning.lowerFee")} ($${winner.monthlyFee}/mo)`,
+                `${t("banking.reasoning.betterPerks")}: ${winner.perks.slice(0, 2).join(", ")}`
+              ].map((reason, i) => (
+                <li key={i} className="flex items-start gap-2 text-xs text-foreground/80">
+                  <span className="text-primary mt-1">✓</span>
+                  {reason}
+                </li>
+              ))}
+            </ul>
+
+            <p className="text-[10px] text-muted-foreground italic mt-auto">
+              {t("banking.disclaimer")}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 text-primary/5 rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                 <span className="text-4xl font-black">$$</span>
+            </div>
+            <h3 className="text-sm font-medium text-foreground mb-4 relative z-10 flex items-center gap-2">
+              Neural Fiscal Path
+            </h3>
+            <p className="text-xs text-muted-foreground leading-relaxed relative z-10 mb-4">
+              Transitioning your capital distribution to <strong className="text-foreground">{winner?.bankName}</strong> yields a projected 14% improvement in net annual yields.
+            </p>
+            <div className="mt-auto flex items-center justify-between relative z-10">
+              <span className="text-[10px] font-medium text-primary uppercase tracking-widest">Logic Efficiency</span>
+              <span className="text-[10px] font-bold text-foreground">Optimal</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button
+        className="rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        onClick={() => alert("PDF export is a placeholder in this demo.")}
+      >
+        Export to PDF
+      </button>
+
+
+      <Disclaimer />
+    </div>
+  )
+}
+
+export default function BankingComparePage() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-muted-foreground">Loading comparison...</div>}>
+      <CompareContent />
+    </Suspense>
+  )
+}
+
