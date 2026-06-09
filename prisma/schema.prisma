@@ -382,3 +382,81 @@ model UtilityProvider {
   type   String // electricity, water, internet
   rating Float
 }
+
+// ── Manual Data Overrides for Admin Input ──
+
+model SchoolManualData {
+  id             Int      @id @default(autoincrement())
+  schoolName     String
+  location       String
+  tuitionFee     Float
+  currency       String   @default("USD")
+  admissionFee   Float?
+  boardingFee    Float?
+  uniformCost    Float?
+  booksCost      Float?
+  examFee        Float?
+  effectiveDate  DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([schoolName])
+  @@index([location])
+}
+
+model UniversityManualData {
+  id                Int      @id @default(autoincrement())
+  universityName    String
+  location          String
+  tuitionFee        Float
+  currency          String   @default("USD")
+  accommodationFee  Float?
+  applicationFee    Float?
+  labFee            Float?
+  libraryFee        Float?
+  studentUnionFee   Float?
+  effectiveDate     DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([universityName])
+  @@index([location])
+}
+
+model InsuranceManualData {
+  id            Int      @id @default(autoincrement())
+  providerName  String
+  insuranceType String
+  basePremium   Float
+  currency      String   @default("USD")
+  maxCoverage   Float?
+  deductible    Float?
+  coinsurance   Float?
+  copay         Float?
+  effectiveDate DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([providerName])
+  @@index([insuranceType])
+}
+
+model BankingManualFee {
+  id              Int      @id @default(autoincrement())
+  bankId          String
+  bankName        String
+  feeType         String   // "transaction", "loan", "card"
+  feeCategory     String
+  feeName         String
+  amount          Float
+  currency        String   @default("USD")
+  unit            String? // percentage, flat, etc.
+  description     String?
+  effectiveDate   DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([bankId])
+  @@index([bankName])
+  @@index([feeType])
+}

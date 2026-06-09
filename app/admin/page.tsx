@@ -13,7 +13,7 @@ import { schools } from "@/lib/mock/schools"
 import { universities } from "@/lib/mock/universities"
 import { apiPost } from "@/lib/api"
 import * as XLSX from "xlsx"
-import { Sun, Moon, LogOut } from "lucide-react"
+import { Sun, Moon, LogOut, RadioTower, ChevronRight } from "lucide-react"
 import { useTheme } from "next-themes"
 
 export default function AdminPage() {
@@ -208,14 +208,101 @@ export default function AdminPage() {
           { label: "Universities", value: universities.length, color: "text-primary" },
           { label: "Insurance", value: insuranceProviders.length, color: "text-purple-400" },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-white dark:bg-white/[0.02] border border-[#dfe3e8] dark:border-white/5 rounded-[14px] py-[22px] px-[24px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-none group hover:border-[#cfd6dd] dark:hover:border-primary/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] dark:hover:shadow-none transition-all duration-300"
-          >
+          <div key={stat.label} className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 group hover:border-primary/20 transition-all">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
             <p className={cn("text-2xl font-display font-medium", stat.color)}>{stat.value}</p>
           </div>
         ))}
+      </div>
+
+      {/* Quick Access – Pricing Managers */}
+      <div>
+        <h3 className="text-sm font-medium text-foreground mb-3">Pricing Managers</h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <button
+            onClick={() => router.push("/admin/banking")}
+            className="group flex items-center justify-between rounded-2xl border border-blue-500/20 bg-blue-500/5 px-5 py-4 hover:border-blue-500/40 hover:bg-blue-500/10 transition-all text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                <svg size={16} className="text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-blue-400 uppercase tracking-widest">Banking</p>
+                <p className="text-[10px] text-muted-foreground">Data Input</p>
+              </div>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+          </button>
+          <button
+            onClick={() => router.push("/admin/telecom-pricing")}
+            className="group flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4 hover:border-emerald-500/40 hover:bg-emerald-500/10 transition-all text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <RadioTower size={16} className="text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Telecom</p>
+                <p className="text-[10px] text-muted-foreground">Pricing Manager</p>
+              </div>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+          </button>
+          <button
+            onClick={() => router.push("/admin/insurance")}
+            className="group flex items-center justify-between rounded-2xl border border-purple-500/20 bg-purple-500/5 px-5 py-4 hover:border-purple-500/40 hover:bg-purple-500/10 transition-all text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                <svg size={16} className="text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-purple-400 uppercase tracking-widest">Insurance</p>
+                <p className="text-[10px] text-muted-foreground">Data Input</p>
+              </div>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all" />
+          </button>
+          <button
+            onClick={() => router.push("/admin/schools")}
+            className="group flex items-center justify-between rounded-2xl border border-amber-500/20 bg-amber-500/5 px-5 py-4 hover:border-amber-500/40 hover:bg-amber-500/10 transition-all text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                <svg size={16} className="text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">Schools</p>
+                <p className="text-[10px] text-muted-foreground">Data Input</p>
+              </div>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+          </button>
+          <button
+            onClick={() => router.push("/admin/universities")}
+            className="group flex items-center justify-between rounded-2xl border border-blue-500/20 bg-blue-500/5 px-5 py-4 hover:border-blue-500/40 hover:bg-blue-500/10 transition-all text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                <svg size={16} className="text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-blue-400 uppercase tracking-widest">Universities</p>
+                <p className="text-[10px] text-muted-foreground">Data Input</p>
+              </div>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

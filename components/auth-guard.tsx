@@ -16,7 +16,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const checkAuth = async () => {
             const token = localStorage.getItem("zim_auth_token")
+            const selectedRole = localStorage.getItem("selectedRole")
             const isProtectedRoute = protectedRoutes.some(route => pathname === route || pathname.startsWith(route + "/"))
+
+            // If a role was chosen via the interface-selection page, allow access directly
+            if (selectedRole) {
+                setAuthorized(true)
+                return
+            }
 
             if (token) {
                 try {
