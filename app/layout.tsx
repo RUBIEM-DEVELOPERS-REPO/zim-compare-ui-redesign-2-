@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, JetBrains_Mono, Old_Standard_TT, DM_Serif_Display, Playfair_Display } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ClientShell } from "@/components/client-shell"
+import Providers from "@/app/providers"
 
 const inter = Inter({ subsets: ["latin"] })
 const oldCentury = Old_Standard_TT({
@@ -42,9 +43,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} ${oldCentury.variable} ${dmSerif.variable} ${playfair.variable} font-sans antialiased min-h-screen bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ClientShell>
-            {children}
-          </ClientShell>
+          <Providers>
+            <ClientShell>
+              {children}
+            </ClientShell>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

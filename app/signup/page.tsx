@@ -43,14 +43,7 @@ export default function SignUpPage() {
             router.push("/interface-selection")
         } catch (err: any) {
             console.error('Sign up error:', err)
-            
-            if (!error) {
-                // Fallback for development if it's a network error
-                const mockToken = "mock_token_" + Date.now()
-                localStorage.setItem("zim_auth_token", mockToken)
-                login(email, name, "registered")
-                router.push("/interface-selection")
-            }
+            setError('Network error. Please check your connection and try again.')
         } finally {
             setIsLoading(false)
         }

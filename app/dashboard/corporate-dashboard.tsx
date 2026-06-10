@@ -1,17 +1,25 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAppStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 import { 
     BarChart3, TrendingUp, Users, FileText, Bell, Plus, Save, 
     Upload, CheckCircle, XCircle, MessageSquare, ArrowUpRight, ArrowDownRight,
-    Search, Filter, MoreVertical, Edit3
+    Search, Filter, MoreVertical, Edit3, RadioTower
 } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { NavArrows } from "@/components/nav-arrows"
 import { validatePrice, validateRequired } from "@/lib/validation"
 
 export function CorporateDashboard() {
+  const router = useRouter()
   const { applications, updateApplication, addAuditLog, userName } = useAppStore()
   const [activeTab, setActiveTab] = useState("overview")
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null)
@@ -68,10 +76,28 @@ export function CorporateDashboard() {
             <button className="px-5 py-2.5 rounded-[1.25rem] bg-white/5 border border-white/10 text-white text-[11px] font-medium uppercase tracking-widest hover:bg-white/10 transition-all floating-hover">
                 Export Insights
             </button>
-            <button className="flex items-center gap-2 px-6 py-3 rounded-[1.25rem] bg-primary text-primary-foreground text-[11px] font-medium uppercase tracking-[0.15em] hover:bg-primary/90 transition-all shadow-2xl teal-glow floating-hover">
-                <Plus className="w-4 h-4" />
-                Add New Product
-            </button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 px-6 py-3 rounded-[1.25rem] bg-primary text-primary-foreground text-[11px] font-medium uppercase tracking-[0.15em] hover:bg-primary/90 transition-all shadow-2xl teal-glow floating-hover outline-none">
+                        <RadioTower className="w-4 h-4" />
+                        Manual Input
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-[#111] border-white/10 rounded-xl shadow-2xl z-50">
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/telecom")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Telecom
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/telecom-pricing")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Telecom Pricing
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
       </div>
 

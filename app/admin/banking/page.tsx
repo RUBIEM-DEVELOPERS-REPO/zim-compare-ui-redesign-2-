@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/use-auth";
+import { useAppStore } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Select,
@@ -43,7 +43,7 @@ import BankRevenueLineChart from "@/components/BankRevenueLineChart";
 import MedianRevenueLineChart from "@/components/MedianRevenueLineChart";
 import CompetitorCountUpdater from "@/components/CompetitorCountUpdater";
 import MLPredictionPanel from "@/components/MLPredictionPanel";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { RefreshButton } from "@/components/RefreshButton";
 
 // Define types for the bank details response
@@ -123,7 +123,7 @@ const fetchBanks = async (): Promise<Bank[]> => {
   
   while (retries < maxRetries) {
     try {
-      const response = await fetch("/api/banks");
+      const response = await fetch("/api/banking/banks");
       if (!response.ok) {
         if (response.status === 503) {
           throw new Error("Database connection is currently unavailable. Please try again later.");
@@ -131,8 +131,9 @@ const fetchBanks = async (): Promise<Bank[]> => {
         throw new Error(`Failed to fetch banks: ${response.status}`);
       }
       const data = await response.json();
-      console.log(`Fetched Banks (${data.length} banks):`, data);
-      return data;
+      const banksArray = data.banks || data;
+      console.log(`Fetched Banks (${banksArray.length} banks):`, banksArray);
+      return banksArray;
     } catch (error) {
       retries++;
       console.error(`Error fetching banks (attempt ${retries}/${maxRetries}):`, error);
@@ -193,14 +194,21 @@ const fetchBankDetails = async (bankId: string | undefined): Promise<BankDetails
 // Define available view types
 type ViewType = 'statistics' | 'recommendations' | 'selectBank' | 'hierarchicalDiscounts' | 'consolidatedDiscounts' | 'discountHistory' | 'consolidatedWorkflow' | 'bankTrends' | 'medianTrends' | 'mlPredictions';
 
-export default function BankingAdminPage() {
+export default function CompetitiveAnalysisPricing() {
+  const { userName, userEmail, isAuthenticated } = useAppStore();
+  const user = isAuthenticated ? { name: userName, email: userEmail } : null;
+  const authLoading = false;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  
+  // Check URL parameters for initial tab selection
+  const initialTab = searchParams.get('tab') as ViewType | null;
   
   // All hooks must be declared before any conditional returns
   const [selectedBankId, setSelectedBankId] = useState<string | undefined>(undefined);
   const [retryCount, setRetryCount] = useState(0);
-  const [activeView, setActiveView] = useState<ViewType>('statistics');
+  const [activeView, setActiveView] = useState<ViewType>(initialTab || 'statistics');
   const [feeStatistics, setFeeStatistics] = useState<any[]>([]);
   const [hasCalculatedRecommendations, setHasCalculatedRecommendations] = useState<boolean>(false);
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
@@ -355,7 +363,7 @@ export default function BankingAdminPage() {
   };
 
   // Enhanced error handling - Show if there are issues loading initial data
-  if (!banks) {
+  if (authLoading) {
     return (
       <div className="flex flex-col min-h-screen">
         <div className="container mx-auto py-8 px-4">
@@ -545,7 +553,7 @@ export default function BankingAdminPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BuildingIcon className="h-5 w-5" />
-                Bank Selection 
+                Competitor Selection 
               </CardTitle>
               <CardDescription>
                 Select a bank to view detailed fee structure and competitive positioning
@@ -556,7 +564,7 @@ export default function BankingAdminPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Select value={selectedBankId} onValueChange={(value) => setSelectedBankId(value)}>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Bank" />
+                      <SelectValue placeholder="Select Competetor" />
                     </SelectTrigger>
                     <SelectContent>
                       {banks?.map((bank) => (
@@ -662,17 +670,17 @@ export default function BankingAdminPage() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <BuildingIcon className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-semibold">Banking Information Management</h1>
+            <h1 className="text-2xl font-semibold">Competetive Pricing</h1>
           </div>
           <div className="flex items-center gap-2">
             <RefreshButton />
             <Button
               variant="outline"
-              onClick={() => router.push("/admin")}
+              onClick={() => (window.location.href = "/home")}
               className="flex items-center gap-2"
             >
               <HomeIcon className="h-4 w-4" />
-              Back to Admin
+              Back to Home
             </Button>
           </div>
         </div>
@@ -717,7 +725,7 @@ export default function BankingAdminPage() {
             disabled={loadingBanks || !banks || banks.length === 0}
           >
             <ScaleIcon className="h-4 w-4" />
-            Bank Selection
+            Competitor Selection
           </Button>
           <Button
             onClick={() => setActiveView('statistics')}

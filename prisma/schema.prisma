@@ -135,7 +135,9 @@ model DataBundle {
   source_name           String?
 
   provider TelecomProvider @relation(fields: [operator], references: [id])
+  @@index([operator])
 }
+
 
 model VoiceRate {
   id                  String  @id @default(cuid())

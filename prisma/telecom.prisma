@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TelecomProvider {
+  id                String   @id
+  name              String
+  type              String
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  coverageScore     Int
+  networkType       String
+  coverageCities    String // JSON stringified array
+
+  bundles    DataBundle[]
+  voiceRates VoiceRate[]
+}
+
+model DataBundle {
+  id                    String   @id @default(cuid())
+  operator              String
+  currency              String
+  bundle_group          String
+  bundle_name           String
+  price                 Float
+  validity_type         String
+  validity_value        Int
+  validity_unit         String
+  total_data_mb         Float
+  peak_data_mb          Float?
+  offpeak_data_mb       Float?
+  onnet_minutes         Float?
+  other_minutes         Float?
+  cug_minutes           Float?
+  international_minutes Float?
+  sms_count             Float?
+  facebook_mb           Float?
+  instagram_mb          Float?
+  x_mb                  Float?
+  extras                String?
+  ussd_code             String?
+  source_url            String?
+  source_name           String?
+
+  provider TelecomProvider @relation(fields: [operator], references: [id])
+  @@index([operator])
+}
+
+model VoiceRate {
+  id                  String   @id @default(cuid())
+  operator            String
+  offer_type          String
+  bundle_group        String
+  bundle_name         String
+  price               Float
+  validity_type       String
+  validity_value      Int
+  validity_unit       String
+  offpeak_type        String?
+  price_unit          String?
+  onnet_min_count     Float?
+  offnet_min_count    Float?
+  landline_min_count  Float?
+  intl_min_count      Float?
+  sms_count           Float?
+  offpeak_sms_count   Float?
+  extras              String?
+  ussd_code           String?
+  source_url          String?
+  source_name         String?
+
+  provider TelecomProvider @relation(fields: [operator], references: [id])
+}
