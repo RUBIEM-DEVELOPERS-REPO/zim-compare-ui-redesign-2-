@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
     const rawBanks = await prisma.bank.findMany({
       where,
-      orderBy: { transparencyScore: 'desc' }
+      orderBy: [{ isManual: 'desc' }, { transparencyScore: 'desc' }],
     })
 
     const banks = filterVerifiedRecords(rawBanks, "banking")

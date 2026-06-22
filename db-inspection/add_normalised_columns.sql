@@ -1,0 +1,24 @@
+-- Safe additive migration: only ADD new columns, never drop anything
+-- Schools table
+ALTER TABLE "School" ADD COLUMN IF NOT EXISTS "numberOfTerms" INTEGER DEFAULT 3;
+ALTER TABLE "School" ADD COLUMN IF NOT EXISTS "normalised" DOUBLE PRECISION;
+
+-- SchoolManualData table
+ALTER TABLE "SchoolManualData" ADD COLUMN IF NOT EXISTS "schoolType" TEXT NOT NULL DEFAULT 'day';
+ALTER TABLE "SchoolManualData" ADD COLUMN IF NOT EXISTS "province" TEXT NOT NULL DEFAULT '';
+ALTER TABLE "SchoolManualData" ADD COLUMN IF NOT EXISTS "passRate" DOUBLE PRECISION NOT NULL DEFAULT 0;
+ALTER TABLE "SchoolManualData" ADD COLUMN IF NOT EXISTS "numberOfTerms" INTEGER NOT NULL DEFAULT 3;
+ALTER TABLE "SchoolManualData" ADD COLUMN IF NOT EXISTS "annualFee" DOUBLE PRECISION NOT NULL DEFAULT 0;
+ALTER TABLE "SchoolManualData" ADD COLUMN IF NOT EXISTS "normalised" DOUBLE PRECISION;
+
+-- Universities table (mapped as "universities")
+ALTER TABLE "universities" ADD COLUMN IF NOT EXISTS "annualFee" DOUBLE PRECISION;
+ALTER TABLE "universities" ADD COLUMN IF NOT EXISTS "programmeDuration" INTEGER;
+ALTER TABLE "universities" ADD COLUMN IF NOT EXISTS "programmeMatch" DOUBLE PRECISION;
+ALTER TABLE "universities" ADD COLUMN IF NOT EXISTS "normalised" DOUBLE PRECISION;
+
+-- UniversityManualData table
+ALTER TABLE "UniversityManualData" ADD COLUMN IF NOT EXISTS "annualFee" DOUBLE PRECISION NOT NULL DEFAULT 0;
+ALTER TABLE "UniversityManualData" ADD COLUMN IF NOT EXISTS "programmeDuration" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "UniversityManualData" ADD COLUMN IF NOT EXISTS "programmeMatch" DOUBLE PRECISION NOT NULL DEFAULT 0;
+ALTER TABLE "UniversityManualData" ADD COLUMN IF NOT EXISTS "normalised" DOUBLE PRECISION;

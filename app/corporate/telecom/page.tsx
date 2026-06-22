@@ -123,6 +123,8 @@ export default function TelecomCorporate() {
   const router = useRouter()
 
   const [selectedOperator, setSelectedOperator] = useState("econet")
+  const [providerQuery, setProviderQuery] = useState("")
+  const [providerFocused, setProviderFocused] = useState(false)
   const [activeTab, setActiveTab] = useState<"browsing_data" | "combo" | "sms" | "social_media">("browsing_data")
   
   // Data lists
@@ -372,21 +374,73 @@ export default function TelecomCorporate() {
             {/* Input Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
+                  {/* Provider combobox */}
+                  <div className="relative">
                     <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
                       Provider <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="text"
                       required
-                      value={selectedOperator}
+                      value={providerFocused ? providerQuery : selectedOperator}
                       onChange={(e) => {
+                        setProviderQuery(e.target.value)
                         setSelectedOperator(e.target.value)
                         if (editingId) cancelEdit()
                       }}
-                      placeholder="e.g. Econet Wireless"
+                      onFocus={() => {
+                        setProviderFocused(true)
+                        setProviderQuery(selectedOperator)
+                      }}
+                      onBlur={() => setTimeout(() => setProviderFocused(false), 150)}
+                      placeholder="Select or type operator name…"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-muted-foreground/40 focus:outline-none focus:border-primary/50 transition-colors"
                     />
+                    {providerFocused && (
+                      <div className="absolute z-50 top-full mt-1 left-0 w-full bg-[#0d1117] border border-white/10 rounded-xl shadow-xl overflow-hidden max-h-44 overflow-y-auto">
+                        {[
+                          ...new Set([
+                            ...operators.map((o) => o.name),
+                            ...browsingData.map((d) => d.provider),
+                            ...combos.map((d) => d.provider),
+                            ...smsData.map((d) => d.provider),
+                            ...socialMediaData.map((d) => d.provider),
+                          ])
+                        ]
+                          .filter((name) =>
+                            name.toLowerCase().includes(providerQuery.toLowerCase())
+                          )
+                          .map((name) => (
+                            <button
+                              key={name}
+                              type="button"
+                              onMouseDown={() => {
+                                setSelectedOperator(name)
+                                setProviderQuery(name)
+                                setProviderFocused(false)
+                              }}
+                              className="w-full text-left px-3.5 py-2.5 text-xs text-white hover:bg-white/10 transition-colors"
+                            >
+                              {name}
+                            </button>
+                          ))}
+                        {providerQuery &&
+                          ![
+                            ...operators.map((o) => o.name),
+                            ...browsingData.map((d) => d.provider),
+                            ...combos.map((d) => d.provider),
+                            ...smsData.map((d) => d.provider),
+                            ...socialMediaData.map((d) => d.provider),
+                          ].some(
+                            (name) => name.toLowerCase() === providerQuery.toLowerCase()
+                          ) && (
+                            <div className="px-3.5 py-2 text-[10px] text-muted-foreground border-t border-white/5">
+                              New provider:{" "}
+                              <span className="text-primary">{providerQuery}</span>
+                            </div>
+                          )}
+                      </div>
+                    )}
                   </div>
 
                   <div>

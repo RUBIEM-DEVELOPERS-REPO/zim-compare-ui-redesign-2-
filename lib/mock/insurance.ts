@@ -23,7 +23,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 25000, 
     benefits: ["Comprehensive cover", "Third-party liability", "Accident assistance"], 
     exclusions: ["Unlicensed driver", "Drunk driving", "Racing"], 
-    type: "Full Cover", matchScore: 94 
+    type: "Full Cover", matchScore: 94, currency: "USD", isManual: false 
 },
   { 
     id: "zimnat-auto-secure", providerId: "zimnat", providerName: "Zimnat", category: "motor", 
@@ -32,7 +32,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 20000, 
     benefits: ["Theft cover", "Third-party cover", "Roadside support"], 
     exclusions: ["Wear and tear", "Drunk driving"], 
-    type: "Full Cover", matchScore: 91 
+    type: "Full Cover", matchScore: 91, currency: "USD", isManual: false 
 },
   { 
     id: "fm-drive-cover", providerId: "first-mutual", providerName: "First Mutual", category: "motor", 
@@ -40,7 +40,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 30000, 
     benefits: ["Comprehensive cover", "Windscreen cover", "Emergency towing"], 
     exclusions: ["Commercial misuse", "Illegal use"], 
-    type: "Full Cover", matchScore: 92 
+    type: "Full Cover", matchScore: 92, currency: "USD", isManual: false 
   },
   { 
     id: "nicoz-motor-plus", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "motor", 
@@ -48,7 +48,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 22000, 
     benefits: ["Own damage", "Theft", "Fire cover"], 
     exclusions: ["Driver negligence", "Unauthorized use"], 
-    type: "Full Cover", matchScore: 90 
+    type: "Full Cover", matchScore: 90, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-motor-guard", providerId: "alliance", providerName: "Alliance", category: "motor", 
@@ -56,7 +56,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 18000, 
     benefits: ["Third-party", "Fire & theft", "Accident response"], 
     exclusions: ["Mechanical breakdown", "Reckless driving"], 
-    type: "Third Party Fire and Theft", matchScore: 88 
+    type: "Third Party Fire and Theft", matchScore: 88, currency: "USD", isManual: false 
   },
   { 
     id: "eagle-auto-plan", providerId: "eagle", providerName: "Eagle Insurance", category: "motor", 
@@ -64,7 +64,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 21500, 
     benefits: ["Comprehensive option", "Passenger liability", "Towing"], 
     exclusions: ["Intentional damage", "No valid license"], 
-    type: "Full Cover", matchScore: 89 
+    type: "Full Cover", matchScore: 89, currency: "USD", isManual: false 
   },
 
   // 2) Medical Insurance — 6 mock companies
@@ -75,7 +75,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 15000, 
     benefits: ["GP visits", "Hospitalization", "Specialist network"], 
     exclusions: ["Cosmetic treatment", "Non-approved procedures"], 
-    type: "Individual Cover", matchScore: 95 
+    type: "Individual Cover", matchScore: 95, currency: "USD", isManual: false 
 },
   { 
     id: "psmas-care-secure", providerId: "psmas", providerName: "PSMAS", category: "medical", 
@@ -84,7 +84,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 12000, 
     benefits: ["In-patient care", "Outpatient care", "Chronic medication"], 
     exclusions: ["Cosmetic surgery", "Elective overseas treatment"], 
-    type: "Individual Cover", matchScore: 93 
+    type: "Individual Cover", matchScore: 93, currency: "USD", isManual: false 
 },
   { 
     id: "fm-health-cover", providerId: "first-mutual", providerName: "First Mutual", category: "medical", 
@@ -92,7 +92,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 14000, 
     benefits: ["Hospital cover", "Lab tests", "Maternity support"], 
     exclusions: ["Experimental treatment"], 
-    type: "User Cover", matchScore: 91 
+    type: "User Cover", matchScore: 91, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-health-protect", providerId: "alliance", providerName: "Alliance", category: "medical", 
@@ -100,7 +100,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 10500, 
     benefits: ["GP network", "Hospitalization", "Diagnostics"], 
     exclusions: ["Dental cosmetics", "Unapproved specialists"], 
-    type: "Individual Cover", matchScore: 89 
+    type: "Individual Cover", matchScore: 89, currency: "USD", isManual: false 
   },
   { 
     id: "zimnat-medisure", providerId: "zimnat", providerName: "Zimnat", category: "medical", 
@@ -108,7 +108,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 13500, 
     benefits: ["User cover", "Emergency care", "Pharmacy support"], 
     exclusions: ["Cosmetic care", "Non-network providers"], 
-    type: "User Cover", matchScore: 90 
+    type: "User Cover", matchScore: 90, currency: "USD", isManual: false 
   },
   { 
     id: "cellmed-prime-care", providerId: "cellmed", providerName: "CellMed", category: "medical", 
@@ -116,7 +116,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 30, coverLimit: 16000, 
     benefits: ["Specialist access", "Inpatient cover", "Chronic care"], 
     exclusions: ["Elective procedures not approved"], 
-    type: "In-Patient Cover", matchScore: 94 
+    type: "In-Patient Cover", matchScore: 94, currency: "USD", isManual: false 
   },
 
   // 3) Funeral Cover — 6 mock companies
@@ -127,7 +127,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 180, coverLimit: 2500, 
     benefits: ["Funeral service", "Coffin", "Transport"], 
     exclusions: ["Waiting period", "Misrepresentation"], 
-    type: "Service Plan", matchScore: 96 
+    type: "Service Plan", matchScore: 96, currency: "USD", isManual: false 
 },
   { 
     id: "nyaradzo-user-cover", providerId: "nyaradzo", providerName: "Nyaradzo", category: "life_funeral", 
@@ -136,7 +136,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 180, coverLimit: 2000, 
     benefits: ["Full funeral package", "User extension", "Repatriation"], 
     exclusions: ["Early claims within waiting period"], 
-    type: "User Plan", matchScore: 95 
+    type: "User Plan", matchScore: 95, currency: "USD", isManual: false 
 },
   { 
     id: "fm-final-rest", providerId: "first-mutual", providerName: "First Mutual", category: "life_funeral", 
@@ -144,7 +144,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 180, coverLimit: 2200, 
     benefits: ["Funeral support", "User cover", "Transport"], 
     exclusions: ["Fraudulent claims"], 
-    type: "User Plan", matchScore: 90 
+    type: "User Plan", matchScore: 90, currency: "USD", isManual: false 
   },
   { 
     id: "om-funeral-assist", providerId: "old-mutual", providerName: "Old Mutual", category: "life_funeral", 
@@ -152,7 +152,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 180, coverLimit: 2700, 
     benefits: ["Funeral assistance", "Grocery support", "User coverage"], 
     exclusions: ["Waiting period restrictions"], 
-    type: "Cash Plan", matchScore: 91 
+    type: "Cash Plan", matchScore: 91, currency: "USD", isManual: false 
   },
   { 
     id: "zimnat-comfort-cover", providerId: "zimnat", providerName: "Zimnat", category: "life_funeral", 
@@ -160,7 +160,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 180, coverLimit: 1800, 
     benefits: ["Basic funeral package", "Transport", "Cover extension"], 
     exclusions: ["Late premium payments"], 
-    type: "Individual Plan", matchScore: 88 
+    type: "Individual Plan", matchScore: 88, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-memorial-plan", providerId: "alliance", providerName: "Alliance", category: "life_funeral", 
@@ -168,7 +168,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 180, coverLimit: 2100, 
     benefits: ["Funeral payout", "User package", "Mortuary support"], 
     exclusions: ["Pre-existing claim fraud"], 
-    type: "Service Plan", matchScore: 89 
+    type: "Service Plan", matchScore: 89, currency: "USD", isManual: false 
   },
 
   // 4) Home Insurance — 6 mock companies
@@ -179,7 +179,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 100000, 
     benefits: ["Building cover", "Contents cover", "Liability"], 
     exclusions: ["Wear and tear", "Poor maintenance"], 
-    type: "Building Cover", matchScore: 97 
+    type: "Building Cover", matchScore: 97, currency: "USD", isManual: false 
 },
   { 
     id: "zimnat-home-shield", providerId: "zimnat", providerName: "Zimnat", category: "property_business", 
@@ -188,7 +188,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 85000, 
     benefits: ["Fire", "Theft", "Storm damage"], 
     exclusions: ["Gradual deterioration"], 
-    type: "Combined Home Cover", matchScore: 93 
+    type: "Combined Home Cover", matchScore: 93, currency: "USD", isManual: false 
 },
   { 
     id: "fm-house-secure", providerId: "first-mutual", providerName: "First Mutual", category: "property_business", 
@@ -196,7 +196,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 95000, 
     benefits: ["Structure cover", "Personal goods", "Burglary cover"], 
     exclusions: ["Negligence", "Intentional damage"], 
-    type: "Building Cover", matchScore: 92 
+    type: "Building Cover", matchScore: 92, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-home-guard", providerId: "alliance", providerName: "Alliance", category: "property_business", 
@@ -204,7 +204,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 80000, 
     benefits: ["Building cover", "Fire cover", "Limited contents cover"], 
     exclusions: ["Flooding in excluded zones"], 
-    type: "Contents Cover", matchScore: 88 
+    type: "Contents Cover", matchScore: 88, currency: "USD", isManual: false 
   },
   { 
     id: "nicoz-property-cover", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "property_business", 
@@ -212,7 +212,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 105000, 
     benefits: ["Full building cover", "Contents", "Liability"], 
     exclusions: ["Unoccupied property risks"], 
-    type: "Building Cover", matchScore: 94 
+    type: "Building Cover", matchScore: 94, currency: "USD", isManual: false 
   },
   { 
     id: "eagle-home-secure", providerId: "eagle", providerName: "Eagle Insurance", category: "property_business", 
@@ -220,7 +220,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 82000, 
     benefits: ["Theft", "Fire", "Storm protection"], 
     exclusions: ["Poor upkeep", "Intentional damage"], 
-    type: "Combined Home Cover", matchScore: 89 
+    type: "Combined Home Cover", matchScore: 89, currency: "USD", isManual: false 
   },
 
   // 5) Business Insurance — 6 mock companies
@@ -230,7 +230,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 150000, 
     benefits: ["Stock cover", "Equipment cover", "Liability"], 
     exclusions: ["Fraud", "Illegal trading"], 
-    type: "Asset All Risks", matchScore: 95 
+    type: "Asset All Risks", matchScore: 95, currency: "USD", isManual: false 
   },
   { 
     id: "zimnat-business-shield-v2", providerId: "zimnat", providerName: "Zimnat", category: "business", 
@@ -238,7 +238,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 120000, 
     benefits: ["Property cover", "Theft", "Business interruption"], 
     exclusions: ["Cyber-only incidents unless added"], 
-    type: "Business All Risks", matchScore: 91 
+    type: "Business All Risks", matchScore: 91, currency: "USD", isManual: false 
   },
   { 
     id: "fm-commercial-cover", providerId: "first-mutual", providerName: "First Mutual", category: "business", 
@@ -246,7 +246,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 170000, 
     benefits: ["Fire", "Stock", "Machinery", "Public liability"], 
     exclusions: ["Misuse", "Unlawful acts"], 
-    type: "Business All Risks", matchScore: 94 
+    type: "Business All Risks", matchScore: 94, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-sme-guard", providerId: "alliance", providerName: "Alliance", category: "business", 
@@ -254,7 +254,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 110000, 
     benefits: ["Equipment cover", "Theft", "Employer liability"], 
     exclusions: ["Undisclosed risk factors"], 
-    type: "Public Liability", matchScore: 89 
+    type: "Public Liability", matchScore: 89, currency: "USD", isManual: false 
   },
   { 
     id: "nicoz-enterprise-cover", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "business", 
@@ -262,7 +262,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 180000, 
     benefits: ["Business interruption", "Fire", "Liability", "Stock"], 
     exclusions: ["Poor compliance", "Fraud"], 
-    type: "Asset All Risks", matchScore: 93 
+    type: "Asset All Risks", matchScore: 93, currency: "USD", isManual: false 
   },
   { 
     id: "eagle-commercial-protect", providerId: "eagle", providerName: "Eagle Insurance", category: "business", 
@@ -270,7 +270,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 130000, 
     benefits: ["SME property cover", "Business assets", "Liability"], 
     exclusions: ["High-risk activities without declaration"], 
-    type: "Business All Risks", matchScore: 90 
+    type: "Business All Risks", matchScore: 90, currency: "USD", isManual: false 
   },
 
   // 6) Agriculture Insurance — 6 mock companies
@@ -280,7 +280,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 90000, 
     benefits: ["Crop protection", "Livestock cover", "Farm equipment"], 
     exclusions: ["Neglect", "Undeclared disease outbreak"], 
-    type: "Crop Cover", matchScore: 94 
+    type: "Crop Cover", matchScore: 94, currency: "USD", isManual: false 
   },
   { 
     id: "zimnat-farm-shield", providerId: "zimnat", providerName: "Zimnat", category: "agriculture", 
@@ -288,7 +288,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 80000, 
     benefits: ["Crop cover", "Weather risk", "Irrigation equipment"], 
     exclusions: ["Preventable losses"], 
-    type: "Crop Cover", matchScore: 91 
+    type: "Crop Cover", matchScore: 91, currency: "USD", isManual: false 
   },
   { 
     id: "fm-agri-secure", providerId: "first-mutual", providerName: "First Mutual", category: "agriculture", 
@@ -296,7 +296,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 100000, 
     benefits: ["Livestock", "Machinery", "Drought support"], 
     exclusions: ["Lack of veterinary compliance"], 
-    type: "Livestock Cover", matchScore: 93 
+    type: "Livestock Cover", matchScore: 93, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-crop-guard", providerId: "alliance", providerName: "Alliance", category: "agriculture", 
@@ -304,7 +304,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 75000, 
     benefits: ["Crop failure cover", "Storm damage", "Input loss"], 
     exclusions: ["Unreported farm incidents"], 
-    type: "Crop Cover", matchScore: 88 
+    type: "Crop Cover", matchScore: 88, currency: "USD", isManual: false 
   },
   { 
     id: "nicoz-farm-protect", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "agriculture", 
@@ -312,7 +312,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 95000, 
     benefits: ["Farm buildings", "Equipment", "Livestock"], 
     exclusions: ["Illegal land use", "Negligence"], 
-    type: "Equipment Cover", matchScore: 90 
+    type: "Equipment Cover", matchScore: 90, currency: "USD", isManual: false 
   },
   { 
     id: "eagle-agri-plus", providerId: "eagle", providerName: "Eagle Insurance", category: "agriculture", 
@@ -320,7 +320,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 78000, 
     benefits: ["Livestock cover", "Crop loss", "Weather risk"], 
     exclusions: ["Poor farm management"], 
-    type: "Livestock Cover", matchScore: 87 
+    type: "Livestock Cover", matchScore: 87, currency: "USD", isManual: false 
   },
 
   // 7) Travel Insurance — 6 mock companies
@@ -330,7 +330,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 25000, 
     benefits: ["Medical emergencies", "Baggage loss", "Trip delays"], 
     exclusions: ["High-risk sports", "Non-disclosed conditions"], 
-    type: "International", matchScore: 95 
+    type: "International", matchScore: 95, currency: "USD", isManual: false 
   },
   { 
     id: "zimnat-travel-guard-v2", providerId: "zimnat", providerName: "Zimnat", category: "travel", 
@@ -338,7 +338,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 20000, 
     benefits: ["Emergency medical", "Cancellations", "Lost baggage"], 
     exclusions: ["Pre-existing conditions"], 
-    type: "International", matchScore: 91 
+    type: "International", matchScore: 91, currency: "USD", isManual: false 
   },
   { 
     id: "fm-global-travel", providerId: "first-mutual", providerName: "First Mutual", category: "travel", 
@@ -346,7 +346,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 28000, 
     benefits: ["International medical support", "Cancellation cover"], 
     exclusions: ["Adventure travel without extension"], 
-    type: "International", matchScore: 93 
+    type: "International", matchScore: 93, currency: "USD", isManual: false 
   },
   { 
     id: "alliance-trip-cover", providerId: "alliance", providerName: "Alliance", category: "travel", 
@@ -354,7 +354,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 18000, 
     benefits: ["Delays", "Baggage", "Emergency care"], 
     exclusions: ["Unapproved destinations"], 
-    type: "Regional", matchScore: 88 
+    type: "Regional", matchScore: 88, currency: "USD", isManual: false 
   },
   { 
     id: "nicoz-travel-protect", providerId: "nicoz-diamond", providerName: "Nicoz Diamond", category: "travel", 
@@ -362,7 +362,7 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 22000, 
     benefits: ["Medical cover", "Document loss", "Cancellations"], 
     exclusions: ["Extreme sports", "Pre-existing conditions"], 
-    type: "International", matchScore: 90 
+    type: "International", matchScore: 90, currency: "USD", isManual: false 
   },
   { 
     id: "eagle-voyager-cover", providerId: "eagle", providerName: "Eagle Insurance", category: "travel", 
@@ -370,6 +370,6 @@ export const policies: Policy[] = [
     waitingPeriodDays: 0, coverLimit: 16000, 
     benefits: ["Travel delay", "Baggage loss", "Emergency assistance"], 
     exclusions: ["High-risk travel activities"], 
-    type: "Regional", matchScore: 87 
+    type: "Regional", matchScore: 87, currency: "USD", isManual: false 
   },
 ];

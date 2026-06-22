@@ -20,9 +20,13 @@ export async function POST(request: Request) {
         for (const record of records) {
             try {
                 if (category === "banking") {
-                    // Decide if it's a Bank or a Product/Fee/Loan based on fields
                     if (record.account || record.category === "savings" || record.category === "current") {
-                        // It's a BankingProduct
+                        // Guard: skip if manual record exists for this bankName+name
+                        const existing = await prisma.bankingProduct.findUnique({
+                            where: { bankName_name: { bankName: record.bankName, name: record.name } }
+                        })
+                        if (existing?.isManual) { skippedCount++; continue }
+
                         await prisma.bankingProduct.upsert({
                             where: { id: record.id },
                             update: {
@@ -48,7 +52,10 @@ export async function POST(request: Request) {
                             }
                         })
                     } else if (record.transparencyScore !== undefined) {
-                        // It's a Bank
+                        // Guard: skip if manual record exists for this bank name
+                        const existing = await prisma.bank.findUnique({ where: { name: record.name } })
+                        if (existing?.isManual) { skippedCount++; continue }
+
                         await prisma.bank.upsert({
                             where: { id: record.id },
                             update: {
@@ -88,7 +95,12 @@ export async function POST(request: Request) {
                 } 
                 else if (category === "telecom") {
                     if (record.total_data_mb !== undefined) {
-                        // DataBundle
+                        // Guard: skip if manual DataBundle exists for this operator+bundle_name
+                        const existing = await prisma.dataBundle.findUnique({
+                            where: { operator_bundle_name: { operator: record.operator, bundle_name: record.bundle_name } }
+                        })
+                        if (existing?.isManual) { skippedCount++; continue }
+
                         await prisma.dataBundle.upsert({
                             where: { id: record.id || `db-${record.operator}-${record.bundle_name}` },
                             update: {
@@ -120,7 +132,10 @@ export async function POST(request: Request) {
                             }
                         })
                     } else if (record.coverageScore !== undefined) {
-                        // TelecomProvider
+                        // Guard: skip if manual TelecomProvider exists for this name
+                        const existing = await prisma.telecomProvider.findUnique({ where: { name: record.name } })
+                        if (existing?.isManual) { skippedCount++; continue }
+
                         await prisma.telecomProvider.upsert({
                             where: { id: record.id },
                             update: {
@@ -160,7 +175,12 @@ export async function POST(request: Request) {
                 }
                 else if (category === "insurance") {
                     if (record.monthlyPremium !== undefined) {
-                        // Policy
+                        // Guard: skip if manual Policy exists for this providerName+name
+                        const existing = await prisma.policy.findUnique({
+                            where: { providerName_name: { providerName: record.providerName, name: record.name } }
+                        })
+                        if (existing?.isManual) { skippedCount++; continue }
+
                         await prisma.policy.upsert({
                             where: { id: record.id },
                             update: {
@@ -192,7 +212,10 @@ export async function POST(request: Request) {
                             }
                         })
                     } else if (record.claimsScore !== undefined) {
-                        // InsuranceProvider
+                        // Guard: skip if manual InsuranceProvider exists for this name
+                        const existing = await prisma.insuranceProvider.findUnique({ where: { name: record.name } })
+                        if (existing?.isManual) { skippedCount++; continue }
+
                         await prisma.insuranceProvider.upsert({
                             where: { id: record.id },
                             update: {
@@ -231,6 +254,10 @@ export async function POST(request: Request) {
                     }
                 }
                 else if (category === "schools") {
+                    // Guard: skip if manual School exists for this name
+                    const existing = await prisma.school.findUnique({ where: { name: record.name } })
+                    if (existing?.isManual) { skippedCount++; continue }
+
                     await prisma.school.upsert({
                         where: { id: record.id },
                         update: {

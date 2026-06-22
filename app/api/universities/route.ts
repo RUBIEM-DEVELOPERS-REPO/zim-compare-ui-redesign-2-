@@ -14,10 +14,20 @@ export async function GET(request: Request) {
 
     const rawUniversities = await prisma.university.findMany({
       where,
-      orderBy: { university: 'asc' },
+      orderBy: [
+        { isManual: 'desc' },
+        { university: 'asc' }
+      ],
     })
 
-    const universities = filterVerifiedRecords(rawUniversities, "education")
+    const filtered = filterVerifiedRecords(rawUniversities, "education")
+    
+    const seen = new Set()
+    const universities = filtered.filter((u) => {
+      if (seen.has(u.university)) return false
+      seen.add(u.university)
+      return true
+    })
 
     return NextResponse.json({ universities })
   } catch (error: any) {

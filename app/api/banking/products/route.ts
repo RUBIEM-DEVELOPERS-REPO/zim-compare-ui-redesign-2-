@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 
     const rawProducts = await prisma.bankingProduct.findMany({
       where,
-      orderBy: { interestRate: 'desc' },
+      orderBy: [{ isManual: 'desc' }, { interestRate: 'desc' }],
       include: {
         bank: {
           select: { name: true, logo: true, transparencyScore: true }

@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
     const bundles = await prisma.dataBundle.findMany({
       where,
-      orderBy: { price: 'asc' },
+      orderBy: [{ isManual: 'desc' }, { price: 'asc' }],
     })
 
     return NextResponse.json({ bundles })

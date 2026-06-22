@@ -96,6 +96,37 @@ export function CorporateDashboard() {
                     >
                         Telecom Pricing
                     </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/banking")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Banking
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/schools")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Schools
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/universities")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Universities
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/insurance")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Insurance Input
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onSelect={() => router.push("/corporate/hotels")}
+                        className="text-xs text-white/70 hover:text-white focus:text-white hover:bg-white/5 focus:bg-white/5 cursor-pointer rounded-lg m-1 transition-colors"
+                    >
+                        Hotels
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>

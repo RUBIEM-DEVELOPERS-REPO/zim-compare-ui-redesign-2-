@@ -1,0 +1,895 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://neondb_owner:npg_Gn7xCrtb0YgH@ep-withered-heart-aqw3dy7m-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"
+}
+
+model Alert {
+  id        String   @id
+  userId    String?
+  type      String
+  category  String
+  itemId    String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Bank {
+  id                String  @id
+  name              String
+  type              String
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  branches          Int
+  digitalFeatures   String
+  locations         String
+}
+
+model BankFee {
+  id          String @id
+  bankId      String
+  bankName    String
+  category    String
+  name        String
+  amount      Float
+  unit        String
+  description String
+}
+
+model BankLoan {
+  id                     String @id
+  bankId                 String
+  bankName               String
+  category               String
+  name                   String
+  apr                    Float
+  initiationFee          Float
+  earlySettlementPenalty Float
+  maxTermMonths          Int
+  requirements           String
+}
+
+model BankingManualFee {
+  id            Int      @id @default(autoincrement())
+  bankId        String
+  bankName      String
+  feeType       String
+  feeCategory   String
+  feeName       String
+  amount        Float
+  currency      String   @default("USD")
+  unit          String?
+  description   String?
+  effectiveDate DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+
+  @@index([bankId])
+  @@index([bankName])
+  @@index([feeType])
+}
+
+model BankingProduct {
+  id           String @id
+  bankId       String
+  bankName     String
+  category     String
+  name         String
+  interestRate Float
+  minBalance   Float
+  monthlyFee   Float
+  perks        String
+}
+
+model BusRoute {
+  id             String  @id
+  providerId     String
+  providerName   String
+  origin         String
+  destination    String
+  price          Float
+  durationHours  Float
+  departureTimes String
+  crossBorder    Boolean
+  amenities      String
+  busType        String
+}
+
+model CarDealership {
+  id                 String  @id
+  name               String
+  city               String
+  brands             String
+  verified           Boolean
+  yearsActive        Int
+  stockCount         Int
+  financingAvailable Boolean
+  rating             Float
+  phone              String
+}
+
+model ChatMessage {
+  id        String   @id
+  userId    String?
+  role      String
+  content   String
+  timestamp DateTime @default(now())
+}
+
+model DataBundle {
+  id                    String  @id
+  operator              String
+  currency              String
+  bundle_group          String
+  bundle_name           String
+  price                 Float
+  validity_type         String
+  validity_value        Int
+  validity_unit         String
+  total_data_mb         Float
+  peak_data_mb          Float?
+  offpeak_data_mb       Float?
+  onnet_minutes         Float?
+  other_minutes         Float?
+  cug_minutes           Float?
+  international_minutes Float?
+  sms_count             Float?
+  facebook_mb           Float?
+  instagram_mb          Float?
+  x_mb                  Float?
+  extras                String?
+  ussd_code             String?
+  source_url            String?
+  source_name           String?
+}
+
+model DrivingSchool {
+  id               String  @id
+  name             String
+  city             String
+  pricePerLesson   Float
+  packagePrice     Float
+  lessonsInPackage Int
+  passRate         Float
+  yearsActive      Int
+  verified         Boolean
+  phone            String
+}
+
+model Hotel {
+  id            String  @id
+  name          String
+  location      String
+  city          String
+  stars         Int
+  pricePerNight Float
+  amenities     String
+  rating        Float
+  reviewCount   Int
+  type          String
+  recommended   Boolean
+  bestValue     Boolean
+  description   String
+}
+
+model InsuranceManualData {
+  id            Int      @id @default(autoincrement())
+  providerName  String
+  insuranceType String
+  basePremium   Float
+  currency      String   @default("USD")
+  maxCoverage   Float?
+  deductible    Float?
+  coinsurance   Float?
+  copay         Float?
+  effectiveDate DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+
+  @@index([insuranceType])
+  @@index([providerName])
+}
+
+model InsuranceProvider {
+  id                String  @id
+  name              String
+  type              String
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  claimsScore       Int
+  avgClaimDays      Int
+  serviceAreas      String
+}
+
+model Policy {
+  id                String @id
+  providerId        String
+  providerName      String
+  category          String
+  name              String
+  monthlyPremium    Float
+  annualPremium     Float
+  excess            Float
+  waitingPeriodDays Int
+  coverLimit        Float
+  benefits          String
+  exclusions        String
+}
+
+model RecentView {
+  id        String   @id
+  userId    String
+  category  String
+  itemId    String
+  name      String
+  timestamp DateTime @default(now())
+}
+
+model SavedComparison {
+  id        String   @id
+  userId    String
+  category  String
+  name      String
+  itemIds   String
+  createdAt DateTime @default(now())
+}
+
+model School {
+  id                  String  @id
+  name                String
+  type                String
+  logo                String?
+  transparencyScore   Int
+  digitalScore        Int?
+  website             String?
+  headOfficeAddress   String?
+  contactPhone        String?
+  contactEmail        String?
+  curriculum          String
+  province            String
+  city                String
+  tuitionPerTerm      Float
+  boardingFeePerTerm  Float?
+  totalAnnualCost     Float
+  passRate            Float?
+  studentTeacherRatio Float
+  facilities          String
+  sports              String
+  academicScore       Int
+  safetyScore         Int
+  normalised          Float?
+}
+
+model SchoolManualData {
+  id            Int      @id @default(autoincrement())
+  schoolName    String
+  location      String
+  schoolType    String   @default("day")
+  province      String   @default("")
+  tuitionFee    Float
+  currency      String   @default("USD")
+  admissionFee  Float?
+  boardingFee   Float?
+  uniformCost   Float?
+  booksCost     Float?
+  examFee       Float?
+  passRate      Float    @default(0)
+  numberOfTerms Int      @default(3)
+  annualFee     Float    @default(0)
+  normalised    Float?
+  effectiveDate DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+
+  @@index([location])
+  @@index([schoolName])
+}
+
+model SolarProvider {
+  id                String @id
+  name              String
+  type              String
+  rating            Float
+  installationCount Int
+  warrantyYears     Int
+  packages          String
+}
+
+model TelecomProvider {
+  id                String  @id
+  name              String
+  type              String
+  logo              String?
+  transparencyScore Int
+  digitalScore      Int?
+  website           String?
+  headOfficeAddress String?
+  contactPhone      String?
+  contactEmail      String?
+  coverageScore     Int
+  networkType       String
+  coverageCities    String
+}
+
+model University {
+  id                 String  @id
+  university         String
+  location           String
+  provinceArea       String
+  type               String
+  programmeSummary   String?
+  feeMinUSD          Float?
+  feeMaxUSD          Float?
+  feeNote            String?
+  feeConfidence      String?
+  programmeSourceUrl String?
+}
+
+model UniversityManualData {
+  id                Int      @id @default(autoincrement())
+  universityName    String
+  location          String
+  tuitionFee        Float
+  currency          String   @default("USD")
+  accommodationFee  Float?
+  applicationFee    Float?
+  labFee            Float?
+  libraryFee        Float?
+  studentUnionFee   Float?
+  annualFee         Float    @default(0)
+  programmeDuration Int      @default(0)
+  programmeMatch    Float    @default(0)
+  normalised        Float?
+  effectiveDate     DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime
+
+  @@index([location])
+  @@index([universityName])
+}
+
+model User {
+  id        String   @id
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("guest")
+  isPaid    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model UtilityProvider {
+  id     String @id
+  name   String
+  type   String
+  rating Float
+}
+
+model Vehicle {
+  id                 String  @id
+  dealershipId       String
+  dealershipName     String
+  make               String
+  model              String
+  year               Int
+  price              Float
+  engineCC           Float
+  fuelType           String
+  mileage            Int
+  transmission       String
+  color              String
+  financingAvailable Boolean
+  condition          String
+  location           String
+}
+
+model VoiceRate {
+  id               String  @id
+  operator         String
+  offer_type       String
+  bundle_group     String
+  bundle_name      String
+  price            Float
+  validity_type    String
+  validity_value   Int
+  validity_unit    String
+  onnet_min_count  Float?
+  offnet_min_count Float?
+  sms_count        Float?
+  source_url       String?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model attribute_comparison_rules {
+  id                 BigInt             @id
+  attribute_id       BigInt
+  comparison_type    String             @db.VarChar(20)
+  weight             Decimal?           @default(1) @db.Decimal(10, 4)
+  created_at         DateTime?          @db.Timestamp(6)
+  updated_at         DateTime?          @db.Timestamp(6)
+  product_attributes product_attributes @relation(fields: [attribute_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model bank_products {
+  id                       BigInt                     @id
+  bank_id                  BigInt
+  category_id              BigInt
+  product_name             String                     @db.VarChar(255)
+  description              String?
+  currency                 String?                    @db.VarChar(20)
+  effective_date           DateTime?                  @db.Date
+  active                   Int?                       @default(1)
+  created_at               DateTime?                  @db.Timestamp(6)
+  updated_at               DateTime?                  @db.Timestamp(6)
+  banks                    banks                      @relation(fields: [bank_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_categories       product_categories         @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_attribute_prices product_attribute_prices[]
+  product_scores           product_scores[]
+}
+
+model banks {
+  id            BigInt          @id @default(autoincrement())
+  bank_name     String          @db.VarChar(255)
+  bank_code     String?         @db.VarChar(50)
+  website       String?         @db.VarChar(255)
+  logo_url      String?         @db.VarChar(500)
+  status        Int?            @default(1) @db.SmallInt
+  created_at    DateTime?       @db.Timestamp(6)
+  updated_at    DateTime?       @db.Timestamp(6)
+  bank_products bank_products[]
+  loan_products loan_products[]
+}
+
+model browsing_data {
+  product_id         Int      @id
+  provider           String   @db.VarChar(100)
+  product            String   @db.VarChar(150)
+  browsing_data_type String   @db.VarChar(100)
+  price              Decimal  @db.Decimal(10, 2)
+  currency           String   @db.VarChar(10)
+  validity           String   @db.VarChar(50)
+  normalised_data    Decimal? @db.Decimal(15, 4)
+}
+
+model combo {
+  product_id      Int      @id
+  provider        String   @db.VarChar(100)
+  product         String   @db.VarChar(150)
+  combo_type      String   @db.VarChar(100)
+  price           Decimal  @db.Decimal(10, 2)
+  currency        String   @db.VarChar(10)
+  validity        String   @db.VarChar(50)
+  normalised_data Decimal? @db.Decimal(15, 4)
+}
+
+model digital_banking_comparison {
+  digital_id                    Int      @id
+  provider                      String   @db.VarChar(100)
+  mobile_banking_app_rating     Decimal? @db.Decimal(3, 2)
+  internet_banking_availability Boolean? @default(false)
+  ussd_banking                  Boolean? @default(false)
+  qr_payments                   Boolean? @default(false)
+  cardless_withdrawals          Boolean? @default(false)
+  bill_payment_services         Boolean? @default(false)
+  online_account_opening        Boolean? @default(false)
+  normalised_score              Decimal? @db.Decimal(10, 4)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model insurance {
+  provider_name          String?
+  provider_type          String?
+  provider_website       String?
+  product_category       String?
+  product_name           String?
+  product_type           String?
+  coverage_description   String?
+  coverage_limit         Decimal?  @db.Decimal
+  coverage_currency      String?   @db.VarChar(10)
+  premium_amount         Decimal?  @db.Decimal
+  premium_currency       String?   @db.VarChar(10)
+  premium_frequency      String?
+  price_string           String?
+  excess_deductible      Decimal?  @db.Decimal
+  waiting_period_days    Int?
+  age_minimum            Int?
+  age_maximum            Int?
+  third_party_covered    Boolean?
+  own_damage_covered     Boolean?
+  comprehensive_coverage Boolean?
+  accidental_damage      Boolean?
+  theft_coverage         Boolean?
+  personal_belongings    Boolean?
+  legal_liability        Boolean?
+  roadside_assistance    Boolean?
+  confidence_score       Decimal?  @db.Decimal(5, 4)
+  source_url             String?
+  scraped_date           DateTime? @db.Timestamp(6)
+  data_status            String?
+
+  @@ignore
+}
+
+model learning_history {
+  id                      Int       @id @default(autoincrement())
+  product_name            String
+  company                 String    @db.VarChar(50)
+  approved_classification String?   @db.VarChar(100)
+  approved_group          String?   @db.VarChar(100)
+  original_confidence     Decimal?  @db.Decimal(5, 4)
+  timestamp               DateTime? @default(now()) @db.Timestamp(6)
+  batch_id                String?   @db.VarChar(64)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model loan_products {
+  id                              BigInt    @id @default(autoincrement())
+  bank_id                         BigInt
+  loan_name                       String    @db.VarChar(255)
+  loan_type                       String    @db.VarChar(50)
+  currency                        String?   @db.VarChar(20)
+  minimum_loan_amount             Decimal?  @db.Decimal(18, 2)
+  maximum_loan_amount             Decimal?  @db.Decimal(18, 2)
+  interest_rate                   Decimal?  @db.Decimal(10, 4)
+  interest_rate_type              String?   @db.VarChar(20)
+  apr                             Decimal?  @db.Decimal(10, 4)
+  minimum_repayment_period_months Int?
+  maximum_repayment_period_months Int?
+  application_fee                 Decimal?  @db.Decimal(18, 2)
+  processing_fee                  Decimal?  @db.Decimal(18, 2)
+  administration_fee              Decimal?  @db.Decimal(18, 2)
+  facility_fee                    Decimal?  @db.Decimal(18, 2)
+  insurance_required              Boolean?  @default(false)
+  insurance_fee                   Decimal?  @db.Decimal(18, 2)
+  minimum_age                     Int?
+  maximum_age                     Int?
+  minimum_salary                  Decimal?  @db.Decimal(18, 2)
+  collateral_required             Boolean?  @default(false)
+  collateral_type                 String?   @db.VarChar(255)
+  guarantor_required              Boolean?  @default(false)
+  approval_time                   String?   @db.VarChar(100)
+  disbursement_time               String?   @db.VarChar(100)
+  repayment_frequency             String?   @db.VarChar(20)
+  grace_period_days               Int?
+  top_up_available                Boolean?  @default(false)
+  early_settlement_allowed        Boolean?  @default(false)
+  early_settlement_fee            Decimal?  @db.Decimal(18, 2)
+  late_payment_penalty            Decimal?  @db.Decimal(18, 2)
+  online_application              Boolean?  @default(false)
+  mobile_application              Boolean?  @default(false)
+  credit_score_required           Boolean?  @default(false)
+  business_registration_required  Boolean?  @default(false)
+  tax_clearance_required          Boolean?  @default(false)
+  financial_statements_required   Boolean?  @default(false)
+  relationship_manager_available  Boolean?  @default(false)
+  required_documents              String?
+  eligibility_requirements        String?
+  special_features                String?
+  effective_date                  DateTime? @db.Date
+  status                          String?   @default("Active") @db.VarChar(20)
+  created_at                      DateTime? @default(now()) @db.Timestamp(6)
+  updated_at                      DateTime? @default(now()) @db.Timestamp(6)
+  banks                           banks     @relation(fields: [bank_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_loan_products_bank")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model medical_aid_schemes {
+  provider_name          String?
+  provider_type          String?
+  provider_website       String?
+  scheme_category        String?
+  plan_name              String?
+  plan_tier              String?
+  monthly_premium        Decimal?  @db.Decimal
+  annual_premium         Decimal?  @db.Decimal
+  price_currency         String?   @db.VarChar(10)
+  price_string           String?
+  billing_period         String?
+  coverage_type          String?
+  dependents_allowed     Boolean?
+  max_dependents         Int?
+  outpatient_coverage    Boolean?
+  inpatient_coverage     Boolean?
+  maternity_coverage     Boolean?
+  dental_coverage        Boolean?
+  optical_coverage       Boolean?
+  mental_health_coverage Boolean?
+  emergency_coverage     Boolean?
+  benefits_description   String?
+  waiting_period_days    Int?
+  co_pay_percentage      Decimal?  @db.Decimal
+  excess_amount          Decimal?  @db.Decimal
+  annual_limit           Decimal?  @db.Decimal
+  lifetime_limit         Decimal?  @db.Decimal
+  confidence_score       Decimal?  @db.Decimal(5, 4)
+  source_url             String?
+  scraped_date           DateTime? @db.Timestamp(6)
+  data_status            String?
+
+  @@ignore
+}
+
+model mobile_network_bundles {
+  id                        Int       @id @default(autoincrement())
+  company                   String    @db.VarChar(50)
+  source_url                String?
+  source_page_type          String?   @db.VarChar(100)
+  original_bundle_name      String
+  normalized_bundle_name    String
+  bundle_type               String?   @db.VarChar(50)
+  service_category          String    @db.VarChar(50)
+  comparison_group          String?   @db.VarChar(100)
+  comparison_group_detailed String?   @db.VarChar(100)
+  currency                  String?   @db.VarChar(10)
+  charge                    Decimal?  @db.Decimal(12, 4)
+  validity_raw              String?   @db.VarChar(100)
+  validity_days             Decimal?  @db.Decimal(10, 4)
+  time_category             String?   @db.VarChar(50)
+  amount_raw                String?
+  data_mb                   Decimal?  @db.Decimal(12, 4)
+  data_gb                   Decimal?  @db.Decimal(12, 6)
+  peak_data_mb              Decimal?  @db.Decimal(12, 4)
+  offpeak_data_mb           Decimal?  @db.Decimal(12, 4)
+  night_data_mb             Decimal?  @db.Decimal(12, 4)
+  whatsapp_mb               Decimal?  @db.Decimal(12, 4)
+  facebook_mb               Decimal?  @db.Decimal(12, 4)
+  instagram_mb              Decimal?  @db.Decimal(12, 4)
+  x_mb                      Decimal?  @db.Decimal(12, 4)
+  social_app                String?   @db.VarChar(50)
+  voice_minutes             Decimal?  @db.Decimal(10, 2)
+  onnet_minutes             Decimal?  @db.Decimal(10, 2)
+  offnet_minutes            Decimal?  @db.Decimal(10, 2)
+  offpeak_minutes           Decimal?  @db.Decimal(10, 2)
+  sms_count                 Decimal?  @db.Decimal(10, 2)
+  is_combo                  Boolean?  @default(false)
+  is_social                 Boolean?  @default(false)
+  is_private_wifi           Boolean?  @default(false)
+  is_tariff                 Boolean?  @default(false)
+  is_roaming                Boolean?  @default(false)
+  is_promotion              Boolean?  @default(false)
+  restrictions              String?
+  activation_method         String?
+  notes                     String?
+  last_verified             DateTime? @db.Timestamp(6)
+  confidence_score          Decimal?  @db.Decimal(5, 4)
+  cost_per_mb               Decimal?  @db.Decimal(12, 6)
+  cost_per_gb               Decimal?  @db.Decimal(12, 6)
+  cost_per_social_gb        Decimal?  @db.Decimal(12, 6)
+  total_voice_minutes       Decimal?  @db.Decimal(10, 2)
+  cost_per_voice_minute     Decimal?  @db.Decimal(12, 6)
+  cost_per_onnet_minute     Decimal?  @db.Decimal(12, 6)
+  cost_per_offnet_minute    Decimal?  @db.Decimal(12, 6)
+  cost_per_sms              Decimal?  @db.Decimal(12, 6)
+  monthly_equivalent_cost   Decimal?  @db.Decimal(12, 4)
+  combo_score               Decimal?  @db.Decimal(12, 6)
+  created_at                DateTime? @default(now()) @db.Timestamp(6)
+  batch_id                  String?   @db.VarChar(64)
+}
+
+model mobile_network_comparison_results {
+  id                        Int       @id @default(autoincrement())
+  comparison_group          String    @db.VarChar(100)
+  comparison_group_detailed String    @db.VarChar(100)
+  currency                  String?   @db.VarChar(10)
+  service_category          String?   @db.VarChar(50)
+  time_category             String?   @db.VarChar(50)
+  companies_present         String?
+  row_count                 Int?
+  favourable_company        String?   @db.VarChar(50)
+  favourable_bundle_name    String?
+  favourable_metric         String?   @db.VarChar(100)
+  favourable_metric_value   Decimal?  @db.Decimal(12, 6)
+  explanation               String?
+  caveats                   String?
+  generated_at              DateTime? @db.Timestamp(6)
+  created_at                DateTime? @default(now()) @db.Timestamp(6)
+  batch_id                  String?   @db.VarChar(64)
+}
+
+model mobile_network_tariffs {
+  id                      Int       @id @default(autoincrement())
+  company                 String    @db.VarChar(50)
+  tariff_name             String
+  tariff_type             String?   @db.VarChar(100)
+  currency                String?   @db.VarChar(10)
+  onnet_rate_per_minute   Decimal?  @db.Decimal(12, 6)
+  offnet_rate_per_minute  Decimal?  @db.Decimal(12, 6)
+  onnet_rate_per_second   Decimal?  @db.Decimal(12, 6)
+  offnet_rate_per_second  Decimal?  @db.Decimal(12, 6)
+  sms_rate                Decimal?  @db.Decimal(12, 6)
+  ussd_rate               Decimal?  @db.Decimal(12, 6)
+  out_of_bundle_data_rate Decimal?  @db.Decimal(12, 6)
+  international_rate      Decimal?  @db.Decimal(12, 6)
+  roaming_rate            Decimal?  @db.Decimal(12, 6)
+  source_url              String?
+  last_verified           DateTime? @db.Timestamp(6)
+  confidence_score        Decimal?  @db.Decimal(5, 4)
+  created_at              DateTime? @default(now()) @db.Timestamp(6)
+  batch_id                String?   @db.VarChar(64)
+}
+
+model product_attribute_prices {
+  id                 BigInt             @id
+  product_id         BigInt
+  attribute_id       BigInt
+  attribute_price    String?
+  created_at         DateTime?          @db.Timestamp(6)
+  updated_at         DateTime?          @db.Timestamp(6)
+  product_attributes product_attributes @relation(fields: [attribute_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bank_products      bank_products      @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_attributes {
+  id                         BigInt                       @id
+  category_id                BigInt
+  attribute_name             String                       @db.VarChar(255)
+  data_type                  String?                      @default("string") @db.VarChar(50)
+  display_order              Int?                         @default(0)
+  created_at                 DateTime?                    @db.Timestamp(6)
+  updated_at                 DateTime?                    @db.Timestamp(6)
+  attribute_comparison_rules attribute_comparison_rules[]
+  product_attribute_prices   product_attribute_prices[]
+  product_categories         product_categories           @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_categories {
+  id                 BigInt               @id @default(autoincrement())
+  category_name      String               @db.VarChar(100)
+  description        String?
+  created_at         DateTime?            @db.Timestamp(6)
+  updated_at         DateTime?            @db.Timestamp(6)
+  bank_products      bank_products[]
+  product_attributes product_attributes[]
+}
+
+model product_review_queue {
+  id                        Int       @id @default(autoincrement())
+  original_bundle_name      String
+  company                   String    @db.VarChar(50)
+  proposed_classification   String?   @db.VarChar(100)
+  proposed_comparison_group String?   @db.VarChar(100)
+  confidence_score          Decimal?  @db.Decimal(5, 4)
+  status                    String?   @default("pending") @db.VarChar(50)
+  reviewer_notes            String?
+  human_classification      String?   @db.VarChar(100)
+  human_comparison_group    String?   @db.VarChar(100)
+  created_at                DateTime? @default(now()) @db.Timestamp(6)
+  reviewed_at               DateTime? @db.Timestamp(6)
+  reviewed_by               String?   @db.VarChar(100)
+  batch_id                  String?   @db.VarChar(64)
+}
+
+model product_scores {
+  id            BigInt        @id
+  product_id    BigInt
+  overall_score Decimal?      @db.Decimal(15, 8)
+  rank_position Int?
+  calculated_at DateTime?     @db.Timestamp(6)
+  bank_products bank_products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model schools {
+  school_name     String?
+  location        String?
+  program_name    String?
+  tuition_fee     Decimal?  @db.Decimal
+  boarding_fee    Decimal?  @db.Decimal
+  total_fees      Decimal?  @db.Decimal
+  currency        String?   @db.VarChar(10)
+  fee_type        String?
+  school_type     String?
+  source_url      String?
+  collected_at    DateTime? @db.Timestamp(6)
+  gender_policy   String?
+  boarding_status String?
+  curriculum_type String?
+
+  @@ignore
+}
+
+model sms {
+  product_id      Int      @id
+  provider        String   @db.VarChar(100)
+  product         String   @db.VarChar(150)
+  sms_type        String   @db.VarChar(100)
+  price           Decimal  @db.Decimal(10, 2)
+  currency        String   @db.VarChar(10)
+  validity        String   @db.VarChar(50)
+  normalised_data Decimal? @db.Decimal(15, 4)
+}
+
+model social_media {
+  product_id        Int      @id
+  provider          String   @db.VarChar(100)
+  product           String   @db.VarChar(150)
+  social_media_type String   @db.VarChar(100)
+  price             Decimal  @db.Decimal(10, 2)
+  currency          String   @db.VarChar(10)
+  validity          String   @db.VarChar(50)
+  normalised_data   Decimal? @db.Decimal(15, 4)
+}
+
+model transaction_payment_services {
+  service_id                 Int      @id
+  provider                   String   @db.VarChar(100)
+  local_transfer_fee         Decimal? @db.Decimal(10, 2)
+  rtgs_charge                Decimal? @db.Decimal(10, 2)
+  zipit_charge               Decimal? @db.Decimal(10, 2)
+  international_transfer_fee Decimal? @db.Decimal(10, 2)
+  currency                   String?  @db.VarChar(10)
+  swift_availability         Boolean? @default(false)
+  foreign_currency_support   Boolean? @default(false)
+  mobile_money_integration   Boolean? @default(false)
+  normalised_score           Decimal? @db.Decimal(10, 4)
+}
+
+model transaction_services {
+  service_id       Int      @id
+  provider         String   @db.VarChar(100)
+  service_type     String   @db.VarChar(100)
+  price            Decimal? @db.Decimal(10, 2)
+  currency         String?  @db.VarChar(10)
+  availability     Boolean? @default(true)
+  normalised_score Decimal? @db.Decimal(10, 4)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model universities {
+  institution_name       String?
+  institution_type       String?
+  institution_website    String?
+  service_category       String?
+  program_name           String?
+  program_level          String?
+  faculty_department     String?
+  tuition_fee            Decimal?  @db.Decimal
+  price_currency         String?   @db.VarChar(10)
+  price_string           String?
+  billing_period         String?
+  registration_fee       Decimal?  @db.Decimal
+  accommodation_fee      Decimal?  @db.Decimal
+  library_fee            Decimal?  @db.Decimal
+  examination_fee        Decimal?  @db.Decimal
+  technology_fee         Decimal?  @db.Decimal
+  student_activity_fee   Decimal?  @db.Decimal
+  total_fees             Decimal?  @db.Decimal
+  program_duration_years Decimal?  @db.Decimal
+  entry_requirements     String?
+  scholarship_available  Boolean?
+  payment_terms          String?
+  confidence_score       Decimal?  @db.Decimal(5, 4)
+  source_url             String?
+  scraped_date           DateTime? @db.Timestamp(6)
+  data_status            String?
+  programmeDuration      Int?
+  programmeMatch         Float?
+  normalised             Float?
+
+  @@ignore
+}
+
+model voice {
+  product_id      Int      @id
+  provider        String   @db.VarChar(100)
+  product         String   @db.VarChar(150)
+  price           Decimal  @db.Decimal(10, 2)
+  currency        String   @db.VarChar(10)
+  validity        String   @db.VarChar(50)
+  normalised_data Decimal? @db.Decimal(15, 4)
+}

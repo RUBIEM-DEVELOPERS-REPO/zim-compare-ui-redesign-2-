@@ -16,12 +16,24 @@ export async function GET(request: Request) {
 
     const rawSchools = await prisma.school.findMany({
       where,
-      orderBy: { transparencyScore: 'desc' },
+      orderBy: [
+        { isManual: 'desc' },
+        { transparencyScore: 'desc' }
+      ],
     })
 
     const schools = filterVerifiedRecords(rawSchools, "education")
 
-    return NextResponse.json({ schools })
+    const uniqueSchools = Array.from(
+      new Map(
+        schools.map((school) => [school.name, school])
+      ).values()
+    ).sort((a, b) => {
+      if (a.isManual !== b.isManual) return b.isManual ? 1 : -1
+      return (b.transparencyScore || 0) - (a.transparencyScore || 0)
+    })
+
+    return NextResponse.json({ schools: uniqueSchools })
   } catch (error: any) {
     console.error("Schools API Error:", error)
     return NextResponse.json({ schools: [] }, { status: 500 })

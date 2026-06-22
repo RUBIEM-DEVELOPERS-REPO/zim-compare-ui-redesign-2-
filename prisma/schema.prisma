@@ -217,34 +217,45 @@ model InsuranceProvider {
   name              String
   type              String
   logo              String?
-  transparencyScore Int
-  digitalScore      Int?
+  transparencyScore Int     @default(50)
+  digitalScore      Int?    @default(50)
   website           String?
   headOfficeAddress String?
   contactPhone      String?
   contactEmail      String?
-  claimsScore       Int
-  avgClaimDays      Int
-  serviceAreas      String // JSON stringified array
+  claimsScore       Int     @default(50)
+  avgClaimDays      Int     @default(30)
+  serviceAreas      String  @default("[]")
+  isManual          Boolean @default(false)
 
   policies Policy[]
 }
 
 model Policy {
-  id                String @id
+  id                String  @id @default(cuid())
   providerId        String
   providerName      String
-  category          String // "motor", "medical", "life_funeral", "property_business"
+  category          String  // "motor", "medical", "life_funeral", "property_business", "business", "agriculture", "travel"
+  type              String  @default("")  // plan sub-type e.g. "Comprehensive"
   name              String
   monthlyPremium    Float
   annualPremium     Float
-  excess            Float
-  waitingPeriodDays Int
-  coverLimit        Float
-  benefits          String // JSON stringified array
-  exclusions        String // JSON stringified array
+  excess            Float   @default(0)
+  waitingPeriodDays Int     @default(0)
+  coverLimit        Float   @default(0)
+  benefits          String  @default("[]") // JSON stringified array
+  exclusions        String  @default("[]") // JSON stringified array
+  currency          String  @default("USD")
+  isManual          Boolean @default(false)
+  normalisedScore   Float?  // coverLimit / annualPremium — higher = better value
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   provider InsuranceProvider @relation(fields: [providerId], references: [id])
+
+  @@index([category])
+  @@index([providerId])
+  @@index([isManual])
 }
 
 // ── App State ──
@@ -408,7 +419,7 @@ model SchoolManualData {
 
 model UniversityManualData {
   id                Int      @id @default(autoincrement())
-  universityName    String
+  universityName    String   @unique
   location          String
   tuitionFee        Float
   currency          String   @default("USD")
@@ -417,6 +428,14 @@ model UniversityManualData {
   labFee            Float?
   libraryFee        Float?
   studentUnionFee   Float?
+  annualFee         Float?
+  programmeDuration Int?
+  programmeMatch    Float?
+  normalised        Float?
+  isManual          Boolean? @default(true)
+  source            String?  @default("manual-entry")
+  lastManualUpdate  DateTime? @default(now())
+  programs          String?  // JSON string containing array of programs
   effectiveDate     DateTime @default(now())
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -425,23 +444,7 @@ model UniversityManualData {
   @@index([location])
 }
 
-model InsuranceManualData {
-  id            Int      @id @default(autoincrement())
-  providerName  String
-  insuranceType String
-  basePremium   Float
-  currency      String   @default("USD")
-  maxCoverage   Float?
-  deductible    Float?
-  coinsurance   Float?
-  copay         Float?
-  effectiveDate DateTime @default(now())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@index([providerName])
-  @@index([insuranceType])
-}
+// InsuranceManualData removed — manual entries now go directly into Policy table (isManual=true)
 
 model BankingManualFee {
   id              Int      @id @default(autoincrement())
@@ -461,4 +464,29 @@ model BankingManualFee {
   @@index([bankId])
   @@index([bankName])
   @@index([feeType])
+}
+
+model HotelManualData {
+  id               Int      @id @default(autoincrement())
+  hotelName        String   @unique
+  location         String
+  city             String
+  stars            Int
+  pricePerNight    Float
+  currency         String   @default("USD")
+  type             String
+  amenities        String?
+  rating           Float
+  reviewCount      Int
+  description      String?
+  recommended      Boolean  @default(false)
+  bestValue        Boolean  @default(false)
+  isManual         Boolean  @default(true)
+  source           String   @default("manual-entry")
+  lastManualUpdate DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([hotelName])
+  @@index([city])
 }

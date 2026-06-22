@@ -1,7 +1,22 @@
 import { Policy } from "@/lib/types"
 
 export function scoreInsurancePolicies(selectedPolicies: Policy[]) {
-    if (selectedPolicies.length === 0) return { scoredPolicies: [], bestOverall: null, lowestCost: null, bestCoverage: null, lowestRisk: null }
+    if (selectedPolicies.length === 0) {
+        // Return dummy objects to satisfy type system if empty array passed
+        const dummy: Policy = {
+            id: "", providerId: "", providerName: "", category: "motor",
+            name: "", monthlyPremium: 0, annualPremium: 0, excess: 0,
+            waitingPeriodDays: 0, coverLimit: 0, benefits: [], exclusions: [],
+            type: "", currency: "USD", isManual: false
+        }
+        return { 
+            scoredPolicies: [], 
+            bestOverall: { ...dummy, calculatedScore: 0 }, 
+            lowestCost: dummy, 
+            bestCoverage: dummy, 
+            lowestRisk: dummy 
+        }
+    }
 
     const lowestPremium = Math.min(...selectedPolicies.map(p => p.monthlyPremium))
     const lowestExcess = Math.min(...selectedPolicies.map(p => p.excess))
@@ -34,10 +49,10 @@ export function scoreInsurancePolicies(selectedPolicies: Policy[]) {
         return { ...p, calculatedScore: Math.round(score) }
     })
 
-    const bestOverall = scoredPolicies.reduce((prev, curr) => (curr.calculatedScore > prev.calculatedScore ? curr : prev))
-    const lowestCost = selectedPolicies.reduce((prev, curr) => (curr.monthlyPremium < prev.monthlyPremium ? curr : prev))
-    const bestCoverage = selectedPolicies.reduce((prev, curr) => (curr.coverLimit > prev.coverLimit || curr.benefits.length > prev.benefits.length ? curr : prev))
-    const lowestRisk = selectedPolicies.reduce((prev, curr) => ((curr.excess + (curr.outOfPocketLimit ?? 0)) < (prev.excess + (prev.outOfPocketLimit ?? 0)) ? curr : prev))
+    const bestOverall = scoredPolicies.reduce((prev, curr) => (curr.calculatedScore > prev.calculatedScore ? curr : prev), scoredPolicies[0])
+    const lowestCost = selectedPolicies.reduce((prev, curr) => (curr.monthlyPremium < prev.monthlyPremium ? curr : prev), selectedPolicies[0])
+    const bestCoverage = selectedPolicies.reduce((prev, curr) => (curr.coverLimit > prev.coverLimit || curr.benefits.length > prev.benefits.length ? curr : prev), selectedPolicies[0])
+    const lowestRisk = selectedPolicies.reduce((prev, curr) => ((curr.excess + (curr.outOfPocketLimit ?? 0)) < (prev.excess + (prev.outOfPocketLimit ?? 0)) ? curr : prev), selectedPolicies[0])
 
     return { scoredPolicies, bestOverall, lowestCost, bestCoverage, lowestRisk }
 }

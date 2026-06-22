@@ -240,6 +240,9 @@ export interface Policy {
   benefits: string[]
   exclusions: string[]
   type: string
+  currency: string
+  isManual: boolean
+  normalisedScore?: number | null
   matchScore?: number
 }
 

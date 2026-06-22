@@ -12,18 +12,18 @@ export async function GET(request: Request) {
 
     const dbProviders = await prisma.telecomProvider.findMany({
       where,
-      orderBy: { name: 'asc' },
+      orderBy: [{ isManual: 'desc' }, { name: 'asc' }],
     })
 
     const dbBundles = await prisma.dataBundle.findMany({
-      orderBy: { price: 'asc' },
+      orderBy: [{ isManual: 'desc' }, { price: 'asc' }],
     })
 
     const voiceRateWhere = providerId ? { operator: providerId } : {}
 
     const dbVoiceRates = await prisma.voiceRate.findMany({
       where: voiceRateWhere,
-      orderBy: { price: 'asc' },
+      orderBy: [{ isManual: 'desc' }, { price: 'asc' }],
     })
 
     // Filter using our dynamic Data Quality Verification Engine
