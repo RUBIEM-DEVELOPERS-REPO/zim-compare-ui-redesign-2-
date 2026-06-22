@@ -10,7 +10,7 @@ export async function GET(request: Request) {
 
     const voiceRates = await prisma.voiceRate.findMany({
       where,
-      orderBy: [{ isManual: 'desc' }, { price: 'asc' }],
+      orderBy: [{ price: 'asc' }],
     })
 
     return NextResponse.json({ voiceRates })

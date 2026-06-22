@@ -10,7 +10,7 @@ export async function GET(request: Request) {
 
     const providers = await prisma.telecomProvider.findMany({
       where,
-      orderBy: [{ isManual: 'desc' }, { transparencyScore: 'desc' }],
+      orderBy: [{ transparencyScore: 'desc' }],
     })
 
     return NextResponse.json({ providers })

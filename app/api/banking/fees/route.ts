@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 
     const rawFees = await prisma.bankFee.findMany({
       where,
-      orderBy: [{ isManual: 'desc' }, { amount: 'asc' }],
+      orderBy: [{ amount: 'asc' }],
     })
 
     const fees = filterVerifiedRecords(rawFees, "banking")

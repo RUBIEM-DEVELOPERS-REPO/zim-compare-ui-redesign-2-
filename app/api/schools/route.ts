@@ -17,7 +17,6 @@ export async function GET(request: Request) {
     const rawSchools = await prisma.school.findMany({
       where,
       orderBy: [
-        { isManual: 'desc' },
         { transparencyScore: 'desc' }
       ],
     })
@@ -29,7 +28,6 @@ export async function GET(request: Request) {
         schools.map((school) => [school.name, school])
       ).values()
     ).sort((a, b) => {
-      if (a.isManual !== b.isManual) return b.isManual ? 1 : -1
       return (b.transparencyScore || 0) - (a.transparencyScore || 0)
     })
 

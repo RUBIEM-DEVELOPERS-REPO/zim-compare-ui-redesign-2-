@@ -15,7 +15,6 @@ export async function GET(request: Request) {
     const rawUniversities = await prisma.university.findMany({
       where,
       orderBy: [
-        { isManual: 'desc' },
         { university: 'asc' }
       ],
     })
