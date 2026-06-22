@@ -48,11 +48,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "schoolName and location are required." }, { status: 400 })
     }
 
-    const data = {
+    const cleanData = {
       schoolName,
       location,
-      schoolType: schoolType ?? "day",
-      province: province ?? "",
       tuitionFee: parseFloat(tuitionFee) || 0,
       currency: currency ?? "USD",
       admissionFee: admissionFee != null ? parseFloat(admissionFee) : null,
@@ -60,24 +58,24 @@ export async function POST(request: Request) {
       uniformCost: uniformCost != null ? parseFloat(uniformCost) : null,
       booksCost: booksCost != null ? parseFloat(booksCost) : null,
       examFee: examFee != null ? parseFloat(examFee) : null,
-      passRate: parseFloat(passRate) || 0,
-      numberOfTerms: parseInt(numberOfTerms) || 3,
-      annualFee: parseFloat(annualFee) || 0,
-      normalised: normalised != null ? parseFloat(normalised) : null,
-      isManual: true,
-      source: "manual-entry",
-      lastManualUpdate: new Date(),
+      effectiveDate: new Date(),
     }
 
-    const record = await prisma.schoolManualData.upsert({
-      where: { schoolName },
-      update: {
-        ...data,
-      },
-      create: {
-        ...data,
-      },
+    const existing = await prisma.schoolManualData.findFirst({
+      where: { schoolName }
     })
+
+    let record
+    if (existing) {
+      record = await prisma.schoolManualData.update({
+        where: { id: existing.id },
+        data: cleanData,
+      })
+    } else {
+      record = await prisma.schoolManualData.create({
+        data: cleanData,
+      })
+    }
 
     return NextResponse.json({ record })
   } catch (error: any) {

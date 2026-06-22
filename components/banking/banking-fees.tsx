@@ -11,6 +11,8 @@ import { BankingCompareBar } from "./banking-compare-bar"
 
 interface BankingFeesProps {
   location?: string
+  banks?: any[]
+  fees?: any[]
 }
 
 export function BankingFees({ location = "All Locations" }: BankingFeesProps) {

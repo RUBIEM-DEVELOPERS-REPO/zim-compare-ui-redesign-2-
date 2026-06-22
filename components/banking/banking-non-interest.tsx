@@ -19,6 +19,8 @@ const subTabs = [
 
 interface BankingNonInterestProps {
   location?: string
+  banks?: any[]
+  products?: any[]
 }
 
 export function BankingNonInterest({ location = "All Locations" }: BankingNonInterestProps) {
