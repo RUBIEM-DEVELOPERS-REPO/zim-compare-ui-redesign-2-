@@ -7,6 +7,7 @@ import { Sun, Droplets, TrendingUp, Shield } from "lucide-react"
 
 interface SolarOverviewProps {
     location?: string
+    providers?: any[]
 }
 
 const summaryCards = [

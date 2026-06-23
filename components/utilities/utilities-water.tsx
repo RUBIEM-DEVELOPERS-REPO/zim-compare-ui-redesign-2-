@@ -12,6 +12,7 @@ type WaterType = "All" | "Municipal" | "Borehole Delivery" | "Subscription"
 
 interface UtilitiesWaterProps {
     location?: string
+    utilities?: any[]
 }
 
 

@@ -13,6 +13,7 @@ type CustomerFilter = "All" | "Residential" | "Commercial"
 
 interface UtilitiesElectricityProps {
     location?: string
+    utilities?: any[]
 }
 
 export function UtilitiesElectricity({ location = "All Locations" }: UtilitiesElectricityProps) {

@@ -9,7 +9,11 @@ import { DynamicBar } from "@/components/ui/dynamic-bar"
 const bestMonths = ["March", "April", "February"]
 const peakMonths = ["June", "July", "August", "September"]
 
-export function HotelsSeasonal() {
+interface HotelsSeasonalProps {
+    hotels?: any[]
+}
+
+export function HotelsSeasonal({ hotels = [] }: HotelsSeasonalProps = {}) {
     const { t } = useI18n()
     const maxPrice = Math.max(...seasonalPricing.map(m => m.avgPrice))
     const maxOccupancy = Math.max(...seasonalPricing.map(m => m.occupancy))

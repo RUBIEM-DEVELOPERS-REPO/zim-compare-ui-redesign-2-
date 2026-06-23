@@ -10,6 +10,7 @@ import { BankingCompareBar } from "./banking-compare-bar"
 
 interface BankingDigitalProps {
   location?: string
+  banks?: any[]
 }
 
 export function BankingDigital({ location = "All Locations" }: BankingDigitalProps) {

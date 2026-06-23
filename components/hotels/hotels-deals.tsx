@@ -7,6 +7,7 @@ import { formatDateShort } from "@/lib/utils"
 
 interface HotelsDealsProps {
     location?: string
+    hotels?: any[]
 }
 
 export function HotelsDeals({ location = "All Locations" }: HotelsDealsProps) {

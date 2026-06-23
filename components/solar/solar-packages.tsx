@@ -9,6 +9,7 @@ import { useAppStore } from "@/lib/store"
 
 interface SolarPackagesProps {
     location?: string
+    providers?: any[]
 }
 
 const sizeFilters = ["All", "1kW", "2kW", "3kW", "5kW", "10kW+"]

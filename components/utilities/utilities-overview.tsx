@@ -16,7 +16,11 @@ const smartBadges = [
     { label: "Budget Friendly", description: "ZESA Prepaid + Showmax + Securico Basic", color: "bg-green-50 text-green-700 border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800" },
 ]
 
-export function UtilitiesOverview() {
+interface UtilitiesOverviewProps {
+    utilities?: any[]
+}
+
+export function UtilitiesOverview({ utilities = [] }: UtilitiesOverviewProps = {}) {
     const topElectricity = electricityProviders.filter(p => p.badge)
     const topWater = waterProviders.filter(p => p.badge)
     const topSubs = subscriptionServices.filter(p => p.badge).slice(0, 3)

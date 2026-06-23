@@ -12,6 +12,7 @@ import { SchoolsCompareBar } from "./schools-compare-bar"
 
 interface SchoolsProfilesProps {
   location?: string
+  schools?: any[]
 }
 
 export function SchoolsProfiles({ location = "All Locations" }: SchoolsProfilesProps) {

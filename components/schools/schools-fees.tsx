@@ -14,6 +14,7 @@ type TypeFilter = "all" | "boarding" | "day" | "both"
 
 interface SchoolsFeesProps {
   location?: string
+  schools?: any[]
 }
 
 export function SchoolsFees({ location = "All Locations" }: SchoolsFeesProps) {

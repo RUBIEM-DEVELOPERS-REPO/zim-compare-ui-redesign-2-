@@ -13,6 +13,7 @@ type FilterType = "all" | "commercial" | "building_society" | "microfinance"
 
 interface BankingProfilesProps {
   location?: string
+  banks?: any[]
 }
 
 export function BankingProfiles({ location = "All Locations" }: BankingProfilesProps) {

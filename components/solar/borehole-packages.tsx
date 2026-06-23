@@ -7,6 +7,7 @@ import { Droplets, Clock, Shield, TrendingUp, Waves } from "lucide-react"
 
 interface BoreholePackagesProps {
     location?: string
+    providers?: any[]
 }
 
 const depthFilters = ["All", "≤30m", "31–60m", "61–100m", "100m+"]

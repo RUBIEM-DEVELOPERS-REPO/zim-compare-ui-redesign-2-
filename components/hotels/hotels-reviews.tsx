@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/utils"
 
 interface HotelsReviewsProps {
     location?: string
+    hotels?: any[]
 }
 
 function StarRating({ rating }: { rating: number }) {
